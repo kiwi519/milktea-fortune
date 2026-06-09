@@ -24,7 +24,12 @@ export default {
 
     try {
       const body = await request.json();
-      const { type, birthday, drinkName, mood, zodiac, shengxiao, score, dims, maxDim, minDim, luckyColor, luckyDir, title, drinkBrand, drinkType, drinkTags, topDim, moonPhase, moonEmoji, todayTerm, elementLine, shengxiaoLine, birthdayLine } = body;
+      const {
+        type, birthday, drinkName, mood, zodiac, shengxiao, score,
+        dims, maxDim, minDim, luckyColor, luckyDir, title,
+        drinkBrand, drinkType, drinkTags, topDim,
+        moonPhase, moonEmoji, todayTerm, elementLine, shengxiaoLine, birthdayLine
+      } = body;
 
       const today = new Date().toLocaleDateString("zh-CN", {
         timeZone: "Asia/Shanghai",
@@ -34,51 +39,65 @@ export default {
         weekday: "long",
       });
 
+      const systemPrompt = "你是一个说话很直、不卖弄的占星助手。不讲虚的，每句话都讲一件具体的事——今天该做什么、躲什么、注意什么。用口语化的中文，像朋友聊天。";
+
       let prompt = "";
-      let systemPrompt = "你是奶茶占卜师，温柔、神秘、有趣。用自然流畅的中文回答，不要分点列举，用段落形式。";
 
       if (type === "fortune") {
-        const dimsStr = dims ? Object.entries(dims).map(([k,v]) => `${k}:${v}分`).join('、') : '';
-        prompt = `今天是${today}。用户是${zodiac || '未知星座'}座，属${shengxiao || '未知'}，今日运势总分${score || '未知'}分，各维度分数：${dimsStr || '未知'}。幸运色${luckyColor || ''}，幸运方位${luckyDir || ''}。今日运势标题：${title || ''}。
+        const dimsStr = dims
+          ? Object.entries(dims).map(([k, v]) => `${k}:${v}分`).join("、")
+          : "";
+        const highDims = dims
+          ? Object.entries(dims).filter(([, v]) => v >= 75).map(([k]) => k).join("、")
+          : "";
+        const lowDims = dims
+          ? Object.entries(dims).filter(([, v]) => v <= 65).map(([k]) => k).join("、")
+          : "";
 
-请为用户生成今日运势文案，要求：
-1. 结合星座特质、今日分数和各维度表现，给出有洞察力的运势解读
-2. 融入幸运色和幸运方位的暗示
-3. 语气温柔有趣，带一点神秘感和诗意
-4. 80-120字，自然段落，不要分点
-5. 开头用一句吸引人的话引入`;
+        prompt = `今天是${today}。用户是${zodiac || "未知星座"}座，今日运势总分${score || "未知"}分，各维度：${dimsStr || "未知"}。幸运色${luckyColor || ""}，幸运方位${luckyDir || ""}。
+
+请生成今日运势文案，要求严格执行：
+- 禁止空话套话，比如"缓缓步入美好的一天""能量在悄悄积累"这类句子一律不要
+- 分数高的维度（${highDims || "工作"}）：直接说今天适合用这个优势做什么具体的事
+- 分数低的维度（${lowDims || "健康"}）：直接说今天要注意什么、别干什么
+- 幸运色${luckyColor}和方位${luckyDir}融入具体建议，比如"穿${luckyColor}系的出门""往${luckyDir}方向走走"
+- 语气像朋友聊天，不用"亲爱的"开头
+- 80-120字，自然段落，不要分点列举`;
 
       } else if (type === "energy") {
-        const dimsStr = dims ? Object.entries(dims).map(([k,v]) => `${k}:${v}分`).join('、') : '';
         const contextStr = [
-          zodiac ? `星座：${zodiac}座` : null,
-          shengxiao ? `属${shengxiao}` : null,
+          zodiac ? `${zodiac}座` : null,
           score ? `今日总分${score}分` : null,
-          maxDim ? `最强维度：${maxDim}` : null,
-          minDim ? `最弱维度：${minDim}` : null,
-          moonPhase ? `今日月相：${moonPhase} ${moonEmoji || ''}` : null,
-          todayTerm ? `今日节气：${todayTerm}` : null,
-        ].filter(Boolean).join('，');
-        prompt = `今天是${today}。用户生日${birthday}，${contextStr}。
+          maxDim ? `最强：${maxDim}` : null,
+          minDim ? `最弱：${minDim}` : null,
+          moonPhase ? `${moonPhase}${moonEmoji || ""}` : null,
+          todayTerm ? `${todayTerm}节气` : null,
+        ].filter(Boolean).join("，");
 
-请为用户生成今日能量解读，要求：
-1. 结合星座、月相/节气（如有的话）、各维度分数，分析今天的能量状态
-2. 给出一个具体的、可操作的小建议
-3. 语气温柔浪漫，带点玄学感，偶尔引用月相或节气
-4. 80-120字，自然段落，不要分点
-5. 结尾用一句温暖的话收尾`;
+        prompt = `今天是${today}。用户${contextStr}。
+
+请生成今日能量解读，要求严格执行：
+- 禁止空话，每句话对应一件具体的事
+- 最强维度是${maxDim}，说清楚今天可以用它干什么（举一个具体场景）
+- 最弱维度是${minDim}，说清楚今天为什么要躲开它、或者怎么应对
+- 如果今天是${moonPhase}，用一句话说这个月相对今天有什么具体影响（不要说"能量达到峰值"这种废话）
+- ${todayTerm ? `今天是${todayTerm}节气，顺带一句具体的节气提示` : ""}
+- 给出 1-2 个今天可以实际操作的建议
+- 语气轻松直接，80-120字，自然段落`;
 
       } else if (type === "drink_reason") {
-        const drinkInfo = [drinkName || '', drinkBrand || '', drinkType || '', (drinkTags || []).join('、')].filter(Boolean).join(' · ');
-        prompt = `今天是${today}。用户生日${birthday}，${zodiac ? `星座${zodiac}座` : ''}，属${shengxiao || ''}。今日最高维度${topDim || ''}。当前心情：${mood || ''}。幸运色${luckyColor || ''}。
+        const drinkInfo = [drinkName || "", drinkBrand || "", drinkType || ""]
+          .filter(Boolean).join(" · ");
+        const tags = (drinkTags || []).slice(0, 3).join("、");
 
-宇宙今天为这位用户推荐了一杯${drinkInfo}。
+        prompt = `用户是${zodiac || ""}座，心情${mood || ""}，今天运势最强的面是${topDim || ""}，幸运色${luckyColor || ""}。今天推荐的奶茶：${drinkInfo}，口感特点：${tags}。
 
-请用奶茶占卜师的口吻，解释为什么今天的宇宙能量和这杯奶茶特别匹配。要求：
-1. 结合星座特质、心情、运势维度、幸运色等因素，给出有说服力的"命中注定"感
-2. 要让人读完就想喝这杯
-3. 80-120字，自然段落，不要分点
-4. 结尾可以加一句俏皮话`;
+用 2-3 句话解释为什么这杯奶茶适合今天，要求严格执行：
+- 结合这杯奶茶的具体口感（${tags}）和用户今天的状态做匹配，说具体
+- 禁止说"命中注定""宇宙安排"这种过度玄学套话
+- 读完让人想立刻去买
+- 可以加一句轻松的收尾，不要强行煽情
+- 50-80字，口语化`;
 
       } else {
         return new Response(JSON.stringify({ error: "Unknown type: " + type }), {
@@ -99,8 +118,8 @@ export default {
             { role: "system", content: systemPrompt },
             { role: "user", content: prompt },
           ],
-          temperature: 0.9,
-          max_tokens: 500,
+          temperature: 0.85,
+          max_tokens: 400,
         }),
       });
 
