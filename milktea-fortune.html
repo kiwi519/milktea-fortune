@@ -839,7 +839,7 @@ gap: 8px;
 // ─────────────────────────────────────────────
 //  AI 配置 & 调用函数
 // ─────────────────────────────────────────────
-const AI_WORKER_URL = ''; // 将在 Cloudflare Worker 部署后填入 URL
+const AI_WORKER_URL = '';
 
 async function callAI(type, params) {
   if (!AI_WORKER_URL) return null; // 未配置 Worker，直接返回 null 使用本地生成
