@@ -842,22 +842,18 @@ gap: 8px;
 const AI_WORKER_URL = 'https://milktea-fortune-ai.qingrui519.workers.dev';
 
 async function callAI(type, params) {
-  if (!AI_WORKER_URL) return null; // 未配置 Worker，直接返回 null 使用本地生成
+  if (!AI_WORKER_URL) return null;
   try {
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), 15000);
     const resp = await fetch(AI_WORKER_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ type, ...params }),
-      signal: controller.signal,
     });
-    clearTimeout(timer);
     if (!resp.ok) return null;
     const data = await resp.json();
     return data.result || null;
   } catch (e) {
-    console.warn('AI 调用失败，使用本地内容：', e.message);
+    console.warn('AI 调用失败：', e.message);
     return null;
   }
 }
