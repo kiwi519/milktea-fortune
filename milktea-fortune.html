@@ -839,7 +839,7 @@ gap: 8px;
 // ─────────────────────────────────────────────
 //  AI 配置 & 调用函数
 // ─────────────────────────────────────────────
-const AI_WORKER_URL = '';
+const AI_WORKER_URL = 'https://milktea-fortune-ai.qingrui519.workers.dev';
 
 async function callAI(type, params) {
   if (!AI_WORKER_URL) return null; // 未配置 Worker，直接返回 null 使用本地生成

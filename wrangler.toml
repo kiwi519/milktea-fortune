@@ -1,0 +1,4 @@
+name = "milktea-fortune-ai"
+main = "worker.js"
+compatibility_date = "2024-01-01"
+account_id = "0b15cf580cf9ef1b5e5567aba19e5bb5"
