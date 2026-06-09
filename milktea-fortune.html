@@ -837,6 +837,29 @@ gap: 8px;
 
 <script>
 // ─────────────────────────────────────────────
+//  AI 配置 & 调用函数
+// ─────────────────────────────────────────────
+const AI_WORKER_URL = ''; // 将在 Cloudflare Worker 部署后填入 URL
+
+async function callAI(type, params) {
+  if (!AI_WORKER_URL) return null; // 未配置 Worker，直接返回 null 使用本地生成
+  try {
+    const resp = await fetch(AI_WORKER_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type, ...params }),
+      signal: AbortSignal.timeout(8000), // 8秒超时
+    });
+    if (!resp.ok) return null;
+    const data = await resp.json();
+    return data.result || null;
+  } catch (e) {
+    console.warn('AI 调用失败，使用本地内容：', e.message);
+    return null;
+  }
+}
+
+// ─────────────────────────────────────────────
 //  DATA
 // ─────────────────────────────────────────────
 
@@ -2603,7 +2626,23 @@ function goStep2() {
     }, 200 + i * 100);
   });
 
-  document.getElementById('fortuneQuote').textContent = '「' + getFortuneQuote(STATE.zodiac.name, STATE.shengxiao.name, fortune.quoteSeed) + '」';
+  const localQuote = '「' + getFortuneQuote(STATE.zodiac.name, STATE.shengxiao.name, fortune.quoteSeed) + '」';
+  document.getElementById('fortuneQuote').textContent = localQuote;
+  // ── AI 联网：今日运势文案 ──
+  callAI('fortune', {
+    birthday: STATE.birthDate,
+    zodiac: STATE.zodiac.name,
+    shengxiao: STATE.shengxiao.name,
+    score: fortune.score,
+    dims: Object.fromEntries(DIMENSION_KEYS.map((k,i) => [DIMENSION_LABELS[i], fortune.dims[i]])),
+    luckyColor: fortune.luckyColor,
+    luckyDir: fortune.luckyDir,
+    title: fortune.title,
+  }).then(aiText => {
+    if (aiText) {
+      document.getElementById('fortuneQuote').textContent = '「' + aiText + '」';
+    }
+  });
 
   // 幸运标签（去掉生命数字）
   const luckyEl = document.getElementById('luckyRow');
@@ -2778,6 +2817,29 @@ function goStep2() {
         </div>
       `;
     }
+    // ── AI 联网：今日能量解读 ──
+    callAI('energy', {
+      birthday: STATE.birthDate,
+      zodiac: STATE.zodiac.name,
+      shengxiao: STATE.shengxiao.name,
+      score: fortune.score,
+      dims: Object.fromEntries(DIMENSION_KEYS.map((k,i) => [DIMENSION_LABELS[i], fortune.dims[i]])),
+      maxDim: maxLabel,
+      minDim: minLabel,
+      moonPhase: moonPhase,
+      moonEmoji: moonEmoji,
+      todayTerm: todayTerm,
+      elementLine: elementLine,
+      shengxiaoLine: shengxiaoLine,
+      birthdayLine: birthdayLine,
+    }).then(aiText => {
+      if (aiText) {
+        const insightEl = document.getElementById('fortuneInsight');
+        if (insightEl) {
+          insightEl.innerHTML = `<div class="insight-title">✦ &nbsp;今日能量解读</div><div class="insight-body">${aiText}</div>`;
+        }
+      }
+    });
   })();
 
   document.getElementById('step2').classList.remove('hidden');
@@ -3212,6 +3274,31 @@ lucky_stressed:{ quote: '{drinkName}，宇宙看见你在扛了。扛过去的�
       </div>
     </div>
   `;
+  // ── AI 联网：奶茶推荐理由 ──
+  const drink = STATE.scored[idx];
+  const mood = MOODS.find(m => m.id === STATE.mood);
+  const topDimIdx = STATE.fortune.dims.indexOf(Math.max(...STATE.fortune.dims));
+  const topDimLabel = DIMENSION_LABELS[topDimIdx];
+  callAI('drink_reason', {
+    birthday: STATE.birthDate,
+    zodiac: STATE.zodiac.name,
+    shengxiao: STATE.shengxiao.name,
+    drinkName: drink.name,
+    drinkBrand: drink.brand,
+    drinkType: drink.type,
+    drinkTags: drink.tags,
+    mood: mood ? mood.name : '',
+    topDim: topDimLabel,
+    luckyColor: STATE.fortune.luckyColor,
+    luckyDir: STATE.fortune.luckyDir,
+  }).then(aiText => {
+    if (aiText) {
+      const bodyEl = document.querySelector('.reason-card .reason-body');
+      if (bodyEl) {
+        bodyEl.textContent = aiText;
+      }
+    }
+  });
 }
 
 function orderOnMeituan() {
