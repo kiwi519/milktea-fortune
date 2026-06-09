@@ -848,7 +848,7 @@ async function callAI(type, params) {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ type, ...params }),
-      signal: AbortSignal.timeout(8000), // 8秒超时
+      signal: AbortSignal.timeout(15000), // 15秒超时
     });
     if (!resp.ok) return null;
     const data = await resp.json();
@@ -2629,6 +2629,7 @@ function goStep2() {
   const localQuote = '「' + getFortuneQuote(STATE.zodiac.name, STATE.shengxiao.name, fortune.quoteSeed) + '」';
   document.getElementById('fortuneQuote').textContent = localQuote;
   // ── AI 联网：今日运势文案 ──
+  document.getElementById('fortuneQuote').style.opacity = '0.5';
   callAI('fortune', {
     birthday: STATE.birthDate,
     zodiac: STATE.zodiac.name,
@@ -2642,6 +2643,7 @@ function goStep2() {
     if (aiText) {
       document.getElementById('fortuneQuote').textContent = '「' + aiText + '」';
     }
+    document.getElementById('fortuneQuote').style.opacity = '1';
   });
 
   // 幸运标签（去掉生命数字）
@@ -2818,6 +2820,8 @@ function goStep2() {
       `;
     }
     // ── AI 联网：今日能量解读 ──
+    const insightElLoading = document.getElementById('fortuneInsight');
+    if (insightElLoading) insightElLoading.style.opacity = '0.5';
     callAI('energy', {
       birthday: STATE.birthDate,
       zodiac: STATE.zodiac.name,
@@ -2833,10 +2837,11 @@ function goStep2() {
       shengxiaoLine: shengxiaoLine,
       birthdayLine: birthdayLine,
     }).then(aiText => {
-      if (aiText) {
-        const insightEl = document.getElementById('fortuneInsight');
-        if (insightEl) {
-          insightEl.innerHTML = `<div class="insight-title">✦ &nbsp;今日能量解读</div><div class="insight-body">${aiText}</div>`;
+      const insightEl2 = document.getElementById('fortuneInsight');
+      if (insightEl2) {
+        insightEl2.style.opacity = '1';
+        if (aiText) {
+          insightEl2.innerHTML = `<div class="insight-title">✦ &nbsp;今日能量解读</div><div class="insight-body">${aiText}</div>`;
         }
       }
     });
