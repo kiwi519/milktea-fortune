@@ -3738,5 +3738,33 @@ async function generateShareCanvas() {
   return canvas.toDataURL('image/png');
 }
 </script>
+
+<div id="ai-debug-btn" style="position:fixed;bottom:20px;right:20px;z-index:9999">
+  <button onclick="testAI()" style="background:#333;color:#fff;padding:10px 16px;border:none;border-radius:8px;font-size:13px;cursor:pointer">🔍 测试AI</button>
+</div>
+<div id="ai-debug-result" style="display:none;position:fixed;bottom:70px;right:10px;left:10px;z-index:9999;background:#fff;border:1px solid #ccc;border-radius:8px;padding:12px;font-size:12px;max-height:60vh;overflow:auto;word-break:break-all"></div>
+<script>
+async function testAI() {
+  const el = document.getElementById('ai-debug-result');
+  el.style.display = 'block';
+  el.textContent = '请求中...';
+  try {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 15000);
+    const resp = await fetch('https://milktea-fortune-ai.qingrui519.workers.dev', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({type:'fortune', birthday:'1990-04-25', zodiac:'金牛座', shengxiao:'狗', score:74, dims:{爱情:94,工作:75,财运:59,健康:70,创意:87,气场:64}, luckyColor:'金色', luckyDir:'东', title:'踏实前行'}),
+      signal: controller.signal,
+    });
+    clearTimeout(timer);
+    el.textContent = '状态:' + resp.status + ' | ';
+    const data = await resp.json();
+    el.textContent += JSON.stringify(data);
+  } catch(e) {
+    el.textContent = '错误: ' + e.name + ' - ' + e.message;
+  }
+}
+</script>
 </body>
 </html>
