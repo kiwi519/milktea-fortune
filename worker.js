@@ -5,7 +5,7 @@ const MOONSHOT_API = "https://api.moonshot.cn/v1/chat/completions";
 
 const CORS_HEADERS = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Methods": "POST, OPTIONS",
+  "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
   "Access-Control-Allow-Headers": "Content-Type",
   "Content-Type": "application/json",
 };
@@ -15,22 +15,46 @@ export default {
     if (request.method === "OPTIONS") {
       return new Response(null, { headers: CORS_HEADERS });
     }
-    if (request.method !== "POST") {
-      return new Response(JSON.stringify({ error: "Method not allowed" }), {
-        status: 405,
-        headers: CORS_HEADERS,
-      });
+
+    let body = {};
+    if (request.method === "POST") {
+      try { body = await request.json(); } catch(e) {}
+    } else if (request.method === "GET") {
+      const url = new URL(request.url);
+      // type 直接从 path 或 query 取
+      const pathType = url.pathname.replace(/^\//, '') || '';
+      body.type = url.searchParams.get("type") || pathType || "";
+      body.birthday = url.searchParams.get("birthday") || "";
+      body.zodiac = url.searchParams.get("zodiac") || "";
+      body.shengxiao = url.searchParams.get("shengxiao") || "";
+      body.score = url.searchParams.get("score") || "";
+      body.luckyColor = url.searchParams.get("luckyColor") || "";
+      body.luckyDir = url.searchParams.get("luckyDir") || "";
+      body.title = url.searchParams.get("title") || "";
+      body.maxDim = url.searchParams.get("maxDim") || "";
+      body.minDim = url.searchParams.get("minDim") || "";
+      body.moonPhase = url.searchParams.get("moonPhase") || "";
+      body.moonEmoji = url.searchParams.get("moonEmoji") || "";
+      body.todayTerm = url.searchParams.get("todayTerm") || "";
+      body.mood = url.searchParams.get("mood") || "";
+      body.drinkName = url.searchParams.get("drinkName") || "";
+      body.drinkBrand = url.searchParams.get("drinkBrand") || "";
+      body.drinkType = url.searchParams.get("drinkType") || "";
+      body.topDim = url.searchParams.get("topDim") || "";
+      try { body.dims = JSON.parse(url.searchParams.get("dims") || "{}"); } catch(e) { body.dims = {}; }
+      try { body.drinkTags = JSON.parse(url.searchParams.get("drinkTags") || "[]"); } catch(e) { body.drinkTags = []; }
+    } else {
+      return new Response(JSON.stringify({ error: "Method not allowed" }), { status: 405, headers: CORS_HEADERS });
     }
 
-    try {
-      const body = await request.json();
-      const {
-        type, birthday, drinkName, mood, zodiac, shengxiao, score,
-        dims, maxDim, minDim, luckyColor, luckyDir, title,
-        drinkBrand, drinkType, drinkTags, topDim,
-        moonPhase, moonEmoji, todayTerm, elementLine, shengxiaoLine, birthdayLine
-      } = body;
+    const {
+      type, birthday, drinkName, mood, zodiac, shengxiao, score,
+      dims, maxDim, minDim, luckyColor, luckyDir, title,
+      drinkBrand, drinkType, drinkTags, topDim,
+      moonPhase, moonEmoji, todayTerm, elementLine, shengxiaoLine, birthdayLine
+    } = body;
 
+    try {
       const today = new Date().toLocaleDateString("zh-CN", {
         timeZone: "Asia/Shanghai",
         year: "numeric",

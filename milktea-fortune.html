@@ -844,11 +844,14 @@ const AI_WORKER_URL = 'https://milktea-fortune-ai.qingrui519.workers.dev';
 async function callAI(type, params) {
   if (!AI_WORKER_URL) return null;
   try {
-    const resp = await fetch(AI_WORKER_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ type, ...params }),
-    });
+    // 用 GET 请求，把参数放 URL query string，兼容 iOS Safari
+    const p = new URLSearchParams({ type });
+    for (const [k, v] of Object.entries(params)) {
+      if (v !== null && v !== undefined) {
+        p.set(k, typeof v === 'object' ? JSON.stringify(v) : String(v));
+      }
+    }
+    const resp = await fetch(AI_WORKER_URL + '?' + p.toString());
     if (!resp.ok) return null;
     const data = await resp.json();
     return data.result || null;
