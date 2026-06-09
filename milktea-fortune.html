@@ -3275,10 +3275,6 @@ lucky_stressed:{ quote: '{drinkName}，宇宙看见你在扛了。扛过去的�
     </div>
   `;
   // ── AI 联网：奶茶推荐理由 ──
-  const drink = STATE.scored[idx];
-  const mood = MOODS.find(m => m.id === STATE.mood);
-  const topDimIdx = STATE.fortune.dims.indexOf(Math.max(...STATE.fortune.dims));
-  const topDimLabel = DIMENSION_LABELS[topDimIdx];
   callAI('drink_reason', {
     birthday: STATE.birthDate,
     zodiac: STATE.zodiac.name,
