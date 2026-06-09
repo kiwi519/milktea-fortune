@@ -1,0 +1,3769 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>今日奶茶运势 ✨</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500&display=swap');
+
+  :root {
+    --bg: #f0ece3;
+    --card: #f7f4ee;
+    --card2: #fdfaf4;
+    --border: #e2ddd3;
+    --text: #3d3530;
+    --text-mute: #9b9085;
+    --gold: #b5843a;
+    --gold-light: #d4a85a;
+    --accent: #c9896a;
+    --green: #7a9b6e;
+    --pink: #d4849a;
+    --radius: 20px;
+    --shadow: 0 4px 20px rgba(90,70,50,0.08);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    background-image:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    min-height: 100vh;
+    font-family: 'Noto Sans SC', sans-serif;
+    color: var(--text);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 30px 16px 60px;
+  }
+
+  .app {
+    width: 100%;
+    max-width: 420px;
+  }
+
+  /* ── Header ── */
+  .header {
+    text-align: center;
+    margin-bottom: 28px;
+  }
+  .header-tag {
+    display: inline-block;
+    background: var(--gold);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    padding: 4px 14px;
+    border-radius: 20px;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+  }
+  .header h1 {
+    font-family: 'Playfair Display', 'Noto Serif SC', serif;
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.2;
+  }
+  .header p {
+    color: var(--text-mute);
+    font-size: 13px;
+    margin-top: 6px;
+    font-weight: 300;
+  }
+
+  /* ── Card ── */
+  .card {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+    padding: 24px;
+    margin-bottom: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+    pointer-events: none;
+    border-radius: inherit;
+  }
+  .card-label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .card-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* ── Step 1: 生日输入 ── */
+  .birth-input-wrap {
+    position: relative;
+  }
+  .birth-input-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .birth-input-row .birth-sep {
+    color: var(--text-mute);
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .birth-input-row input[type="text"] {
+    background: var(--card2);
+    border: 1.5px solid var(--border);
+    border-radius: 14px;
+    font-size: 16px;
+    font-family: 'Noto Sans SC', sans-serif;
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.2s;
+    text-align: center;
+    padding: 14px 8px;
+  }
+  .birth-input-row input[type="text"]:focus {
+    border-color: var(--gold);
+  }
+  .birth-input-row .birth-year { flex: 2.2; min-width: 0; }
+  .birth-input-row .birth-month { flex: 1.2; min-width: 0; }
+  .birth-input-row .birth-day { flex: 1.2; min-width: 0; }
+  .birth-input-hint {
+    margin-top: 7px;
+    font-size: 12px;
+    color: var(--text-mute);
+    text-align: center;
+  }
+
+  .zodiac-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 12px;
+  }
+  .zodiac-badge {
+    flex: 1;
+    background: var(--card2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+  }
+  .zodiac-badge .icon { font-size: 22px; }
+  .zodiac-badge .name { font-size: 13px; font-weight: 500; color: var(--text); }
+  .zodiac-badge .sub  { font-size: 10px; color: var(--text-mute); }
+
+  /* ── Button ── */
+  .btn {
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-radius: 14px;
+    font-size: 15px;
+    font-weight: 500;
+    font-family: 'Noto Sans SC', sans-serif;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-primary {
+    background: linear-gradient(135deg, #c9946a, #b5843a);
+    color: #fff;
+    box-shadow: 0 4px 16px rgba(181,132,58,0.3);
+  }
+  .btn-primary:hover { filter: brightness(1.06); transform: translateY(-1px); }
+  .btn-primary:active { transform: translateY(0); }
+  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+  /* ── Step 2: 运势 ── */
+  .fortune-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 16px;
+  }
+  .fortune-score-ring {
+    position: relative;
+    width: 72px;
+    height: 72px;
+    flex-shrink: 0;
+  }
+  .fortune-score-ring svg { width: 72px; height: 72px; transform: rotate(-90deg); }
+  .fortune-score-ring .score-text {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .fortune-score-ring .score-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--gold);
+    line-height: 1;
+  }
+  .fortune-score-ring .score-label { font-size: 9px; color: var(--text-mute); margin-top: 1px; }
+  .fortune-meta h2 { font-family: 'Noto Serif SC', serif; font-size: 18px; font-weight: 700; }
+  .fortune-meta .date-str { font-size: 11px; color: var(--text-mute); margin-top: 2px; }
+
+  .fortune-bars { display: flex; flex-direction: column; gap: 8px; margin: 14px 0; }
+  .fortune-bar-row { display: flex; align-items: center; gap: 10px; }
+  .fortune-bar-row .bar-label { font-size: 12px; color: var(--text-mute); width: 40px; flex-shrink: 0; }
+  .fortune-bar-track {
+    flex: 1;
+    height: 6px;
+    background: var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .fortune-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 1s cubic-bezier(.4,0,.2,1);
+  }
+  .fortune-quote {
+    background: linear-gradient(135deg, #fdf5e8, #f7ede0);
+    border-left: 3px solid var(--gold);
+    border-radius: 0 10px 10px 0;
+    padding: 10px 14px;
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--text);
+    font-style: italic;
+  }
+  .fortune-insight {
+    margin-top: 14px;
+    background: linear-gradient(135deg, #f4f0fa, #ede8f5);
+    border: 1px solid #d8d0ea;
+    border-radius: 12px;
+    padding: 12px 14px;
+    font-size: 12px;
+    line-height: 1.75;
+    color: #5a5070;
+  }
+  .fortune-insight:empty { display: none; }
+  .insight-title {
+    font-size: 11px;
+    font-weight: 600;
+    color: #8a70b0;
+    letter-spacing: 0.05em;
+    margin-bottom: 6px;
+  }
+  .insight-body strong {
+    color: #6a50a0;
+    font-weight: 600;
+  }
+
+/* ── Step 3: 心情选择 ── */
+.mood-grid {
+display: grid;
+grid-template-columns: repeat(5, 1fr);
+gap: 8px;
+}
+  .mood-item {
+    background: var(--card2);
+    border: 1.5px solid var(--border);
+    border-radius: 14px;
+    padding: 12px 6px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+    transition: all 0.2s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .mood-item:hover { border-color: var(--gold-light); background: #fdf7ee; }
+  .mood-item.selected {
+    border-color: var(--gold);
+    background: linear-gradient(135deg, #fdf5e4, #fbecd4);
+    box-shadow: 0 2px 12px rgba(181,132,58,0.18);
+  }
+  .mood-item .mood-emoji { font-size: 24px; }
+  .mood-item .mood-name { font-size: 11px; color: var(--text-mute); font-weight: 500; }
+  .mood-item.selected .mood-name { color: var(--gold); }
+
+  /* ── Step 4: 推荐结果 ── */
+  .result-hero {
+    position: relative;
+    text-align: center;
+    padding: 10px 0 20px;
+  }
+  .drink-img-wrap {
+    width: 200px;
+    height: 280px;
+    margin: 0 auto 16px;
+    position: relative;
+    animation: floatDrink 3.8s ease-in-out infinite;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  @keyframes floatDrink {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50%       { transform: translateY(-10px) scale(1.018); }
+  }
+  .drink-img-wrap img {
+    width: 200px;
+    height: 268px;
+    object-fit: contain;
+    position: relative;
+    z-index: 1;
+    filter: drop-shadow(0 8px 18px rgba(100,70,30,0.18));
+  }
+  .drink-img-wrap .sticker-ring {
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    border: 1.5px dashed var(--gold-light);
+    opacity: 0.32;
+    animation: spinSlow 24s linear infinite;
+  }
+  @keyframes spinSlow {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+  }
+  .drink-name {
+    font-family: 'Playfair Display', 'Noto Serif SC', serif;
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.2;
+  }
+  .drink-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 6px;
+    background: var(--card2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 12px;
+    color: var(--text-mute);
+  }
+  .drink-brand .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); }
+
+  .reason-card {
+    background: linear-gradient(135deg, #fdf7ed, #f8efe0);
+    border: 1px solid #e8d9c0;
+    border-radius: 14px;
+    padding: 18px 16px;
+    margin-top: 16px;
+  }
+  .reason-card .reason-title {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 12px;
+  }
+  .reason-card .reason-body {
+    font-size: 13.5px;
+    line-height: 1.9;
+    color: var(--text);
+  }
+  .reason-card .reason-body em {
+    font-style: normal;
+    color: var(--gold);
+    font-weight: 500;
+  }
+  .reason-card .reason-divider {
+    margin: 14px 0 12px;
+    border: none;
+    border-top: 1px dashed #e2d0b0;
+  }
+  .reason-card .reason-punchline {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.65;
+    color: var(--text);
+    letter-spacing: 0.02em;
+  }
+  .name-quote {
+    margin-top: 10px;
+    padding: 8px 12px;
+    background: linear-gradient(135deg, #f0f7ee 0%, #e8f4e4 100%);
+    border-left: 3px solid #7a9b6e;
+    border-radius: 0 10px 10px 0;
+    font-size: 13px;
+    color: #4a7040;
+    font-style: italic;
+    letter-spacing: 0.02em;
+    line-height: 1.6;
+  }
+
+  /* fortune-quote-card 已合并入 reason-card */
+
+  .alts-section { margin-top: 14px; }
+  .alts-title { font-size: 12px; color: var(--text-mute); margin-bottom: 10px; font-weight: 500; }
+  .alts-grid { display: flex; gap: 8px; flex-wrap: wrap; }
+  .alt-chip {
+    background: var(--card2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 12px;
+    color: var(--text);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .alt-chip:hover { border-color: var(--gold); color: var(--gold); background: #fdf5e4; }
+
+  /* ── Drink meta tags ── */
+  .drink-meta-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    justify-content: center;
+    margin-top: 10px;
+  }
+  .meta-tag {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    background: var(--card2);
+    border: 1px solid var(--border);
+    color: var(--text-mute);
+    font-weight: 500;
+  }
+  .meta-tag.sweet {
+    background: linear-gradient(135deg, #edf7e8, #dff0d8);
+    border-color: #b8d8a8;
+    color: #5a8a4a;
+  }
+
+  /* ── Lucky Tags ── */
+  .lucky-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+  }
+  .lucky-tag {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background: var(--card2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 5px 12px;
+    font-size: 11px;
+    color: var(--text);
+  }
+  .lucky-tag .tag-icon { font-size: 13px; }
+
+/* 生命数字 tag */
+.life-num-tag { cursor: pointer; position: relative; }
+.life-num-tip-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: var(--gold);
+  color: #fff;
+  font-size: 9px;
+  font-weight: 700;
+  margin-left: 4px;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+.life-num-tooltip {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: #3d3530;
+  color: #f5f0e8;
+  font-size: 11px;
+  line-height: 1.6;
+  padding: 10px 12px;
+  border-radius: 10px;
+  width: 220px;
+  text-align: left;
+  z-index: 100;
+  box-shadow: 0 4px 16px rgba(40,30,20,0.25);
+  pointer-events: none;
+  animation: fadeIn 0.15s ease;
+}
+.life-num-tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: #3d3530;
+}
+
+  /* ── Share btn ── */
+  .share-row { display: flex; gap: 10px; margin-top: 14px; }
+  .btn-outline {
+    flex: 1;
+    padding: 12px;
+    border: 1.5px solid var(--border);
+    background: transparent;
+    border-radius: 12px;
+    font-size: 13px;
+    font-family: 'Noto Sans SC', sans-serif;
+    color: var(--text-mute);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+
+  /* ── Share Card Modal ── */
+  .share-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(40,30,20,0.75);
+    z-index: 1000;
+    display: flex;
+    align-items: flex-end;       /* 底部弹出，移动端更自然 */
+    justify-content: center;
+    padding: 0;
+    animation: fadeIn 0.25s ease;
+  }
+  @media (min-height: 700px) {
+    .share-modal-overlay { align-items: center; padding: 20px; }
+  }
+  .share-modal {
+    background: var(--card);
+    border-radius: 24px 24px 0 0;
+    padding: 20px 20px 32px;
+    width: 100%;
+    max-width: 440px;
+    max-height: 92vh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    box-shadow: 0 -8px 40px rgba(40,30,20,0.25);
+    position: relative;
+  }
+  @media (min-height: 700px) {
+    .share-modal {
+      border-radius: 24px;
+      max-height: 88vh;
+      box-shadow: 0 20px 60px rgba(40,30,20,0.35);
+    }
+  }
+  /* 顶部拖拽把手 */
+  .share-modal-handle {
+    width: 36px; height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    margin: 0 auto 16px;
+  }
+  .share-modal-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--gold);
+    letter-spacing: 1.5px;
+    text-align: center;
+    margin-bottom: 14px;
+  }
+  .share-canvas-wrap {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(90,70,50,0.15);
+    margin-bottom: 14px;
+    line-height: 0;
+    background: #f0ece3;
+  }
+  .share-canvas-wrap canvas,
+  .share-canvas-wrap img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  .share-modal-hint {
+    font-size: 11px;
+    color: var(--text-mute);
+    text-align: center;
+    margin-bottom: 14px;
+    line-height: 1.6;
+  }
+  .share-modal-btns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .share-modal-btns .btn-full {
+    grid-column: 1 / -1;
+  }
+  .share-modal-close {
+    position: absolute;
+    top: 14px;
+    right: 16px;
+    background: none;
+    border: none;
+    font-size: 18px;
+    color: var(--text-mute);
+    cursor: pointer;
+    line-height: 1;
+    padding: 4px;
+    z-index: 1;
+  }
+
+  /* ── Loading ── */
+  .loading-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px 0;
+    gap: 14px;
+  }
+  .loading-cups { display: flex; gap: 6px; }
+  .loading-cup {
+    font-size: 28px;
+    animation: cupBounce 0.8s ease-in-out infinite;
+  }
+  .loading-cup:nth-child(2) { animation-delay: 0.12s; }
+  .loading-cup:nth-child(3) { animation-delay: 0.24s; }
+  @keyframes cupBounce {
+    0%,100% { transform: translateY(0); }
+    50%      { transform: translateY(-8px); }
+  }
+  .loading-text { font-size: 13px; color: var(--text-mute); }
+
+  /* ── Divider ── */
+  .step-divider {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 4px 0 12px;
+    color: var(--text-mute);
+    font-size: 11px;
+  }
+  .step-divider::before, .step-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* ── Animations ── */
+  .fade-in { animation: fadeIn 0.5s ease; }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .hidden { display: none !important; }
+
+  /* ── Decoration floats ── */
+  .deco {
+    position: fixed;
+    pointer-events: none;
+    opacity: 0.08;
+    font-size: 80px;
+    z-index: 0;
+  }
+  .deco-1 { top: 5%; left: -20px; transform: rotate(-15deg); }
+  .deco-2 { bottom: 10%; right: -20px; transform: rotate(20deg); }
+
+  /* confetti particle */
+  .confetti-particle {
+    position: fixed;
+    width: 8px;
+    height: 8px;
+    border-radius: 2px;
+    pointer-events: none;
+    z-index: 999;
+    animation: confettiFall linear forwards;
+  }
+  @keyframes confettiFall {
+    0%   { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="deco deco-1">🧋</div>
+<div class="deco deco-2">🍵</div>
+
+<div class="app">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-tag">✦ Today's Brew ✦</div>
+    <h1>今日奶茶运势</h1>
+    <p>根据你的生辰八字，为你匹配今日灵魂饮品</p>
+  </div>
+
+  <!-- Step 1: 生日 -->
+  <div class="card" id="step1">
+    <div class="card-label">Step 01 &nbsp; 你的生日</div>
+    <div class="birth-input-wrap">
+      <div class="birth-input-row">
+        <input type="text" id="birthYear" class="birth-year"
+               placeholder="年" maxlength="4"
+               inputmode="numeric" pattern="[0-9]*">
+        <span class="birth-sep">/</span>
+        <input type="text" id="birthMonth" class="birth-month"
+               placeholder="月" maxlength="2"
+               inputmode="numeric" pattern="[0-9]*">
+        <span class="birth-sep">/</span>
+        <input type="text" id="birthDay" class="birth-day"
+               placeholder="日" maxlength="2"
+               inputmode="numeric" pattern="[0-9]*">
+      </div>
+      <div class="birth-input-hint">请输入你的生日（示例：1995 / 8 / 20）</div>
+    </div>
+    <div class="zodiac-row hidden" id="zodiacRow">
+      <div class="zodiac-badge">
+        <div class="icon" id="zodiacIcon">♈</div>
+        <div class="name" id="zodiacName">白羊座</div>
+        <div class="sub">星座</div>
+      </div>
+      <div class="zodiac-badge">
+        <div class="icon" id="shengxiaoIcon">🐉</div>
+        <div class="name" id="shengxiaoName">龙</div>
+        <div class="sub">生肖</div>
+      </div>
+      <div class="zodiac-badge">
+        <div class="icon">☯️</div>
+        <div class="name" id="elementName">木</div>
+        <div class="sub">五行</div>
+      </div>
+    </div>
+    <div style="margin-top:14px">
+      <button class="btn btn-primary" id="btn1" disabled onclick="goStep2()">
+        ✨ &nbsp; 查看今日运势
+      </button>
+    </div>
+  </div>
+
+  <!-- Step 2: 运势 -->
+  <div class="card hidden fade-in" id="step2">
+    <div class="card-label">Step 02 &nbsp; 今日运势</div>
+    <div class="fortune-header">
+      <div class="fortune-score-ring">
+        <svg viewBox="0 0 72 72">
+          <circle cx="36" cy="36" r="30" fill="none" stroke="#e8dfd0" stroke-width="5"/>
+          <circle cx="36" cy="36" r="30" fill="none" stroke="url(#goldGrad)" stroke-width="5"
+                  stroke-linecap="round"
+                  id="scoreArc"
+                  stroke-dasharray="188.5"
+                  stroke-dashoffset="188.5"/>
+          <defs>
+            <linearGradient id="goldGrad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#d4a85a"/>
+              <stop offset="100%" stop-color="#c9896a"/>
+            </linearGradient>
+          </defs>
+        </svg>
+        <div class="score-text">
+          <span class="score-num" id="scoreNum">88</span>
+          <span class="score-label">分</span>
+        </div>
+      </div>
+      <div class="fortune-meta">
+        <h2 id="fortuneTitle">运势标题</h2>
+        <div class="date-str" id="fortuneDate"></div>
+      </div>
+    </div>
+
+    <div class="fortune-bars" id="fortuneBars"></div>
+
+<div class="fortune-quote" id="fortuneQuote"></div>
+
+<div class="lucky-row" id="luckyRow"></div>
+
+<div class="fortune-insight" id="fortuneInsight"></div>
+
+<div style="margin-top:16px">
+      <button class="btn btn-primary" onclick="goStep3()">选择今日心情 →</button>
+    </div>
+  </div>
+
+  <!-- Step 3: 心情 -->
+  <div class="card hidden fade-in" id="step3">
+    <div class="card-label">Step 03 &nbsp; 今日心情</div>
+    <p style="font-size:13px;color:var(--text-mute);margin-bottom:14px;">此刻你的心情最接近？</p>
+    <div class="mood-grid" id="moodGrid"></div>
+    <div style="margin-top:16px">
+      <button class="btn btn-primary" id="btn3" disabled onclick="goStep4()">
+        🧋 &nbsp; 为我推荐奶茶
+      </button>
+    </div>
+  </div>
+
+  <!-- Step 4: 结果 -->
+  <div class="card hidden fade-in" id="step4">
+    <div class="card-label">Step 04 &nbsp; 今日灵魂饮品</div>
+    <div id="resultContent"></div>
+    <div class="share-row">
+      <button class="btn-outline" onclick="restart()">🔄 换个日期</button>
+      <button class="btn-outline" onclick="shuffleRec()">🎲 换一杯</button>
+    </div>
+    <div style="margin-top:10px">
+      <button class="btn btn-primary" onclick="openShareCard()" style="background:linear-gradient(135deg,#8a70b0,#6a50a0);box-shadow:0 4px 16px rgba(106,80,160,0.3)">
+        📸 &nbsp; 生成今日运势卡片
+      </button>
+    </div>
+    <div style="margin-top:10px">
+      <button class="btn btn-primary" id="meituanOrderBtn" onclick="orderOnMeituan()" style="background:linear-gradient(135deg,#ff8c00,#ff6000);box-shadow:0 4px 16px rgba(255,96,0,0.32);display:flex;align-items:center;justify-content:center;gap:6px">
+        <svg width="18" height="18" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0"><circle cx="20" cy="20" r="20" fill="#fff"/><path d="M10 20c0-5.523 4.477-10 10-10s10 4.477 10 10-4.477 10-10 10S10 25.523 10 20z" fill="#FF6000"/><path d="M15 20.5l3.5 3.5 7-7" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        去下单 &nbsp;→
+      </button>
+    </div>
+  </div>
+
+</div><!-- .app -->
+
+<script>
+// ─────────────────────────────────────────────
+//  AI 配置 & 调用函数
+// ─────────────────────────────────────────────
+const AI_WORKER_URL = 'https://milktea-fortune-ai.qingrui519.workers.dev';
+
+async function callAI(type, params) {
+  if (!AI_WORKER_URL) return null;
+  try {
+    // 用 GET 请求，把参数放 URL query string，兼容 iOS Safari
+    const p = new URLSearchParams({ type });
+    for (const [k, v] of Object.entries(params)) {
+      if (v !== null && v !== undefined) {
+        p.set(k, typeof v === 'object' ? JSON.stringify(v) : String(v));
+      }
+    }
+    const resp = await fetch(AI_WORKER_URL + '?' + p.toString());
+    if (!resp.ok) return null;
+    const data = await resp.json();
+    return data.result || null;
+  } catch (e) {
+    console.warn('AI 调用失败：', e.message);
+    return null;
+  }
+}
+
+// ─────────────────────────────────────────────
+//  DATA
+// ─────────────────────────────────────────────
+
+const MOODS = [
+  { id:'happy',    emoji:'😊', name:'开心',   color:'#7a9b6e' },
+  { id:'calm',     emoji:'😌', name:'平静',   color:'#7a8fb5' },
+  { id:'tired',    emoji:'😴', name:'疲惫',   color:'#9b8fb5' },
+  { id:'anxious',  emoji:'😰', name:'焦虑',   color:'#c9896a' },
+  { id:'excited',  emoji:'🤩', name:'亢奋',   color:'#d4a85a' },
+  { id:'sad',      emoji:'🥺', name:'有点丧', color:'#a0b0c0' },
+  { id:'focused',  emoji:'🧐', name:'专注',   color:'#5a9b8a' },
+  { id:'lazy',     emoji:'🐱', name:'慵懒',   color:'#c9896a' },
+  { id:'bored',    emoji:'😑', name:'无聊',   color:'#b0a890' },
+  { id:'stressed', emoji:'🤯', name:'压力大', color:'#c07060' },
+];
+
+// ─────────────────────────────────────────────
+//  奶茶数据库
+//  sweetness: 1=极淡  2=少甜  3=中等  4=偏甜（默认少甜口）
+//  texture:   'light' 清爽型 | 'creamy' 醇厚型 | 'floral' 花香型 | 'fruity' 果香型 | 'earthy' 大地型
+//  energy:    'calm' 舒缓 | 'boost' 提振 | 'cozy' 治愈 | 'bright' 明快 | 'grounded' 稳定
+//  mood_fit:  心情标签（多维，权重越靠前越强）
+//  fortune_fit: 运势维度
+// ─────────────────────────────────────────────
+const DRINKS = [
+  // ── 霸王茶姬 ──
+  {
+    name:'伯牙绝弦', brand:'霸王茶姬', type:'原叶奶绿', img:'green', imgFile:'bawangchaji_boyajuexian.png',
+    tags:['清淡','茶香','回甘'], sweetness:2, texture:'light', energy:'calm',
+    desc:'茉莉绿茶底，奶香轻盈，适合三分甜，每一口都是克制的满足',
+    fortune_fit:['love','career','health'],
+    mood_fit:['calm','focused','tired','lazy'],
+    color:'#a8c5a0',
+    nameQuote:'伯牙绝弦，今天你也是那个被懂得的人。'
+  },
+  {
+    name:'青云直上', brand:'霸王茶姬', type:'原叶奶绿', img:'green', imgFile:'bawangchaji_qingyunzhishang.png',
+    tags:['清冽','提神','简洁'], sweetness:2, texture:'light', energy:'boost',
+    desc:'碧螺春奶绿，茶感突出，少甜喝出来最有层次',
+    fortune_fit:['career','wealth','creative'],
+    mood_fit:['focused','anxious','excited'],
+    color:'#b8d4a8',
+    nameQuote:'青云直上，今天的你，就是字面意思。'
+  },
+  {
+    name:'桂馥兰香', brand:'霸王茶姬', type:'花香奶茶', img:'floral', imgFile:'bawangchaji_guifulanxiang.png',
+    tags:['桂花','温柔','诗意'], sweetness:2, texture:'floral', energy:'calm',
+    desc:'桂花乌龙为底，花香若隐若现，像秋天傍晚的一场散步',
+    fortune_fit:['love','creative','wealth'],
+    mood_fit:['happy','calm','sad','lazy'],
+    color:'#d4b88a',
+    nameQuote:'桂馥兰香，今天你身上也有这种气质——不张扬，但让人记住。'
+  },
+  {
+    name:'万里木兰', brand:'霸王茶姬', type:'原叶奶茶', img:'milk', imgFile:'bawangchaji_wanlimlan.png',
+    tags:['醇和','稳定','暖胃'], sweetness:2, texture:'creamy', energy:'grounded',
+    desc:'锡兰红茶配鲜奶，茶感扎实却不厚重，给人踏实感',
+    fortune_fit:['health','creative','career'],
+    mood_fit:['tired','sad','lazy','calm'],
+    color:'#c8a880',
+    nameQuote:'万里木兰，走多远都有底气。今天的你，也是。'
+  },
+  {
+    name:'相思红豆', brand:'霸王茶姬', type:'特调奶茶', img:'milk', imgFile:'bawangchaji_xiangsihongdou.png',
+    tags:['细腻','暖心','有点甜'], sweetness:3, texture:'creamy', energy:'cozy',
+    desc:'红豆绵绵，茶底清透，甜而不腻，适合需要一点点安慰的时刻',
+    fortune_fit:['love','creative'],
+    mood_fit:['sad','tired','happy'],
+    color:'#d49880',
+    nameQuote:'相思红豆，今天不用相思，先把这杯喝完。'
+  },
+
+  // ── 喜茶 ──
+  {
+    name:'多肉葡萄', brand:'喜茶', type:'鲜果茶', img:'fruit', imgFile:'xiche_duorouputao.png',
+    tags:['多汁','清爽','果香浓'], sweetness:2, texture:'fruity', energy:'bright',
+    desc:'整颗葡萄粒沉底，茶汤清亮，果香直接，少甜版更能喝出葡萄本味',
+    fortune_fit:['creative','wealth','love'],
+    mood_fit:['happy','excited','calm'],
+    color:'#8a7aaa',
+    nameQuote:'多肉葡萄，今天的你也是这种质感——饱满，有料，一口就知道。'
+  },
+  {
+    name:'芝芝莓莓', brand:'喜茶', type:'芝士果茶', img:'cheese', imgFile:'xiche_zhizhimeimei.png',
+    tags:['酸甜','芝士','少女'], sweetness:2, texture:'fruity', energy:'bright',
+    desc:'草莓果茶遇上咸芝士奶盖，酸甜咸三重奏，意外地不腻',
+    fortune_fit:['love','creative'],
+    mood_fit:['happy','excited','sad'],
+    color:'#d4708a',
+    nameQuote:'芝芝莓莓，今天的好运也是这种叠加感——一层比一层惊喜。'
+  },
+  {
+    name:'生打椰椰奶冻', brand:'喜茶', type:'椰子系', img:'jelly', imgFile:'xiche_shengdayeyenaidon.png',
+    tags:['椰香','清凉','冻感'], sweetness:2, texture:'light', energy:'calm',
+    desc:'鲜椰直接打入，奶冻Q弹，甜度天然，清凉感拉满',
+    fortune_fit:['creative','health','wealth'],
+    mood_fit:['happy','calm','lazy','excited'],
+    color:'#e0d8b8',
+    nameQuote:'生打椰椰，今天的清爽是真实的，不是滤镜。'
+  },
+  {
+    name:'芝士金凤茶王', brand:'喜茶', type:'芝士纯茶', img:'cheese', imgFile:'xiche_zhishijinfengchawang.png',
+    tags:['优雅','咸香','茶味足'], sweetness:1, texture:'light', energy:'grounded',
+    desc:'金骏眉红茶底配咸芝士，茶香浓而不涩，几乎感受不到甜味',
+    fortune_fit:['career','wealth','health'],
+    mood_fit:['focused','calm','anxious'],
+    color:'#d4c090',
+    nameQuote:'金凤茶王，今天你也是那个压得住场子的人。'
+  },
+  {
+    name:'多肉青提', brand:'喜茶', type:'鲜果茶', img:'fruit', imgFile:'xiche_duorouqingti.png',
+    tags:['清新','微酸','清爽'], sweetness:2, texture:'fruity', energy:'bright',
+    desc:'青提清甜带微酸，茶汤通透，适合不想喝太甜又想有果味的心情',
+    fortune_fit:['health','creative','love'],
+    mood_fit:['calm','focused','happy'],
+    color:'#a0c890',
+    nameQuote:'多肉青提，今天的你也是这种清透感——看一眼就觉得今天还行。'
+  },
+
+  // ── 奈雪的茶 ──
+  {
+    name:'霸气青提', brand:'奈雪的茶', type:'霸气鲜果', img:'fruit', imgFile:'naxue_baqiqingti.png',
+    tags:['清透','果粒足','活力'], sweetness:2, texture:'fruity', energy:'bright',
+    desc:'青提整颗入杯，果汁比例高，喝起来接近喝了一杯清爽鲜果汁',
+    fortune_fit:['health','creative','career'],
+    mood_fit:['calm','focused','happy','tired'],
+    color:'#90b878',
+    nameQuote:'霸气青提，今天的你也要霸气一点——清透有力，不含糊。'
+  },
+  {
+    name:'鸭屎香宝藏茶', brand:'奈雪的茶', type:'特色单枞', img:'floral', imgFile:'naxue_yashixiangbaozangcha.png',
+    tags:['个性','花蜜香','茶感强'], sweetness:2, texture:'floral', energy:'boost',
+    desc:'凤凰单枞天然蜜兰香，茶汤金黄，越喝越上头，适合有点倔的心情',
+    fortune_fit:['career','wealth','creative'],
+    mood_fit:['focused','anxious','excited'],
+    color:'#d4b860',
+    nameQuote:'鸭屎香宝藏茶，名字不好听，但喝了就知道是宝藏。今天的你也是。'
+  },
+  {
+    name:'霸气草莓', brand:'奈雪的茶', type:'霸气鲜果', img:'fruit', imgFile:'naxue_baqicaomei.png',
+    tags:['鲜甜','少女','视觉美'], sweetness:2, texture:'fruity', energy:'bright',
+    desc:'新鲜草莓切片，果茶自然甜，粉粉的颜色让心情也跟着粉起来',
+    fortune_fit:['love','creative'],
+    mood_fit:['happy','sad','excited'],
+    color:'#e87878',
+    nameQuote:'霸气草莓，今天的甜是真实的，不用客气。'
+  },
+  {
+    name:'橙子气泡茶', brand:'奈雪的茶', type:'气泡茶', img:'light', imgFile:'naxue_chengziqipacha.png',
+    tags:['气泡','清爽','微苦橙香'], sweetness:2, texture:'light', energy:'boost',
+    desc:'气泡感活泼，橙皮微苦和茶底形成平衡，有种喝高级汽水的愉悦',
+    fortune_fit:['career','health','creative'],
+    mood_fit:['anxious','excited','focused'],
+    color:'#f0a840',
+    nameQuote:'橙子气泡茶，今天的你也有这种劲儿——活泼，有点冲，但好喝。'
+  },
+
+  // ── 茶百道 ──
+  {
+    name:'杨枝甘露', brand:'茶百道', type:'鲜果茶', img:'fruit', imgFile:'chabaidao_yangzhiganlu.png',
+    tags:['芒果','椰奶','清润'], sweetness:2, texture:'fruity', energy:'bright',
+    desc:'芒果柚子西米的经典组合，少甜版本椰奶的奶香更突出',
+    fortune_fit:['creative','health','wealth'],
+    mood_fit:['happy','calm','tired'],
+    color:'#f0c870',
+    nameQuote:'杨枝甘露，今天的甜是有来头的，不是随便来的。'
+  },
+  {
+    name:'茉莉奶绿', brand:'茶百道', type:'奶绿', img:'green', imgFile:'chabaidao_moliniulv.png',
+    tags:['茉莉花香','清新','日常'], sweetness:2, texture:'light', energy:'calm',
+    desc:'茉莉花茶打底，奶味轻盈，花香随温度散开，喝一口像打了个哈欠',
+    fortune_fit:['health','career','love'],
+    mood_fit:['calm','focused','tired','lazy'],
+    color:'#a8c8a0',
+    nameQuote:'茉莉奶绿，今天的你也有这种气质——清淡，但香。'
+  },
+  {
+    name:'乌漆嘛黑', brand:'茶百道', type:'桑葚果茶', img:'fruit', imgFile:'chabaidao_wuqimahei.png',
+    tags:['深邃','紫色','酸甜'], sweetness:2, texture:'fruity', energy:'bright',
+    desc:'桑葚草莓的深紫茶汤，颜色很炸裂，味道却清爽，有种低调的特别感',
+    fortune_fit:['creative','love','wealth'],
+    mood_fit:['excited','happy','sad'],
+    color:'#7060a8',
+    nameQuote:'乌漆嘛黑，名字随便，但今天的你不随便。'
+  },
+  {
+    name:'草莓酪酪', brand:'茶百道', type:'酪酪系列', img:'milk', imgFile:'chabaidao_caomeilaolao.png',
+    tags:['草莓','酸奶感','柔和'], sweetness:2, texture:'creamy', energy:'cozy',
+    desc:'酸奶底配草莓，奶酸感带走甜腻，柔柔的像冬天晒太阳',
+    fortune_fit:['love','creative','health'],
+    mood_fit:['calm','sad','happy','lazy'],
+    color:'#e89090',
+    nameQuote:'草莓酪酪，今天的柔软是真实的，不是软弱。'
+  },
+
+  // ── 蜜雪冰城 ──
+  {
+    name:'现榨柠檬水', brand:'蜜雪冰城', type:'鲜榨果饮', img:'light', imgFile:'mixue_xianzhaningmengshui.png',
+    tags:['酸爽','纯粹','解腻'], sweetness:1, texture:'light', energy:'boost',
+    desc:'直接榨的柠檬水，酸到眯眼，清醒效果比咖啡直接，甜度可以调到极低',
+    fortune_fit:['health','career','creative'],
+    mood_fit:['anxious','focused','tired','excited'],
+    color:'#f0e050',
+    nameQuote:'现榨柠檬水，今天的清醒是现场的，不是存货。'
+  },
+  {
+    name:'草莓柠檬茶', brand:'蜜雪冰城', type:'鲜果茶', img:'fruit', imgFile:'mixue_caomeiningsengcha.png',
+    tags:['酸甜平衡','轻盈','活力'], sweetness:2, texture:'fruity', energy:'bright',
+    desc:'草莓的甜和柠檬的酸找到了平衡点，茶底清澈，适合元气满满的上午',
+    fortune_fit:['love','creative','career'],
+    mood_fit:['happy','excited','calm'],
+    color:'#e87888',
+    nameQuote:'草莓柠檬茶，今天的你也找到了平衡点——甜而不腻，酸而不苦。'
+  },
+
+  // ── 古茗 ──
+  {
+    name:'豆乳绵绵奶茶', brand:'古茗', type:'豆乳系', img:'milk', imgFile:'guming_douruomianmian.png',
+    tags:['豆香','轻柔','饱腹'], sweetness:2, texture:'creamy', energy:'grounded',
+    desc:'豆乳代替牛奶，蛋白质香气让整杯变得安静，甜度低时豆香最迷人',
+    fortune_fit:['health','love','creative'],
+    mood_fit:['calm','tired','lazy','sad'],
+    color:'#e8dcc0',
+    nameQuote:'豆乳绵绵，今天的你也是这种质感——绵软，但有底气。'
+  },
+  {
+    name:'芋泥青稞牛奶', brand:'古茗', type:'养生系', img:'milk', imgFile:'guming_yununiqingkeruniu.png',
+    tags:['养生','土系','扎实'], sweetness:2, texture:'earthy', energy:'grounded',
+    desc:'青稞给了这杯茶一种谷物的厚重底气，芋泥绵软，喝完像吃了顿饭',
+    fortune_fit:['health','career','wealth'],
+    mood_fit:['focused','calm','tired'],
+    color:'#b8a8c0',
+    nameQuote:'芋泥青稞，今天的扎实感是真实的，不是表演。'
+  },
+  {
+    name:'山茶生椰芒芒', brand:'古茗', type:'生椰系', img:'fruit', imgFile:'guming_shanchashengyemang.png',
+    tags:['椰香','芒果','清甜'], sweetness:2, texture:'fruity', energy:'bright',
+    desc:'山茶底和生椰汁的搭配，芒果果粒增加层次，甜而不齁，热带感扑面',
+    fortune_fit:['creative','wealth','love'],
+    mood_fit:['happy','excited','lazy'],
+    color:'#f0c060',
+    nameQuote:'山茶生椰芒芒，今天的好运也是这种热带感——直接，明亮，不拐弯。'
+  },
+
+  // ── 沪上阿姨 ──
+  {
+    name:'绿豆牛乳冰', brand:'沪上阿姨', type:'五谷系', img:'milk', imgFile:'hushang_lvdouniulubing.png',
+    tags:['清凉','消暑','干净'], sweetness:2, texture:'light', energy:'calm',
+    desc:'绿豆的清苦遇上牛乳，甜感很自然，是夏天最不想费脑子的选择',
+    fortune_fit:['health','career','creative'],
+    mood_fit:['anxious','calm','tired','focused'],
+    color:'#90c888',
+    nameQuote:'绿豆牛乳冰，今天的清爽不需要理由，喝了就知道。'
+  },
+  {
+    name:'超嗲草莓大福', brand:'沪上阿姨', type:'特调', img:'fruit', imgFile:'hushang_chaodiecaomeidafu.png',
+    tags:['草莓','麻薯','少女心'], sweetness:2, texture:'fruity', energy:'bright',
+    desc:'草莓茶底搭麻薯，少甜喝出来果味更立体，视觉系选手',
+    fortune_fit:['love','creative'],
+    mood_fit:['happy','sad','excited'],
+    color:'#e87090',
+    nameQuote:'超嗲草莓大福，今天的你也超嗲，不接受反驳。'
+  },
+  {
+    name:'芝士葡萄奶盖', brand:'沪上阿姨', type:'奶盖系', img:'cheese', imgFile:'hushang_zhishiputaonaibi.png',
+    tags:['咸甜','葡萄','分层美'], sweetness:2, texture:'fruity', energy:'bright',
+    desc:'奶盖的咸压住葡萄茶的甜，一口要喝到两层，适合有点矫情的好心情',
+    fortune_fit:['love','creative','wealth'],
+    mood_fit:['happy','excited','calm'],
+    color:'#907ab8',
+    nameQuote:'芝士葡萄奶盖，今天的你也是这种分层感——表面稳，里面有惊喜。'
+  },
+
+  // ── 茶颜悦色 ──
+  {
+    name:'幽兰拿铁', brand:'茶颜悦色', type:'招牌拿铁', img:'floral', imgFile:'chayan_youlanrlati.png',
+    tags:['诗意','茶感强','奶油香'], sweetness:2, texture:'floral', energy:'calm',
+    desc:'茉莉绿茶配鲜奶和奶油，打碎的鲜奶油漂在上面，文艺感扑面而来',
+    fortune_fit:['love','wealth','creative'],
+    mood_fit:['calm','focused','sad','happy'],
+    color:'#90a870',
+    nameQuote:'幽兰拿铁，今天的你也有这种气质——幽静，但有人记得。'
+  },
+  {
+    name:'声声乌龙', brand:'茶颜悦色', type:'奶茶', img:'milk', imgFile:'chayan_shengshengwulong.png',
+    tags:['乌龙底','稳重','回甘'], sweetness:2, texture:'creamy', energy:'grounded',
+    desc:'乌龙茶底让整杯变得沉稳，奶香克制，每口都有余韵',
+    fortune_fit:['career','creative','wealth'],
+    mood_fit:['focused','calm','tired'],
+    color:'#b09060',
+    nameQuote:'声声乌龙，今天的每一步都算数，声声不息。'
+  },
+  {
+    name:'桂花弄', brand:'茶颜悦色', type:'花香奶茶', img:'floral', imgFile:'chayan_guihuanong.png',
+    tags:['桂花香','秋天感','温柔'], sweetness:2, texture:'floral', energy:'cozy',
+    desc:'桂花香气浸入奶茶，甜而不腻，像在一个微风的傍晚走过桂花树',
+    fortune_fit:['love','creative','health'],
+    mood_fit:['happy','calm','sad','lazy'],
+    color:'#d4b860',
+    nameQuote:'桂花弄，今天的温柔是有香气的，不是没有味道的那种。'
+  },
+  {
+    name:'望京码头', brand:'茶颜悦色', type:'葡萄茶拿铁', img:'floral', imgFile:'chayan_wangjingmatou.png',
+    tags:['葡萄','花香','清新'], sweetness:2, texture:'floral', energy:'bright',
+    desc:'茉莉茶底和葡萄汁混搭，奶油轻漂，葡萄香气和花香意外和谐',
+    fortune_fit:['creative','love','health'],
+    mood_fit:['excited','happy','calm'],
+    color:'#8870b0',
+    nameQuote:'望京码头，今天的你也在等一艘船——好运的那艘，今天靠岸了。'
+  },
+
+  // ── CoCo都可 ──
+  {
+    name:'百香双响炮', brand:'CoCo都可', type:'百香果茶', img:'fruit', imgFile:'coco_baixiangshuangpao.png',
+    tags:['酸爽','香气扑鼻','解压'], sweetness:2, texture:'fruity', energy:'boost',
+    desc:'两倍百香果的酸香直接穿透鼻腔，茶底干净，甜度压到最低，专为需要被唤醒的状态设计',
+    fortune_fit:['career','health','creative'],
+    mood_fit:['anxious','tired','focused','excited'],
+    color:'#f0a820',
+    nameQuote:'百香双响炮，今天的你也是双倍能量，一发入魂。'
+  },
+  {
+    name:'四季春奶绿', brand:'CoCo都可', type:'奶绿', img:'green', imgFile:'coco_sijichunniulv.png',
+    tags:['清香','四季春','轻盈'], sweetness:2, texture:'light', energy:'calm',
+    desc:'四季春茶底自带淡淡兰花香，奶量克制，清而不寡，是一杯不会出错的日常陪伴',
+    fortune_fit:['creative','career','health'],
+    mood_fit:['calm','lazy','tired','focused'],
+    color:'#c8b878',
+    nameQuote:'四季春奶绿，今天的你也是四季皆宜的那种——随时都对。'
+  },
+  {
+    name:'葡萄柚果粒茶', brand:'CoCo都可', type:'鲜果茶', img:'fruit', imgFile:'coco_putaoyouguolichad.png',
+    tags:['葡萄柚','微苦','清透'], sweetness:2, texture:'light', energy:'refresh',
+    desc:'葡萄柚的微苦和茶底的涩恰好互补，果粒咬开有惊喜，适合喜欢有点复杂口感的人',
+    fortune_fit:['wealth','creative','career'],
+    mood_fit:['excited','focused','bored'],
+    color:'#f0c8a0',
+    nameQuote:'葡萄柚果粒茶，今天的惊喜藏在细节里，咬开才知道。'
+  },
+  // 一点点
+  {
+    name:'乌龙茶拿铁', brand:'一点点', type:'青茶拿铁', img:'milk', imgFile:'yidian_wulongchalati.png',
+    tags:['清香','日常','稳定感'], sweetness:1, texture:'medium', energy:'calm',
+    desc:'乌龙底清雅，奶量刚好，少甜喝来很顺口，适合每天都能点的那杯',
+    fortune_fit:['career','health','creative'],
+    mood_fit:['calm','focused','lazy'],
+    color:'#c0a870',
+    nameQuote:'乌龙茶拿铁，今天的稳定感是真实的，不是凑合。'
+  },
+  {
+    name:'炭烤乌龙', brand:'一点点', type:'纯茶', img:'light', imgFile:'yidian_tankaoWulong.png',
+    tags:['香醇','沉静','有深度'], sweetness:1, texture:'light', energy:'calm',
+    desc:'炭火烘焙带来独特焦香，无糖喝来余韵悠长，适合需要沉下心的时刻',
+    fortune_fit:['career','wealth','health'],
+    mood_fit:['focused','calm','anxious'],
+    color:'#907860',
+    nameQuote:'炭烤乌龙，今天的你也是这种质感——经过火，但更香了。'
+  },
+  {
+    name:'柠檬绿茶', brand:'一点点', type:'果茶', img:'fruit', imgFile:'yidian_ningmenglucha.png',
+    tags:['清爽','简单','透明感'], sweetness:1, texture:'light', energy:'refresh',
+    desc:'最简单也最清醒的一杯，柠檬酸把绿茶的苦压得恰到好处，少甜最好喝',
+    fortune_fit:['health','creative','career'],
+    mood_fit:['tired','anxious','bored'],
+    color:'#d8e890',
+    nameQuote:'柠檬绿茶，今天的清醒是简单的，不需要复杂。'
+  },
+  // 书亦烧仙草
+  {
+    name:'椰奶烧仙草', brand:'书亦烧仙草', type:'烧仙草', img:'jelly', imgFile:'shuyi_yeruishaoxiancao.png',
+    tags:['凉感','独特','仙气'], sweetness:2, texture:'jelly', energy:'cool',
+    desc:'烧仙草自带微苦回甘，椰奶中和后层次丰富，少甜反而更能感受仙草本味',
+    fortune_fit:['health','creative','love'],
+    mood_fit:['tired','lazy','sad'],
+    color:'#405840',
+    nameQuote:'椰奶烧仙草，今天的你也有仙气，不信抬头看看。'
+  },
+  {
+    name:'橙漫山茶花', brand:'书亦烧仙草', type:'花果茶', img:'floral', imgFile:'shuyi_chengmanshanchahua.png',
+    tags:['花香','清爽','春日感'], sweetness:2, texture:'light', energy:'refresh',
+    desc:'山茶花茶底配鲜橙，香气轻盈不腻，喝完像被春风吹过一样',
+    fortune_fit:['love','creative','health'],
+    mood_fit:['happy','calm','bored'],
+    color:'#f0a860',
+    nameQuote:'橙漫山茶花，今天的好运也是这种漫开的感觉——慢慢来，但一定到。'
+  },
+  {
+    name:'草莓烧仙草', brand:'书亦烧仙草', type:'烧仙草', img:'jelly', imgFile:'shuyi_caomeishaoxiancao.png',
+    tags:['酸甜','少女','治愈'], sweetness:2, texture:'jelly', energy:'comfort',
+    desc:'草莓的酸让仙草的苦变得可爱，少甜版本口感干净，是丧气天里的小确幸',
+    fortune_fit:['love','creative'],
+    mood_fit:['sad','tired','happy'],
+    color:'#e07080',
+    nameQuote:'草莓烧仙草，今天的小确幸是真实的，不是安慰。'
+  },
+];
+
+// 心情画像配置 —— 每种心情有对应的能量需求、口感偏好、甜度上限
+const MOOD_PROFILE = {
+  happy:   { energy:['refresh','boost'],    texture:['light','medium'], maxSweet:3, bonus:['清爽','果香','少女','酸甜'] },
+  calm:    { energy:['calm','comfort'],      texture:['light','medium'], maxSweet:2, bonus:['淡雅','清香','诗意','沉静'] },
+  tired:   { energy:['comfort','cool'],      texture:['medium','jelly'], maxSweet:2, bonus:['治愈','凉感','仙气','回甘'] },
+  anxious: { energy:['refresh','calm'],      texture:['light'],         maxSweet:2, bonus:['解压','清醒','透明感','酸爽'] },
+  excited: { energy:['boost','refresh'],     texture:['light','medium'], maxSweet:3, bonus:['活力','酸爽','果香','刺激感'] },
+  sad:     { energy:['comfort','calm'],      texture:['medium','jelly'], maxSweet:2, bonus:['治愈','温柔','仙气','花香'] },
+  focused: { energy:['calm','boost'],        texture:['light','medium'], maxSweet:1, bonus:['提神','清香','沉静','有深度'] },
+  lazy:    { energy:['comfort','cool'],      texture:['medium','jelly'], maxSweet:2, bonus:['日常','不出错','稳定感','凉感'] },
+  bored:   { energy:['boost','refresh'],     texture:['light','medium'], maxSweet:2, bonus:['个性','惊喜感','清醒','花香'] },
+  stressed:{ energy:['refresh','calm'],      texture:['light'],         maxSweet:1, bonus:['解压','清醒','酸爽','透明感'] },
+};
+
+// ─────────────────────────────────────────────
+//  ZODIAC & SHENGXIAO
+// ─────────────────────────────────────────────
+
+const ZODIAC = [
+  { name:'摩羯座', icon:'♑', start:[12,22], end:[1,19],   element:'土', lucky:'稳重' },
+  { name:'水瓶座', icon:'♒', start:[1,20],  end:[2,18],   element:'风', lucky:'创意' },
+  { name:'双鱼座', icon:'♓', start:[2,19],  end:[3,20],   element:'水', lucky:'感性' },
+  { name:'白羊座', icon:'♈', start:[3,21],  end:[4,19],   element:'火', lucky:'勇气' },
+  { name:'金牛座', icon:'♉', start:[4,20],  end:[5,20],   element:'土', lucky:'踏实' },
+  { name:'双子座', icon:'♊', start:[5,21],  end:[6,21],   element:'风', lucky:'灵活' },
+  { name:'巨蟹座', icon:'♋', start:[6,22],  end:[7,22],   element:'水', lucky:'温柔' },
+  { name:'狮子座', icon:'♌', start:[7,23],  end:[8,22],   element:'火', lucky:'热情' },
+  { name:'处女座', icon:'♍', start:[8,23],  end:[9,22],   element:'土', lucky:'细致' },
+  { name:'天秤座', icon:'♎', start:[9,23],  end:[10,23],  element:'风', lucky:'平衡' },
+  { name:'天蝎座', icon:'♏', start:[10,24], end:[11,22],  element:'水', lucky:'洞察' },
+  { name:'射手座', icon:'♐', start:[11,23], end:[12,21],  element:'火', lucky:'自由' },
+];
+
+const SHENGXIAO = ['🐀','🐂','🐅','🐇','🐉','🐍','🐎','🐑','🐒','🐓','🐕','🐖'];
+const SHENGXIAO_NAMES = ['鼠','牛','虎','兔','龙','蛇','马','羊','猴','鸡','狗','猪'];
+const WUXING = ['金','木','水','火','土'];
+const WUXING_COLORS = {金:'#d4b870',木:'#7a9b6e',水:'#6a8fb0',火:'#c96a4a',土:'#b09060'};
+
+function getZodiac(month, day) {
+  for (const z of ZODIAC) {
+    const [sm, sd] = z.start, [em, ed] = z.end;
+    if ((month === sm && day >= sd) || (month === em && day <= ed)) return z;
+  }
+  return ZODIAC[0]; // 摩羯
+}
+
+function getShengxiao(year) {
+  const idx = (year - 1900) % 12;
+  return { icon: SHENGXIAO[(idx+12)%12], name: SHENGXIAO_NAMES[(idx+12)%12] };
+}
+
+function getWuxing(year, month, day) {
+  const seed = (year * 100 + month * 10 + day) % 5;
+  return WUXING[seed];
+}
+
+// ─────────────────────────────────────────────
+//  FORTUNE GENERATOR
+// ─────────────────────────────────────────────
+
+// 运势标题按分数分三档，每档风格不同
+// 高分（≥80）：明亮、有冲劲、带点小骄傲
+// 中分（65~79）：平稳、务实、有温度
+// 低分（<65）：内敛、沉淀、鼓励向内看
+const FORTUNE_TITLES_HIGH = [
+  '今天的你，光芒外溢', '旭日东升，万事可期', '春雷乍响，破茧而出',
+  '星辰排列，今日最亮', '金风送爽，灵感涌现', '明月当空，贵人相助',
+  '花香满径，顺遂如意', '天时地利，今日皆备', '好运已在路上，接住就行',
+  '今天的运势，不用客气',
+];
+const FORTUNE_TITLES_MID = [
+  '云淡风轻，静待花开', '细水长流，积累有成', '草木有情，机遇潜伏',
+  '星辰指引，方向明朗', '稳中有进，今日可期', '波澜不惊，自有章法',
+  '踏实向前，好运随行', '平静里藏着力量', '今天不用冲，稳着来',
+  '一步一步，都算数',
+];
+const FORTUNE_TITLES_LOW = [
+  '波澜微起，守稳心境', '向内沉淀，蓄力待发', '低谷也是风景的一部分',
+  '今天适合慢下来', '静水流深，不必着急', '休息也是一种前进',
+  '今天的你，需要被好好对待', '蛰伏有时，厚积薄发', '慢一点，反而走得更远',
+  '今天先把自己照顾好',
+];
+
+// FORTUNE_QUOTES 按星座分组，运行时由 getFortuneQuote(zodiacName, shengxiaoName, seed) 动态选取
+// 每条金句都和奶茶场景强绑定，并预留 {zodiac} 占位符供替换
+const FORTUNE_QUOTES_BY_ZODIAC = {
+  '白羊座': [
+    '想太多不如先喝完这杯。{zodiac}今天的冲劲是真的，但先把茶喝了，再出发。',
+    '今天的运势从第一口开始算。{zodiac}的你，先喝，再去冲。',
+    '有些事不是想通的，是喝完之后自然就通了。{zodiac}今天先慢一秒，再快起来。',
+    '你今天的状态，比你自己以为的要好。{zodiac}先把这杯拿起来，运势跟着动。',
+  ],
+  '金牛座': [
+    '花在自己身上的钱，从来不叫浪费。{zodiac}今天这杯，是最值的一笔。',
+    '好东西就是要慢慢品。{zodiac}今天不用赶，一口一口喝完，节奏自然就对了。',
+    '今天的你值得被好好对待，从这一口开始。{zodiac}的稳，是今天最大的底气。',
+    '不是每天都要冲，今天{zodiac}适合把节奏放下来，踏实地喝完这杯。',
+  ],
+  '双子座': [
+    '脑子里的想法今天特别多，先用这杯茶把它们安抚一下。{zodiac}喝完再整理，效率更高。',
+    '好点子不等人，{zodiac}今天边喝边想，别让它跑掉。',
+    '今天适合做一件让自己开心的小事。{zodiac}的你，选杯好茶就算数了。',
+    '今天的灵感通道比平时畅通，{zodiac}先把这杯喝了，然后去接住那些好想法。',
+  ],
+  '巨蟹座': [
+    '照顾别人之前，先把自己照顾好。{zodiac}今天这杯，是给自己的。',
+    '今天的温柔，先留一点给自己。{zodiac}慢下来，一杯好茶，比什么都管用。',
+    '有人在意你，你也值得在意自己。{zodiac}今天从这一口开始。',
+    '不用什么都扛着。{zodiac}今天先把这杯喝完，让自己被好好对待一次。',
+  ],
+  '狮子座': [
+    '今天的你，光芒有点藏不住。{zodiac}配一杯有气场的茶，才对得起今天的运势。',
+    '好运不等人，{zodiac}先把这杯喝完，再去接住它。',
+    '今天适合被看见。{zodiac}拿着这杯出门，主角光环自动开启。',
+    '你今天的状态，就是字面意思上的"在线"。{zodiac}先喝完这杯，然后去发光。',
+  ],
+  '处女座': [
+    '细节里藏着好运，{zodiac}今天把每一口都喝认真，运势也跟着认真起来。',
+    '不是挑剔，是标准高。{zodiac}今天这杯，是经过认真筛选的推荐，放心喝。',
+    '把手头的事做好，就是今天最大的运势。{zodiac}先喝完这杯，再继续。',
+    '今天的你，适合把一件事做到位。{zodiac}先从这杯开始，认真对待每一口。',
+  ],
+  '天秤座': [
+    '选了就别纠结了。{zodiac}今天这杯是宇宙帮你做的决定，放心喝就行。',
+    '平衡是今天的关键词。{zodiac}一杯好茶，把内外都调到刚刚好。',
+    '今天适合犒劳自己。{zodiac}的你，这杯值得，不用找理由。',
+    '不是每个决定都需要反复权衡。{zodiac}今天这杯，就是对的，喝完你会知道。',
+  ],
+  '天蝎座': [
+    '直觉今天特别准。{zodiac}选了这杯，就是对的，不用再想了。',
+    '有些感受不需要解释，喝完就懂了。{zodiac}今天信自己。',
+    '今天的好运藏在细节里。{zodiac}慢慢喝，慢慢感受，别错过。',
+    '你今天的洞察力比平时强一倍。{zodiac}先把这杯喝完，然后去看清楚那件事。',
+  ],
+  '射手座': [
+    '今天适合出发。{zodiac}拿着这杯，走哪都是好运气。',
+    '不用想太多，{zodiac}今天的运势已经在路上了，先把这杯喝完。',
+    '好运跟着行动的人走。{zodiac}今天先动起来，茶拿着走，运势跟着来。',
+    '今天的你，适合往前走一步。{zodiac}先喝完这杯，然后去做那件一直想做的事。',
+  ],
+  '摩羯座': [
+    '今天的付出，终究会有回应的。{zodiac}先把这杯喝完，再继续扛。',
+    '稳扎稳打是今天的主题。{zodiac}一杯踏实的茶，把节奏稳住，然后继续。',
+    '长期主义的人，今天有奖励。{zodiac}这杯，是给一直在认真的你的。',
+    '不是每天都要有大进展。{zodiac}今天把该做的做好，喝完这杯，就够了。',
+  ],
+  '水瓶座': [
+    '今天的灵感比平时多，{zodiac}先把这杯喝了，然后去把那些想法记下来。',
+    '不走寻常路的你，今天这杯也不一般。{zodiac}的运势，从与众不同开始。',
+    '好运悄悄来了，{zodiac}今天放慢一格，它就在旁边，不用追。',
+    '你今天的想法，比你自己以为的更有价值。{zodiac}先喝完这杯，再去实现它。',
+  ],
+  '双鱼座': [
+    '慢下来，感受一下身边细小的好。{zodiac}今天这杯，是给感受力最强的你的。',
+    '今天的你，比自己以为的更有力量。{zodiac}先喝完这杯，然后去相信自己。',
+    '有些事不需要想通，感受到就够了。{zodiac}今天慢慢喝，慢慢来。',
+    '今天适合跟着感觉走。{zodiac}这杯是对的，喝完你会知道接下来该怎么做。',
+  ],
+};
+function getFortuneQuote(zodiacName, shengxiaoName, seed) {
+const pool = FORTUNE_QUOTES_BY_ZODIAC[zodiacName] || [
+'今天的运势从第一口开始算。先喝完这杯，再去接住好运。',
+'不是每件事都需要答案，但每天都需要一杯好茶。',
+'今天的你值得被好好对待，从这一杯开始。',
+];
+const quote = pool[Math.floor(seededRand(seed) * pool.length)];
+return quote.replace(/\{zodiac\}/g, zodiacName);
+}
+
+const DIMENSION_LABELS = ['爱情', '工作', '财运', '健康', '创意', '气场'];
+const DIMENSION_KEYS   = ['love', 'career', 'wealth', 'health', 'creative', 'aura'];
+const DIMENSION_COLORS = ['#d4849a', '#c9896a', '#d4b870', '#7a9b6e', '#7ab8d4', '#8a7aaa'];
+
+function seededRand(seed) {
+  let x = Math.sin(seed) * 43758.5453;
+  return x - Math.floor(x);
+}
+
+function generateFortune(birthDate) {
+  const today = new Date();
+  const b = new Date(birthDate);
+  const bYear  = b.getFullYear();
+  const bMonth = b.getMonth() + 1; // 1-12
+  const bDay   = b.getDate();      // 1-31
+
+  // ── 1. 今日行星波动因子（模拟每日能量节律）──
+  // 用今天的日期推算出五个维度各自的"今日波动"，让同一个人每天结果不同
+  const todayBase = today.getFullYear() * 10000 + (today.getMonth()+1) * 100 + today.getDate();
+  // 五个维度用不同的质数周期，模拟行星公转节律
+  const PLANET_CYCLES = [13, 17, 11, 19, 23, 7]; // 爱情/工作/财运/健康/创意/气场
+  const todayWave = PLANET_CYCLES.map((cycle, i) => {
+    // 正弦波：以 cycle 天为周期，振幅 ±12
+    const phase = (todayBase + i * 1000) % (cycle * 100);
+    return Math.sin(phase / cycle) * 12;
+  });
+
+  // ── 2. 生日命理底色（每个人固有的维度倾向）──
+  // 出生日期的数字特征对五个维度有不同的固定加成
+  // 原理：生日数字 → 命理数 → 各维度权重
+  const lifeNum = ((bYear + bMonth + bDay) % 9) || 9; // 1-9 命理数
+  // 每个命理数对五维度的倾向（-8 ~ +8）
+  const LIFE_NUM_BIAS = {
+    1: [ 8, 6,-2,-4, 4, 6],  // 领导力强：事业/爱情/气场高
+    2: [ 6,-2, 2, 4, 4, 8],  // 感情细腻：爱情/气场高
+    3: [ 4, 2, 6,-2, 8, 4],  // 创意活跃：创意/财运高
+    4: [-2, 8, 4, 6,-4, 2],  // 踏实稳健：工作/健康高
+    5: [ 2, 4, 8,-4, 6, 4],  // 变化多端：财运/创意高
+    6: [ 8, 2, 4, 6,-2, 6],  // 和谐美感：爱情/健康/气场高
+    7: [-4, 6,-2, 8, 6, 2],  // 内省深思：工作/健康/创意高
+    8: [-2, 8, 8,-4, 2, 4],  // 物质成就：工作/财运高
+    9: [ 6,-2, 2, 4, 6, 8],  // 博爱理想：爱情/创意/气场高
+  };
+  const lifeBias = LIFE_NUM_BIAS[lifeNum];
+
+  // ── 3. 出生月份季节能量（月份对各维度的自然倾向）──
+  const MONTH_BIAS = [
+    [ 2, 4,-4, 6, 2, 2],  // 1月：健康/工作
+    [ 4, 2,-2, 4, 4, 6],  // 2月：爱情/气场
+    [ 6, 2, 4,-2, 6, 2],  // 3月：爱情/创意
+    [ 8, 4, 2, 2, 4, 2],  // 4月：爱情旺
+    [ 4, 6, 4, 2, 2, 4],  // 5月：工作/财运
+    [ 2, 4, 6, 4, 4, 2],  // 6月：财运/创意
+    [ 2, 2, 4, 6, 2, 6],  // 7月：健康/气场
+    [ 4, 2, 2, 4, 6, 8],  // 8月：创意/气场旺
+    [ 6, 4, 4, 2, 4, 2],  // 9月：爱情/工作
+    [ 2, 6, 6, 2, 2, 4],  // 10月：工作/财运
+    [ 2, 4, 4, 6, 6, 2],  // 11月：健康/创意
+    [ 4, 2, 2, 6, 2, 6],  // 12月：健康/气场
+  ];
+  const monthBias = MONTH_BIAS[bMonth - 1];
+
+  // ── 4. 出生日数字特征（日期对各维度的微调）──
+  // 奇偶、整除关系、特殊日期等产生差异
+  const dayBias = DIMENSION_KEYS.map((_, i) => {
+    const d = bDay;
+    // 用日期和维度索引生成一个稳定的偏移，范围 -6 ~ +6
+    const raw = seededRand(d * 97 + i * 53 + bMonth * 17);
+    return Math.floor(raw * 13) - 6;
+  });
+
+  // ── 5. 今日与生日的"共振"因子──
+  // 生日月日与今天月日的接近程度产生"生日能量场"
+  const todayMD = (today.getMonth()+1) * 100 + today.getDate();
+  const birthMD = bMonth * 100 + bDay;
+  const mdDiff  = Math.abs(todayMD - birthMD);
+  // 生日前后30天内有加成（最高+8），越近越强
+  const birthdayBonus = mdDiff < 30 ? Math.floor((30 - mdDiff) / 30 * 8) : 0;
+
+  // ── 6. 合并计算六维度分数 ──
+  const dims = DIMENSION_KEYS.map((k, i) => {
+    // 基础分：60，加各层因子
+    const base = 68;
+    const total = base
+      + lifeBias[i]          // 命理底色 (-8 ~ +8)
+      + monthBias[i]         // 月份季节 (-4 ~ +8)
+      + dayBias[i]           // 日期微调 (-6 ~ +6)
+      + todayWave[i]         // 今日波动 (-12 ~ +12)
+      + birthdayBonus;       // 生日加成 (0 ~ +8)
+    // 钳制在 55~98 之间，避免极端值
+    return Math.min(98, Math.max(55, Math.round(total)));
+  });
+
+  const score = Math.floor(dims.reduce((a,b)=>a+b,0) / dims.length);
+
+  // ── 7. 运势标题：按分数区间选对应档位的标题池 ──
+  const titlePool = score >= 80 ? FORTUNE_TITLES_HIGH
+                  : score >= 65 ? FORTUNE_TITLES_MID
+                  :               FORTUNE_TITLES_LOW;
+  const titleIdx = Math.floor(seededRand(todayBase + bDay * 37 + bMonth * 13) * titlePool.length);
+  const quoteSeed = todayBase + bDay * 1009 + bMonth * 101 + lifeNum * 7;
+
+  // ── 8. 幸运元素：由生日+今日共同决定，每天变化 ──
+  const luckSeed = todayBase * 3 + bDay * 97 + bMonth * 53;
+  const luckyColor = ['红色','蓝色','金色','绿色','紫色','橙色'][Math.floor(seededRand(luckSeed+1)*6)];
+  const luckyNum   = Math.floor(seededRand(luckSeed+2)*9)+1;
+  const luckyDir   = ['东','南','西','北','东南','东北','西南','西北'][Math.floor(seededRand(luckSeed+3)*8)];
+
+  return { dims, score, title: titlePool[titleIdx], quoteSeed,
+    luckyColor, luckyNum, luckyDir };
+}
+
+// ─────────────────────────────────────────────
+//  DRINK RECOMMENDER
+// ─────────────────────────────────────────────
+
+function recommendDrink(fortune, moodId, birthDate) {
+  // 找出最高维度
+  const topDimIdx = fortune.dims.indexOf(Math.max(...fortune.dims));
+  const topDim = DIMENSION_KEYS[topDimIdx];
+
+  // 打分
+  let scored = DRINKS.map(d => {
+    let score = 0;
+    if (d.fortune_fit.includes(topDim)) score += 3;
+    if (d.mood_fit.includes(moodId)) score += 4;
+    // 加随机扰动：生日各字段独立加权，避免不同生日算出相同 seed
+    const b = new Date(birthDate);
+    const today = new Date();
+    const seed = b.getFullYear() * 10000 + (b.getMonth()+1) * 100 + b.getDate()
+      + today.getMonth() * 53 + today.getDate() * 17
+      + DRINKS.indexOf(d) * 1031;
+    score += seededRand(seed) * 2;
+    return { ...d, score };
+  });
+
+  scored.sort((a,b) => b.score - a.score);
+  return scored;
+}
+
+// ─────────────────────────────────────────────
+//  DRINK IMAGE — Canvas 手绘插画
+// ─────────────────────────────────────────────
+
+// 将 hex 颜色解析为 [r,g,b]
+function hexToRGB(hex) {
+  const n = parseInt(hex.replace('#',''), 16);
+  return [(n>>16)&255, (n>>8)&255, n&255];
+}
+// 带透明度的 hex → rgba
+function hexA(hex, a) {
+  const [r,g,b] = hexToRGB(hex);
+  return `rgba(${r},${g},${b},${a})`;
+}
+
+// Canvas 绘制奶茶插画，返回 data URL
+  // ===== AI生成饮品插画（7类精确映射）=====
+  const IMG_FRUIT = 'milktea-imgs/img_fruit.webp';
+  const IMG_MILK = 'milktea-imgs/img_milk.webp';
+  const IMG_GREEN = 'milktea-imgs/img_green.webp';
+  const IMG_CHEESE = 'milktea-imgs/img_cheese.webp';
+  const IMG_JELLY = 'milktea-imgs/img_jelly.webp';
+  const IMG_FLORAL = 'milktea-imgs/img_floral.webp';
+  const IMG_LIGHT = 'milktea-imgs/img_light.webp';
+
+// ── AIGC 插画图片映射表（饮品名 → 本地图片路径）──
+
+function getDrinkImage(drink) {
+  if (drink.imgFile) {
+    return `milktea-imgs/${drink.imgFile}`;
+  }
+  return getDrinkImageSVG(drink);
+}
+
+function getDrinkImageSVG(drink) {
+  const name    = drink.name    || '';
+  const type    = drink.type    || '';
+  const brand   = drink.brand   || '';
+  const tex     = drink.texture || '';
+  const color   = drink.color   || '#c8a070';
+  const imgType = drink.img     || '';
+
+  // ── 颜色工具 ──
+  function hexToRGBLocal(hex) {
+    const n = parseInt(hex.replace('#',''), 16);
+    return [(n>>16)&255, (n>>8)&255, n&255];
+  }
+  function lighter(hex, amt) {
+    let [r,g,b] = hexToRGBLocal(hex);
+    return `#${[Math.min(255,r+amt),Math.min(255,g+amt),Math.min(255,b+amt)].map(v=>v.toString(16).padStart(2,'0')).join('')}`;
+  }
+  function darker(hex, amt) {
+    let [r,g,b] = hexToRGBLocal(hex);
+    return `#${[Math.max(0,r-amt),Math.max(0,g-amt),Math.max(0,b-amt)].map(v=>v.toString(16).padStart(2,'0')).join('')}`;
+  }
+  function hexAlpha(hex, a) {
+    const [r,g,b] = hexToRGBLocal(hex);
+    return `rgba(${r},${g},${b},${a})`;
+  }
+
+  // ── 饮品特征判断 ──
+  const combined  = name + type;
+  const hasCream  = imgType==='cheese' || /芝士|奶盖/.test(combined);
+  const hasJelly  = imgType==='jelly'  || tex==='jelly' || /仙草|烧仙草|椰冻|奶冻/.test(combined);
+  const hasFloral = imgType==='floral' || tex==='floral'|| /花香|玫瑰|桂花|茉莉/.test(type);
+  const hasFruit  = imgType==='fruit'  || tex==='fruity'|| /鲜果|果茶|气泡|柠檬/.test(type);
+  const hasGreen  = imgType==='green'  || /奶绿/.test(type);
+  const isLight   = imgType==='light'  || (tex==='light' && !/奶|牛乳|拿铁/i.test(combined));
+  const hasBoba   = drink.tags && drink.tags.some(t=>['波波','珍珠','布丁'].includes(t));
+
+  // ── 名字截断（最多4字符展示）──
+  const dispName = name.length > 5 ? name.slice(0,5) + '…' : name;
+
+  // ── 颜色派生 ──
+  const c1  = color;
+  const c2  = lighter(color, 40);
+  const c3  = darker(color,  30);
+  const c4  = darker(color,  60);
+  const cA  = hexAlpha(color, 0.55);
+
+  // ── 稳定随机（基于饮品名）──
+  const seed = name.split('').reduce((a,c)=>a+c.charCodeAt(0), 0);
+  function dr(n){ let x=Math.sin(seed+n)*43758.5453; return x-Math.floor(x); }
+
+  // ── 吸管颜色 ──
+  const strawCol = hasFruit ? '#e8785a' : hasCream ? '#d4b060' : darker(color, 20);
+
+  // ── 专属顶部装饰（基于饮品名+特征，每杯独特）──
+  // 液面底色（所有杯通用）
+  const surfaceBase = `<ellipse cx="80" cy="52" rx="43" ry="11" fill="${hexAlpha(c2,0.62)}" stroke="${c3}" stroke-width="0.5"/>`;
+
+  // 草莓图案
+  function svgStrawberry(cx, cy, r) {
+    return `<g transform="translate(${cx},${cy}) scale(${r/9})">
+      <path d="M0,-9 C-5,-9 -9,-4 -9,2 C-9,8 -4,9 0,9 C4,9 9,8 9,2 C9,-4 5,-9 0,-9 Z" fill="#e85555" opacity="0.92"/>
+      <path d="M0,-9 C-2,-11 2,-11 0,-9" fill="#4a8a30" stroke="#3a7020" stroke-width="0.8"/>
+      <circle cx="-3" cy="0" r="1.2" fill="rgba(255,255,255,0.6)"/>
+      <circle cx="2" cy="3" r="1" fill="rgba(255,255,255,0.5)"/>
+      <circle cx="-1" cy="-4" r="0.9" fill="rgba(255,255,255,0.5)"/>
+      <circle cx="4" cy="-1" r="0.8" fill="rgba(255,255,255,0.45)"/>
+    </g>`;
+  }
+  // 葡萄图案
+  function svgGrape(cx, cy) {
+    const gc = /青|绿/.test(name) ? '#90c870' : '#8060b0';
+    return `<g>
+      <circle cx="${cx-8}" cy="${cy+2}" r="5.5" fill="${gc}" opacity="0.9"/>
+      <circle cx="${cx+8}" cy="${cy+2}" r="5.5" fill="${gc}" opacity="0.9"/>
+      <circle cx="${cx}" cy="${cy-4}" r="5.5" fill="${gc}" opacity="0.88"/>
+      <circle cx="${cx-8}" cy="${cy+2}" r="2" fill="rgba(255,255,255,0.4)"/>
+      <circle cx="${cx+8}" cy="${cy+2}" r="2" fill="rgba(255,255,255,0.4)"/>
+      <circle cx="${cx}" cy="${cy-4}" r="2" fill="rgba(255,255,255,0.4)"/>
+      <line x1="${cx}" y1="${cy-9}" x2="${cx}" y2="${cy-7}" stroke="#5a8030" stroke-width="1.5" stroke-linecap="round"/>
+    </g>`;
+  }
+  // 桂花图案
+  function svgOsmanthus(cx, cy) {
+    return `<g transform="translate(${cx},${cy})">
+      ${[0,45,90,135,180,225,270,315].map(a=>`<ellipse cx="${Math.cos(a*Math.PI/180)*6}" cy="${Math.sin(a*Math.PI/180)*6}" rx="2.5" ry="4" fill="#f0b030" opacity="0.88" transform="rotate(${a},${Math.cos(a*Math.PI/180)*6},${Math.sin(a*Math.PI/180)*6})"/>`).join('')}
+      <circle cx="0" cy="0" r="3" fill="#f8d050"/>
+    </g>`;
+  }
+  // 椰子图案
+  function svgCoconut(cx, cy) {
+    return `<g>
+      <ellipse cx="${cx}" cy="${cy}" rx="9" ry="6" fill="#f8ead0" stroke="#c8a870" stroke-width="0.8"/>
+      <ellipse cx="${cx}" cy="${cy}" rx="6" ry="4" fill="none" stroke="#c8a870" stroke-width="0.6"/>
+      <ellipse cx="${cx-3}" cy="${cy-1}" rx="3" ry="2" fill="rgba(255,255,255,0.5)"/>
+    </g>`;
+  }
+  // 芒果图案
+  function svgMango(cx, cy) {
+    return `<g>
+      <ellipse cx="${cx}" cy="${cy}" rx="9" ry="7" fill="#f8b830" opacity="0.92"/>
+      <ellipse cx="${cx-2}" cy="${cy-2}" rx="4" ry="3" fill="rgba(255,255,255,0.4)"/>
+      <path d="M${cx+4},${cy-6} C${cx+8},${cy-10} ${cx+10},${cy-6} ${cx+6},${cy-4}" fill="#4a8a30" opacity="0.8"/>
+    </g>`;
+  }
+  // 柠檬图案
+  function svgLemon(cx, cy) {
+    return `<g>
+      <ellipse cx="${cx}" cy="${cy}" rx="8" ry="7" fill="#f8e030" opacity="0.93"/>
+      <ellipse cx="${cx}" cy="${cy}" rx="6" ry="5" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="0.8"/>
+      <line x1="${cx}" y1="${cy-5}" x2="${cx}" y2="${cy+5}" stroke="rgba(255,255,255,0.4)" stroke-width="0.7"/>
+      <line x1="${cx-5}" y1="${cy}" x2="${cx+5}" y2="${cy}" stroke="rgba(255,255,255,0.4)" stroke-width="0.7"/>
+      <ellipse cx="${cx-2}" cy="${cy-1}" rx="2.5" ry="2" fill="rgba(255,255,255,0.45)"/>
+    </g>`;
+  }
+  // 仙草块
+  function svgJellyBlocks() {
+    const jc = darker(color, 55);
+    return `
+      <rect x="46" y="40" width="18" height="8" rx="2.5" fill="${hexAlpha(jc,0.88)}" stroke="${hexAlpha(jc,0.5)}" stroke-width="0.5"/>
+      <rect x="70" y="38" width="22" height="9" rx="2.5" fill="${hexAlpha(jc,0.85)}" stroke="${hexAlpha(jc,0.5)}" stroke-width="0.5"/>
+      <rect x="98" y="41" width="17" height="7" rx="2" fill="${hexAlpha(jc,0.82)}"/>
+      <rect x="48" y="40" width="6" height="3" rx="1" fill="rgba(255,255,255,0.2)"/>
+      <rect x="72" y="38" width="7" height="3" rx="1" fill="rgba(255,255,255,0.2)"/>
+    `;
+  }
+  // 珍珠
+  function svgBobas() {
+    const bc = darker(color, 60);
+    return [[56,50,5.5],[72,48,5],[88,50,5.5],[104,49,5],[64,46,4],[96,47,4]].map(([bx,by,br])=>
+      `<circle cx="${bx}" cy="${by}" r="${br}" fill="${hexAlpha(bc,0.88)}"/><circle cx="${bx-br*0.3}" cy="${by-br*0.3}" r="${br*0.32}" fill="rgba(255,255,255,0.32)"/>`
+    ).join('');
+  }
+  // 茶叶浮叶
+  function svgTeaLeaf(cx, cy, rot) {
+    return `<g transform="translate(${cx},${cy}) rotate(${rot})">
+      <ellipse cx="0" cy="0" rx="3" ry="7" fill="#5a9050" opacity="0.75"/>
+      <line x1="0" y1="-6" x2="0" y2="6" stroke="rgba(255,255,255,0.3)" stroke-width="0.6"/>
+    </g>`;
+  }
+  // 奶油奶盖
+  function svgCreamTop() {
+    return `
+      <ellipse cx="80" cy="50" rx="46" ry="14" fill="rgba(255,252,240,0.97)" stroke="rgba(220,205,175,0.6)" stroke-width="0.8"/>
+      <path d="M34,50 Q44,40 54,50 Q64,60 74,50 Q84,40 94,50 Q104,60 114,50 Q118,48 126,50" fill="rgba(255,250,235,0.82)" stroke="none"/>
+      <ellipse cx="63" cy="47" rx="14" ry="5" fill="rgba(255,255,255,0.42)"/>
+      <ellipse cx="95" cy="48" rx="10" ry="4" fill="rgba(255,255,255,0.28)"/>
+    `;
+  }
+
+  let topDecor = surfaceBase;  // 先铺液面底色
+
+  // ── 按饮品名精确匹配专属图案 ──
+  if (/草莓/.test(name)) {
+    topDecor += svgStrawberry(62, 50, 9) + svgStrawberry(82, 47, 7) + svgStrawberry(98, 51, 8);
+  } else if (/葡萄/.test(name)) {
+    topDecor += svgGrape(65, 50) + svgGrape(97, 50);
+  } else if (/桂花/.test(name)) {
+    topDecor += svgOsmanthus(58, 50) + svgOsmanthus(82, 48) + svgOsmanthus(104, 51);
+  } else if (/椰/.test(name)) {
+    topDecor += svgCoconut(62, 50) + svgCoconut(95, 50);
+  } else if (/芒/.test(name)) {
+    topDecor += svgMango(62, 50) + svgMango(96, 50);
+  } else if (/柠檬/.test(name)) {
+    topDecor += svgLemon(60, 50) + svgLemon(82, 48) + svgLemon(102, 51);
+  } else if (/橙/.test(name)) {
+    // 橙子切片
+    topDecor += `
+      <circle cx="65" cy="50" r="10" fill="#f09020" opacity="0.9"/>
+      <circle cx="65" cy="50" r="8" fill="none" stroke="rgba(255,255,255,0.45)" stroke-width="0.8"/>
+      <line x1="65" y1="40" x2="65" y2="60" stroke="rgba(255,255,255,0.4)" stroke-width="0.7"/>
+      <line x1="55" y1="50" x2="75" y2="50" stroke="rgba(255,255,255,0.4)" stroke-width="0.7"/>
+      <line x1="58" y1="43" x2="72" y2="57" stroke="rgba(255,255,255,0.3)" stroke-width="0.6"/>
+      <line x1="72" y1="43" x2="58" y2="57" stroke="rgba(255,255,255,0.3)" stroke-width="0.6"/>
+      <circle cx="96" cy="51" r="7" fill="#f09020" opacity="0.75"/>
+      <circle cx="96" cy="51" r="5.5" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="0.7"/>
+    `;
+  } else if (/百香/.test(name)) {
+    // 百香果横切面
+    topDecor += `
+      <circle cx="65" cy="49" r="10" fill="#d4a020" opacity="0.88"/>
+      <circle cx="65" cy="49" r="8" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="0.8"/>
+      ${[0,60,120,180,240,300].map(a=>`<circle cx="${65+Math.cos(a*Math.PI/180)*5}" cy="${49+Math.sin(a*Math.PI/180)*5}" r="1.5" fill="rgba(255,255,255,0.7)"/>`).join('')}
+      <circle cx="97" cy="51" r="7" fill="#d4a020" opacity="0.72"/>
+      ${[0,60,120,180,240,300].map(a=>`<circle cx="${97+Math.cos(a*Math.PI/180)*4}" cy="${51+Math.sin(a*Math.PI/180)*4}" r="1.2" fill="rgba(255,255,255,0.6)"/>`).join('')}
+    `;
+  } else if (/茉莉/.test(name)) {
+    // 茉莉小白花
+    const jasmine = (cx,cy) => `<g transform="translate(${cx},${cy})">
+      ${[0,72,144,216,288].map(a=>`<ellipse cx="${Math.cos(a*Math.PI/180)*5}" cy="${Math.sin(a*Math.PI/180)*5}" rx="2.5" ry="4.5" fill="rgba(255,252,240,0.92)" transform="rotate(${a},${Math.cos(a*Math.PI/180)*5},${Math.sin(a*Math.PI/180)*5})"/>`).join('')}
+      <circle cx="0" cy="0" r="2.5" fill="#f8f060"/>
+    </g>`;
+    topDecor += jasmine(58, 50) + jasmine(80, 47) + jasmine(103, 51);
+  } else if (/红豆/.test(name)) {
+    // 红豆颗粒
+    const rd = '#c05050';
+    topDecor += [[55,50],[65,47],[75,51],[85,48],[95,51],[105,49]].map(([bx,by])=>
+      `<ellipse cx="${bx}" cy="${by}" rx="4.5" ry="3.5" fill="${rd}" opacity="0.85"/>
+       <ellipse cx="${bx-1.5}" cy="${by-1}" rx="1.5" ry="1" fill="rgba(255,255,255,0.3)"/>`
+    ).join('');
+  } else if (/豆乳|绿豆|芋/.test(name)) {
+    // 谷物颗粒感
+    const gc = /芋/.test(name) ? '#b090c0' : /绿豆/.test(name) ? '#80b870' : '#e8d4a0';
+    topDecor += `<ellipse cx="80" cy="52" rx="42" ry="10" fill="${hexAlpha(gc,0.55)}" stroke="${c3}" stroke-width="0.5"/>`;
+    topDecor += [55,67,79,91,103].map((x,i)=>
+      `<ellipse cx="${x}" cy="${50+(i%2)*3}" rx="4" ry="3" fill="${hexAlpha(gc,0.82)}" opacity="0.9"/>
+       <ellipse cx="${x-1}" cy="${49+(i%2)*3}" rx="1.5" ry="1" fill="rgba(255,255,255,0.35)"/>`
+    ).join('');
+  } else if (/木兰|乌龙|炭烤/.test(name)) {
+    // 茶叶浮叶
+    topDecor += `<ellipse cx="80" cy="52" rx="42" ry="10" fill="${hexAlpha(c2,0.55)}" stroke="${c3}" stroke-width="0.5"/>`;
+    topDecor += svgTeaLeaf(58, 50, -20) + svgTeaLeaf(72, 47, 10) + svgTeaLeaf(90, 51, -35) + svgTeaLeaf(106, 49, 15);
+  } else if (hasCream) {
+    topDecor = svgCreamTop();  // 奶盖款完全覆盖液面
+  } else if (hasJelly) {
+    topDecor += svgJellyBlocks();
+  } else if (hasBoba) {
+    topDecor += svgBobas();
+  } else if (hasGreen) {
+    // 抹茶粉
+    topDecor += `
+      <ellipse cx="68" cy="50" rx="18" ry="6" fill="rgba(255,255,255,0.32)"/>
+      ${[55,72,88,102].map((x,i)=>`<circle cx="${x}" cy="${50-(i%2)*2}" r="${2+i%2}" fill="${hexAlpha(c4,0.45)}"/>`).join('')}
+    `;
+  } else if (hasFloral) {
+    // 花瓣
+    const fp = /桂/.test(name+type) ? '#f0b030' : /玫瑰/.test(name+type) ? '#e87080' : '#f8d7e8';
+    topDecor += `<g transform="translate(80,50) scale(0.72)">
+      ${[0,72,144,216,288].map(a=>`<ellipse cx="${Math.cos(a*Math.PI/180)*8}" cy="${Math.sin(a*Math.PI/180)*8}" rx="4" ry="6" fill="${hexAlpha(fp,0.88)}" transform="rotate(${a},${Math.cos(a*Math.PI/180)*8},${Math.sin(a*Math.PI/180)*8})"/>`).join('')}
+      <circle cx="0" cy="0" r="4" fill="#ffe4b5"/>
+    </g>
+    <g transform="translate(58,49) scale(0.55)">
+      ${[0,72,144,216,288].map(a=>`<ellipse cx="${Math.cos(a*Math.PI/180)*8}" cy="${Math.sin(a*Math.PI/180)*8}" rx="4" ry="6" fill="${hexAlpha(fp,0.75)}" transform="rotate(${a},${Math.cos(a*Math.PI/180)*8},${Math.sin(a*Math.PI/180)*8})"/>`).join('')}
+      <circle cx="0" cy="0" r="3.5" fill="#ffe4b5"/>
+    </g>`;
+  } else if (hasFruit) {
+    // 通用水果：用主色画圆形切片
+    topDecor += `
+      <circle cx="68" cy="50" r="9" fill="${c1}" fill-opacity="0.88"/>
+      <circle cx="68" cy="50" r="7" fill="none" stroke="rgba(255,255,255,0.45)" stroke-width="0.8"/>
+      <line x1="68" y1="41" x2="68" y2="59" stroke="rgba(255,255,255,0.4)" stroke-width="0.7"/>
+      <line x1="59" y1="50" x2="77" y2="50" stroke="rgba(255,255,255,0.4)" stroke-width="0.7"/>
+      <circle cx="92" cy="50" r="7" fill="${c1}" fill-opacity="0.72"/>
+      <circle cx="92" cy="50" r="5.5" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="0.7"/>
+      <ellipse cx="60" cy="48" rx="11" ry="3.5" fill="rgba(255,255,255,0.25)"/>
+    `;
+  } else if (isLight) {
+    // 气泡
+    topDecor += `
+      <circle cx="58" cy="50" r="5" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="1.2"/>
+      <circle cx="72" cy="47" r="3.5" fill="none" stroke="rgba(255,255,255,0.45)" stroke-width="1"/>
+      <circle cx="86" cy="51" r="5.5" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="1.2"/>
+      <circle cx="100" cy="49" r="4" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1"/>
+      <ellipse cx="65" cy="49" rx="11" ry="3.5" fill="rgba(255,255,255,0.22)"/>
+    `;
+  } else {
+    // 默认奶茶液面高光
+    topDecor += `<ellipse cx="64" cy="50" rx="18" ry="5.5" fill="rgba(255,255,255,0.3)"/>`;
+  }
+
+  // ── 杯内底料装饰 ──
+  let innerDecor = '';
+  if (hasJelly) {
+    // 仙草块
+    const jc = darker(color, 55);
+    innerDecor = `
+      <rect x="45" y="155" width="22" height="10" rx="3" fill="${hexAlpha(jc,0.85)}"/>
+      <rect x="72" y="150" width="26" height="12" rx="3" fill="${hexAlpha(jc,0.8)}"/>
+      <rect x="104" y="153" width="20" height="11" rx="3" fill="${hexAlpha(jc,0.82)}"/>
+      <rect x="52" y="168" width="18" height="9"  rx="2.5" fill="${hexAlpha(jc,0.75)}"/>
+      <rect x="80" y="165" width="24" height="10" rx="3" fill="${hexAlpha(jc,0.78)}"/>
+    `;
+  } else if (hasBoba) {
+    // 珍珠
+    const bc = darker(color, 60);
+    const bobaList = [
+      [52,168,7],[70,172,6.5],[88,168,7],[106,170,6.5],[60,180,6],
+      [78,182,6.5],[96,178,6],[114,175,6]
+    ];
+    innerDecor = bobaList.map(([bx,by,br])=>`
+      <circle cx="${bx}" cy="${by}" r="${br}" fill="${hexAlpha(bc,0.88)}"/>
+      <circle cx="${bx-br*0.3}" cy="${by-br*0.3}" r="${br*0.35}" fill="rgba(255,255,255,0.3)"/>
+    `).join('');
+  }
+
+  // ── 液体流纹 ──
+  const swirl = [0.45,0.35,0.28].map((alpha,i) => {
+    const sx = 48 + dr(i)*30;
+    const cp1x = sx + (dr(i+3)-0.5)*18, cp2x = sx + (dr(i+4)-0.5)*14;
+    return `<path d="M${sx},63 C${cp1x},90 ${cp2x},120 ${sx+(dr(i+5)-0.5)*10},150" stroke="${hexAlpha(c4,alpha)}" stroke-width="${2+dr(i+6)*2}" fill="none" stroke-linecap="round"/>`;
+  }).join('');
+
+  // ── SVG 整体 ──
+  const svgSrc = `
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 220" width="160" height="220">
+  <defs>
+    <linearGradient id="liq${seed}" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="${c2}" stop-opacity="0.82"/>
+      <stop offset="50%"  stop-color="${c1}" stop-opacity="0.92"/>
+      <stop offset="100%" stop-color="${c4}" stop-opacity="0.97"/>
+    </linearGradient>
+    <linearGradient id="lid${seed}" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"  stop-color="#f8f4ec"/>
+      <stop offset="100%" stop-color="#e8e0d0"/>
+    </linearGradient>
+    <linearGradient id="glass${seed}" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%"   stop-color="rgba(255,255,255,0.28)"/>
+      <stop offset="35%"  stop-color="rgba(255,255,255,0.08)"/>
+      <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+    </linearGradient>
+    <clipPath id="cup${seed}">
+      <path d="M34,62 L24,188 Q24,198 36,198 L124,198 Q136,198 136,188 L126,62 Z"/>
+    </clipPath>
+    <filter id="shad${seed}" x="-15%" y="-5%" width="130%" height="120%">
+      <feDropShadow dx="0" dy="6" stdDeviation="7" flood-color="${c4}" flood-opacity="0.22"/>
+    </filter>
+  </defs>
+
+  <!-- 杯底阴影 -->
+  <ellipse cx="80" cy="204" rx="54" ry="10" fill="${hexAlpha(c4,0.18)}"/>
+
+  <!-- 杯体液体 -->
+  <path d="M34,62 L24,188 Q24,198 36,198 L124,198 Q136,198 136,188 L126,62 Z"
+        fill="url(#liq${seed})" filter="url(#shad${seed})"/>
+
+  <!-- 液体内部流纹 -->
+  <g clip-path="url(#cup${seed})">
+    ${swirl}
+    ${innerDecor}
+    <!-- 杯壁玻璃高光 -->
+    <rect x="34" y="62" width="36" height="136" fill="url(#glass${seed})"/>
+    <rect x="124" y="68" width="8" height="118" fill="rgba(255,255,255,0.09)"/>
+  </g>
+
+  <!-- 杯盖 -->
+  <ellipse cx="80" cy="60" rx="50" ry="12" fill="url(#lid${seed})" stroke="#d8d0c0" stroke-width="0.8"/>
+  <ellipse cx="80" cy="56" rx="48" ry="10" fill="#f4f0e8" stroke="#ddd5c5" stroke-width="0.5"/>
+  <ellipse cx="60" cy="54" rx="22" ry="5" fill="rgba(255,255,255,0.55)"/>
+
+  <!-- 顶部饮品装饰 -->
+  ${topDecor}
+
+  <!-- 吸管 -->
+  <rect x="104" y="10" width="10" height="56" rx="4" fill="${strawCol}" opacity="0.92"/>
+  <rect x="105" y="10" width="4"  height="56" rx="3" fill="rgba(255,255,255,0.3)"/>
+
+  <!-- 杯壁轮廓 -->
+  <path d="M34,62 L24,188 Q24,198 36,198 L124,198 Q136,198 136,188 L126,62 Z"
+        fill="none" stroke="${c3}" stroke-width="1.2" opacity="0.5"/>
+
+  <!-- 品牌贴纸 -->
+  <rect x="38" y="90" width="84" height="62" rx="9" fill="rgba(255,255,255,0.13)" stroke="rgba(255,255,255,0.25)" stroke-width="0.8"/>
+  <!-- 饮品名 -->
+  <text x="80" y="115" text-anchor="middle" font-family="'Noto Sans SC',sans-serif" font-size="13" font-weight="bold" fill="rgba(255,255,255,0.95)" letter-spacing="1">${dispName}</text>
+  <!-- 分隔线 -->
+  <line x1="52" y1="122" x2="108" y2="122" stroke="rgba(255,255,255,0.3)" stroke-width="0.7"/>
+  <!-- 品牌名 -->
+  <text x="80" y="135" text-anchor="middle" font-family="'Noto Sans SC',sans-serif" font-size="10" font-weight="bold" fill="rgba(255,255,255,0.72)">${brand}</text>
+  <!-- 类型 -->
+  <text x="80" y="147" text-anchor="middle" font-family="'Noto Sans SC',sans-serif" font-size="9" fill="rgba(255,255,255,0.48)">${type}</text>
+</svg>`;
+
+  return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgSrc);
+}
+// ===== END 动态SVG插画 =====
+
+  function drawDrinkCanvas(drink) {
+  const W = 280, H = 360;
+  const canvas = document.createElement('canvas');
+  canvas.width = W * 2; canvas.height = H * 2; // 2x 高清
+  canvas.style.width  = W + 'px';
+  canvas.style.height = H + 'px';
+  const ctx = canvas.getContext('2d');
+  ctx.scale(2, 2); // 2x retina
+
+  const color   = drink.color || '#c8a070';
+  const [cr,cg,cb] = hexToRGB(color);
+
+  // 辅助：基于主色调混合
+  function mix(r2,g2,b2,t) {
+    return `rgb(${Math.round(cr+(r2-cr)*t)},${Math.round(cg+(g2-cg)*t)},${Math.round(cb+(b2-cb)*t)})`;
+  }
+
+  const hasBobas  = drink.tags.some(t=>['波波','珍珠','布丁'].includes(t)) || /波波|珍珠/.test(drink.name);
+  const hasCream  = /芝士|奶盖/.test(drink.name+drink.type);
+  const hasFruit  = drink.texture==='fruity' || /果茶|鲜果/.test(drink.type);
+  const hasJelly  = drink.texture==='jelly';
+  const hasFloral = drink.texture==='floral';
+  const isLight   = drink.energy==='refresh' || drink.texture==='light';
+
+  // 基于名字生成稳定随机
+  const dseed = drink.name.split('').reduce((a,c)=>a+c.charCodeAt(0),0);
+  function dr(n) { let x=Math.sin(dseed+n)*43758.5453; return x-Math.floor(x); }
+
+  // ── 杯体路径参数 ──
+  const cx = W/2;
+  const cupTop  = 48,  cupBot  = 318;
+  const cupTopW = 88,  cupBotW = 108;
+  const rimY    = cupTop, rimH = 14;
+
+  // 杯身裁剪路径
+  function cupBodyPath() {
+    ctx.beginPath();
+    ctx.moveTo(cx - cupTopW, cupTop + rimH);
+    ctx.lineTo(cx - cupBotW, cupBot);
+    ctx.quadraticCurveTo(cx - cupBotW, cupBot+12, cx, cupBot+12);
+    ctx.quadraticCurveTo(cx + cupBotW, cupBot+12, cx + cupBotW, cupBot);
+    ctx.lineTo(cx + cupTopW, cupTop + rimH);
+    ctx.closePath();
+  }
+
+  // ─── 1. 杯底投影 ───
+  const shadowGrad = ctx.createRadialGradient(cx,cupBot+20,5, cx,cupBot+20,70);
+  shadowGrad.addColorStop(0, hexA(color, 0.28));
+  shadowGrad.addColorStop(1, 'transparent');
+  ctx.fillStyle = shadowGrad;
+  ctx.beginPath();
+  ctx.ellipse(cx, cupBot+16, 72, 14, 0, 0, Math.PI*2);
+  ctx.fill();
+
+  // ─── 2. 杯体背景（半透明磨砂）───
+  ctx.save();
+  cupBodyPath();
+  ctx.clip();
+  // 液体主渐变
+  const liqGrad = ctx.createLinearGradient(0, cupTop, 0, cupBot+12);
+  const topAlpha = isLight ? 0.45 : 0.72;
+  liqGrad.addColorStop(0,   hexA(color, topAlpha));
+  liqGrad.addColorStop(0.45, hexA(color, 0.82));
+  liqGrad.addColorStop(1,   `rgba(${Math.max(0,cr-55)},${Math.max(0,cg-45)},${Math.max(0,cb-35)},0.96)`);
+  ctx.fillStyle = liqGrad;
+  ctx.fillRect(0, 0, W, H);
+
+  // ─── 3. 奶层（上部亮色分层）───
+  if (!hasJelly) {
+    const milkGrad = ctx.createLinearGradient(0, cupTop+rimH, 0, cupTop+rimH+70);
+    milkGrad.addColorStop(0, `rgba(255,250,238,${hasFruit||hasFloral ? 0.65 : 0.42})`);
+    milkGrad.addColorStop(1, 'transparent');
+    ctx.fillStyle = milkGrad;
+    ctx.fillRect(0, cupTop+rimH, W, 80);
+  }
+
+  // ─── 4. 仙草/果冻块 ───
+  if (hasJelly) {
+    const jellyY = cupBot - 80;
+    const jellyC = `rgba(${Math.max(0,cr-70)},${Math.max(0,cg-70)},${Math.max(0,cb-60)},0.88)`;
+    // 画几块不规则矩形
+    [[22,jellyY+4,56,22],[84,jellyY,58,26],[148,jellyY+8,52,20],
+     [30,jellyY+30,48,18],[96,jellyY+26,62,22],[155,jellyY+32,46,16]].forEach(([x,y,w,h])=>{
+      ctx.fillStyle = jellyC;
+      roundRect(ctx, cx-cupBotW+10+x*0.52, y, w, h, 5);
+      ctx.fill();
+      // 高光
+      ctx.fillStyle = 'rgba(255,255,255,0.12)';
+      roundRect(ctx, cx-cupBotW+10+x*0.52+3, y+3, w-6, 4, 2);
+      ctx.fill();
+    });
+  }
+
+  // ─── 5. 流淌纹路 ───
+  ctx.globalAlpha = 0.48;
+  [[44+dr(1)*20, 0.52], [dr(2)*18+55, 0.38], [dr(3)*15+38, 0.28]].forEach(([xOff, alpha], i)=>{
+    const sx = cx - cupTopW + 18 + xOff;
+    ctx.strokeStyle = `rgba(${Math.max(0,cr-45)},${Math.max(0,cg-40)},${Math.max(0,cb-30)},${alpha})`;
+    ctx.lineWidth = 2.5 + dr(i+10)*3;
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.moveTo(sx, cupTop+rimH+8);
+    ctx.bezierCurveTo(
+      sx + (dr(i+4)-0.5)*22, cupTop+rimH+55,
+      sx + (dr(i+5)-0.5)*18, cupTop+rimH+110,
+      sx + (dr(i+6)-0.5)*14, cupBot-30
+    );
+    ctx.stroke();
+  });
+  ctx.globalAlpha = 1;
+
+  // ─── 6. 珍珠/波波 ───
+  if (hasBobas) {
+    const boba = `rgb(${Math.max(0,cr-70)},${Math.max(0,cg-65)},${Math.max(0,cb-55)})`;
+    const bobaPos = [
+      [cx-52, cupBot-20, 14], [cx-28, cupBot-10, 13], [cx, cupBot-18, 14],
+      [cx+28, cupBot-8,  13], [cx+52, cupBot-16, 13], [cx-40, cupBot-38, 11],
+      [cx+14, cupBot-38, 12], [cx+46, cupBot-40, 10]
+    ];
+    bobaPos.forEach(([bx,by,br])=>{
+      // 球体渐变
+      const bg = ctx.createRadialGradient(bx-br*0.3, by-br*0.3, 1, bx, by, br);
+      bg.addColorStop(0, `rgba(${Math.min(255,cr+40)},${Math.min(255,cg+35)},${Math.min(255,cb+30)},0.7)`);
+      bg.addColorStop(0.5, boba);
+      bg.addColorStop(1, `rgba(${Math.max(0,cr-90)},${Math.max(0,cg-80)},${Math.max(0,cb-70)},0.95)`);
+      ctx.fillStyle = bg;
+      ctx.beginPath();
+      ctx.arc(bx, by, br, 0, Math.PI*2);
+      ctx.fill();
+      // 高光点
+      ctx.fillStyle = 'rgba(255,255,255,0.35)';
+      ctx.beginPath();
+      ctx.ellipse(bx-br*0.28, by-br*0.28, br*0.32, br*0.22, -0.6, 0, Math.PI*2);
+      ctx.fill();
+    });
+  }
+
+  ctx.restore(); // 结束液体裁剪区
+
+  // ─── 7. 奶盖层（在裁剪外，叠在杯口）───
+  if (hasCream) {
+    ctx.save();
+    const foamY = cupTop + rimH + 2;
+    // 奶盖底色
+    const foamGrad = ctx.createLinearGradient(0, foamY-10, 0, foamY+28);
+    foamGrad.addColorStop(0, 'rgba(255,252,240,0.97)');
+    foamGrad.addColorStop(1, 'rgba(240,228,200,0.90)');
+    // 不规则奶盖形状
+    ctx.fillStyle = foamGrad;
+    ctx.beginPath();
+    ctx.moveTo(cx - cupTopW + 2, foamY + 14);
+    for (let i=0; i<=10; i++) {
+      const t = i/10;
+      const x = cx - cupTopW + 2 + (cupTopW*2-4)*t;
+      const wave = Math.sin(t*Math.PI*3 + dr(i)*1.2)*8 + (dr(i+20)*6-3);
+      if (i===0) ctx.moveTo(x, foamY+14+wave);
+      else ctx.lineTo(x, foamY+14+wave);
+    }
+    ctx.lineTo(cx + cupTopW - 2, foamY - 2);
+    ctx.bezierCurveTo(cx+cupTopW/2, foamY-8, cx-cupTopW/2, foamY-8, cx-cupTopW+2, foamY-2);
+    ctx.closePath();
+    ctx.fill();
+    // 奶盖高光
+    ctx.fillStyle = 'rgba(255,255,255,0.45)';
+    ctx.beginPath();
+    ctx.ellipse(cx - 18, foamY + 4, 28, 7, -0.2, 0, Math.PI*2);
+    ctx.fill();
+    ctx.fillStyle = 'rgba(255,255,255,0.25)';
+    ctx.beginPath();
+    ctx.ellipse(cx + 22, foamY + 8, 18, 5, 0.1, 0, Math.PI*2);
+    ctx.fill();
+    ctx.restore();
+  } else {
+    // 非奶盖款：液面反光
+    ctx.save();
+    cupBodyPath();
+    ctx.clip();
+    const surfGrad = ctx.createLinearGradient(0, cupTop+rimH, 0, cupTop+rimH+22);
+    surfGrad.addColorStop(0, 'rgba(255,255,255,0.28)');
+    surfGrad.addColorStop(1, 'transparent');
+    ctx.fillStyle = surfGrad;
+    ctx.fillRect(cx-cupTopW, cupTop+rimH, cupTopW*2, 24);
+    // 液面高光椭圆
+    ctx.fillStyle = 'rgba(255,255,255,0.22)';
+    ctx.beginPath();
+    ctx.ellipse(cx-12, cupTop+rimH+10, 36, 7, -0.1, 0, Math.PI*2);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  // ─── 8. 杯身透明质感描边 + 高光 ───
+  // 杯壁轮廓
+  ctx.save();
+  cupBodyPath();
+  ctx.strokeStyle = `rgba(${Math.max(0,cr-30)},${Math.max(0,cg-25)},${Math.max(0,cb-20)},0.45)`;
+  ctx.lineWidth = 1.8;
+  ctx.stroke();
+
+  // 左侧竖向高光（玻璃感）
+  const glassGrad = ctx.createLinearGradient(cx-cupTopW, 0, cx-cupTopW+50, 0);
+  glassGrad.addColorStop(0,    'rgba(255,255,255,0.28)');
+  glassGrad.addColorStop(0.35, 'rgba(255,255,255,0.08)');
+  glassGrad.addColorStop(1,    'transparent');
+  cupBodyPath();
+  ctx.clip();
+  ctx.fillStyle = glassGrad;
+  ctx.fillRect(0, 0, W, H);
+  // 右侧细高光条
+  ctx.fillStyle = 'rgba(255,255,255,0.10)';
+  ctx.fillRect(cx+cupTopW-22, cupTop+rimH+8, 10, cupBot-cupTop-rimH-20);
+  ctx.restore();
+
+  // ─── 9. 杯盖（磨砂半透明）───
+  ctx.save();
+  // 盖体
+  const lidGrad = ctx.createLinearGradient(0, cupTop-14, 0, cupTop+rimH);
+  lidGrad.addColorStop(0, 'rgba(248,245,238,0.97)');
+  lidGrad.addColorStop(1, 'rgba(228,222,210,0.93)');
+  ctx.fillStyle = lidGrad;
+  ctx.beginPath();
+  ctx.ellipse(cx, cupTop+rimH/2, cupTopW+6, rimH/2+4, 0, 0, Math.PI*2);
+  ctx.fill();
+  // 盖顶椭圆面
+  ctx.fillStyle = 'rgba(238,234,226,0.95)';
+  ctx.beginPath();
+  ctx.ellipse(cx, cupTop+3, cupTopW+2, rimH/2, 0, 0, Math.PI*2);
+  ctx.fill();
+  // 盖高光
+  const lidHl = ctx.createLinearGradient(cx-cupTopW, cupTop-2, cx+cupTopW*0.4, cupTop+4);
+  lidHl.addColorStop(0, 'rgba(255,255,255,0.62)');
+  lidHl.addColorStop(0.5, 'rgba(255,255,255,0.18)');
+  lidHl.addColorStop(1, 'transparent');
+  ctx.fillStyle = lidHl;
+  ctx.beginPath();
+  ctx.ellipse(cx, cupTop+2, cupTopW, rimH/2-1, 0, 0, Math.PI*2);
+  ctx.fill();
+  // 吸管孔
+  ctx.fillStyle = 'rgba(200,192,180,0.8)';
+  ctx.beginPath();
+  ctx.ellipse(cx+32, cupTop+4, 7, 4, 0.2, 0, Math.PI*2);
+  ctx.fill();
+  ctx.restore();
+
+  // ─── 10. 吸管 ───
+  ctx.save();
+  const strawX = cx + 30;
+  const strawW = 11;
+  const strawColor = hasFruit ? '#e0784a' : hasCream ? '#d4aa66' : '#a09070';
+  const [sr,sg,sb] = hexToRGB(strawColor);
+  // 吸管主体渐变
+  const strawGrad = ctx.createLinearGradient(strawX, 0, strawX+strawW, 0);
+  strawGrad.addColorStop(0,   `rgba(${sr},${sg},${sb},0.95)`);
+  strawGrad.addColorStop(0.4, `rgba(${Math.min(255,sr+30)},${Math.min(255,sg+25)},${Math.min(255,sb+20)},0.88)`);
+  strawGrad.addColorStop(1,   `rgba(${Math.max(0,sr-30)},${Math.max(0,sg-25)},${Math.max(0,sb-20)},0.92)`);
+  roundRect(ctx, strawX, 8, strawW, cupTop+rimH, 5);
+  ctx.fillStyle = strawGrad;
+  ctx.fill();
+  // 高光
+  ctx.fillStyle = 'rgba(255,255,255,0.32)';
+  roundRect(ctx, strawX+1.5, 8, strawW*0.38, cupTop+rimH-4, 3);
+  ctx.fill();
+  ctx.restore();
+
+  // ─── 11. 品牌贴纸 ───
+  ctx.save();
+  cupBodyPath();
+  ctx.clip();
+  // 贴纸背景（加高以容纳饮品名）
+  roundRect(ctx, cx-50, cupTop+rimH+62, 100, 68, 10);
+  ctx.fillStyle = 'rgba(255,255,255,0.15)';
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(255,255,255,0.28)';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+  // 饮品名（最大、最醒目）
+  ctx.font = 'bold 13px sans-serif';
+  ctx.fillStyle = 'rgba(255,255,255,0.95)';
+  ctx.textAlign = 'center';
+  // 名字过长时缩小字号
+  const nameText = drink.name;
+  const nameWidth = ctx.measureText(nameText).width;
+  if (nameWidth > 90) {
+    ctx.font = 'bold 11px sans-serif';
+  }
+  ctx.fillText(nameText, cx, cupTop+rimH+84);
+  // 分隔线
+  ctx.strokeStyle = 'rgba(255,255,255,0.25)';
+  ctx.lineWidth = 0.8;
+  ctx.beginPath();
+  ctx.moveTo(cx-36, cupTop+rimH+91);
+  ctx.lineTo(cx+36, cupTop+rimH+91);
+  ctx.stroke();
+  // 品牌名
+  ctx.font = 'bold 10px "Georgia", serif';
+  ctx.fillStyle = 'rgba(255,255,255,0.70)';
+  ctx.fillText(drink.brand, cx, cupTop+rimH+104);
+  // 饮品类型
+  ctx.font = '9px sans-serif';
+  ctx.fillStyle = 'rgba(255,255,255,0.45)';
+  ctx.fillText(drink.type, cx, cupTop+rimH+117);
+  ctx.restore();
+
+  return canvas.toDataURL('image/png');
+}
+
+// 辅助：圆角矩形
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x+r, y);
+  ctx.lineTo(x+w-r, y);
+  ctx.quadraticCurveTo(x+w, y, x+w, y+r);
+  ctx.lineTo(x+w, y+h-r);
+  ctx.quadraticCurveTo(x+w, y+h, x+w-r, y+h);
+  ctx.lineTo(x+r, y+h);
+  ctx.quadraticCurveTo(x, y+h, x, y+h-r);
+  ctx.lineTo(x, y+r);
+  ctx.quadraticCurveTo(x, y, x+r, y);
+  ctx.closePath();
+}
+
+// 保留 shadeColor 兼容旧 SVG 工具（已废弃但 shadeColor 仍被用到）
+function getDrinkSVG(drink) {
+  const c1  = drink.color || '#c8a070';
+  const c2  = shadeColor(c1,  25);
+  const c3  = shadeColor(c1, -30);
+  const c4  = shadeColor(c1, -55);
+
+  const hasBobas  = drink.tags.some(t => ['波波','珍珠','布丁'].includes(t))
+                 || /波波|珍珠/.test(drink.name);
+  const hasCream  = drink.type.includes('芝士') || /芝士|奶盖/.test(drink.name);
+  const hasFruit  = drink.texture === 'fruity' || drink.type.includes('果茶') || drink.type.includes('鲜果');
+  const hasFloral = drink.texture === 'floral';
+  const hasJelly  = drink.texture === 'jelly';
+  const isLight   = drink.energy === 'refresh' || drink.texture === 'light';
+
+  // 吸管颜色随茶色变化
+  const strawHue = hasFruit ? '#e8905a' : hasCream ? '#d4b87a' : '#a09878';
+
+  // 液体层颜色
+  const milkColor   = '#f5efe0';
+  const teaColorTop = isLight ? shadeColor(c1, 30) : c1;
+  const teaColorBot = c3;
+  // 果酱/底料流纹颜色
+  const swirlColor  = hasFruit ? shadeColor(c1, -40) : c4;
+
+  // 每款唯一的随机seed（用drink名字的charCode）
+  const dseed = drink.name.split('').reduce((a,ch)=>a+ch.charCodeAt(0),0);
+  function dr(offset) { // deterministic random 0-1
+    let x = Math.sin(dseed + offset) * 43758.5453;
+    return x - Math.floor(x);
+  }
+
+  // 流淌纹路路径（从杯壁内侧往下蜿蜒）
+  function swirlPath(xBase, amp, offset) {
+    const x = xBase, a = amp;
+    return `M${x},58 C${x+a},75 ${x-a},95 ${x+a*0.6},115 S${x-a*0.4},140 ${x},158`;
+  }
+
+  // 杯子轮廓（梯形，上窄下宽，底部圆角）
+  const cupPath   = 'M 34,44 L 24,178 Q 24,188 36,188 L 124,188 Q 136,188 136,178 L 126,44 Z';
+  const cupClipId = `cc${dseed}`;
+  const lid1Id    = `lg1${dseed}`;
+  const lid2Id    = `lg2${dseed}`;
+  const liqId     = `lq${dseed}`;
+  const milkId    = `mk${dseed}`;
+  const shadowId  = `sh${dseed}`;
+  const glassId   = `gl${dseed}`;
+
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 210" width="160" height="210">
+<defs>
+  <!-- 杯底阴影 -->
+  <filter id="${shadowId}" x="-20%" y="-10%" width="140%" height="130%">
+    <feDropShadow dx="0" dy="8" stdDeviation="8" flood-color="${c4}" flood-opacity="0.28"/>
+  </filter>
+
+  <!-- 裁剪区域（杯内液体不超出杯身） -->
+  <clipPath id="${cupClipId}">
+    <path d="M 35,44 L 25,178 Q 25,188 37,188 L 123,188 Q 135,188 135,178 L 125,44 Z"/>
+  </clipPath>
+
+  <!-- 杯盖渐变 -->
+  <linearGradient id="${lid1Id}" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%"   stop-color="#f0ede6" stop-opacity="0.97"/>
+    <stop offset="100%" stop-color="#ddd8cc" stop-opacity="0.92"/>
+  </linearGradient>
+  <linearGradient id="${lid2Id}" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0%"   stop-color="white" stop-opacity="0.5"/>
+    <stop offset="40%"  stop-color="white" stop-opacity="0.1"/>
+    <stop offset="100%" stop-color="white" stop-opacity="0.0"/>
+  </linearGradient>
+
+  <!-- 液体主渐变（上浅下深，模拟透视） -->
+  <linearGradient id="${liqId}" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%"   stop-color="${teaColorTop}" stop-opacity="0.88"/>
+    <stop offset="60%"  stop-color="${c1}"          stop-opacity="0.93"/>
+    <stop offset="100%" stop-color="${teaColorBot}"  stop-opacity="1"/>
+  </linearGradient>
+
+  <!-- 奶层渐变 -->
+  <linearGradient id="${milkId}" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%"   stop-color="#fdf8f0" stop-opacity="0.98"/>
+    <stop offset="100%" stop-color="#f0e8d4" stop-opacity="0.85"/>
+  </linearGradient>
+
+  <!-- 杯身玻璃质感（左侧高光） -->
+  <linearGradient id="${glassId}" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0%"   stop-color="white" stop-opacity="0.22"/>
+    <stop offset="18%"  stop-color="white" stop-opacity="0.08"/>
+    <stop offset="60%"  stop-color="white" stop-opacity="0.02"/>
+    <stop offset="85%"  stop-color="white" stop-opacity="0.10"/>
+    <stop offset="100%" stop-color="white" stop-opacity="0.04"/>
+  </linearGradient>
+</defs>
+
+<!-- ① 杯体轮廓（透明杯，带阴影） -->
+<path d="${cupPath}" fill="#e8e2d8" fill-opacity="0.18" stroke="#c8c0b0" stroke-width="1.2"
+      filter="url(#${shadowId})"/>
+
+<!-- ② 液体底色 -->
+<rect x="25" y="60" width="110" height="130"
+      fill="url(#${liqId})" clip-path="url(#${cupClipId})"/>
+
+${hasFruit || hasFloral ? `
+<!-- ③a 液体分层：上层奶白（果茶/花茶类，轻奶层） -->
+<rect x="25" y="60" width="110" height="30"
+      fill="url(#${milkId})" clip-path="url(#${cupClipId})" opacity="0.72"/>
+<!-- 分层边界渐隐线 -->
+<rect x="25" y="86" width="110" height="10"
+      fill="url(#${liqId})" clip-path="url(#${cupClipId})" opacity="0.5"/>
+` : ''}
+
+${hasCream || (!hasFruit && !hasJelly) ? `
+<!-- ③b 液体分层：中部奶感层（奶茶/奶绿类） -->
+<rect x="25" y="70" width="110" height="45"
+      fill="${milkColor}" fill-opacity="0.45" clip-path="url(#${cupClipId})"/>
+` : ''}
+
+${hasJelly ? `
+<!-- ③c 仙草/果冻底层（深色块状） -->
+<rect x="30" y="148" width="100" height="40"
+      fill="${c4}" fill-opacity="0.82" clip-path="url(#${cupClipId})" rx="4"/>
+<rect x="35" y="150" width="90" height="12" rx="3"
+      fill="${shadeColor(c4,15)}" fill-opacity="0.6" clip-path="url(#${cupClipId})"/>
+<rect x="35" y="166" width="85" height="12" rx="3"
+      fill="${shadeColor(c4,10)}" fill-opacity="0.5" clip-path="url(#${cupClipId})"/>
+` : ''}
+
+<!-- ④ 流淌纹路（果酱/茶色素沿杯壁流下） -->
+<g clip-path="url(#${cupClipId})" opacity="0.55">
+  <path d="${swirlPath(50 + dr(1)*12, 8 + dr(2)*6, 0)}"
+        fill="none" stroke="${swirlColor}" stroke-width="${2.5 + dr(3)*2}" stroke-linecap="round" opacity="0.6"/>
+  <path d="${swirlPath(90 + dr(4)*10, 6 + dr(5)*5, 1)}"
+        fill="none" stroke="${swirlColor}" stroke-width="${1.8 + dr(6)*2}" stroke-linecap="round" opacity="0.45"/>
+  ${hasFruit ? `<path d="${swirlPath(70 + dr(7)*8, 10, 2)}"
+        fill="none" stroke="${shadeColor(c1,-20)}" stroke-width="2" stroke-linecap="round" opacity="0.35"/>` : ''}
+</g>
+
+${hasBobas ? `
+<!-- ⑤ 珍珠/波波（底部半透明球体） -->
+<g clip-path="url(#${cupClipId})">
+  <circle cx="48"  cy="170" r="9"  fill="${c4}"                opacity="0.88"/>
+  <circle cx="48"  cy="168" r="4"  fill="${shadeColor(c4,25)}" opacity="0.4"/>
+  <circle cx="67"  cy="177" r="8"  fill="${shadeColor(c4,8)}"  opacity="0.85"/>
+  <circle cx="67"  cy="175" r="3.5" fill="${shadeColor(c4,30)}" opacity="0.35"/>
+  <circle cx="86"  cy="168" r="9"  fill="${c4}"                opacity="0.9"/>
+  <circle cx="86"  cy="166" r="4"  fill="${shadeColor(c4,25)}" opacity="0.4"/>
+  <circle cx="104" cy="175" r="8"  fill="${shadeColor(c4,5)}"  opacity="0.85"/>
+  <circle cx="57"  cy="182" r="7"  fill="${shadeColor(c4,12)}" opacity="0.8"/>
+  <circle cx="116" cy="170" r="7"  fill="${c4}"                opacity="0.82"/>
+</g>
+` : ''}
+
+<!-- ⑥ 杯身玻璃高光（透明质感） -->
+<path d="${cupPath}" fill="url(#${glassId})" clip-path="url(#${cupClipId})"/>
+
+<!-- ⑦ 杯壁轮廓线（透明杯边缘） -->
+<path d="${cupPath}" fill="none" stroke="#b8b0a0" stroke-width="1.5" opacity="0.6"/>
+<!-- 内侧细线（厚度感） -->
+<path d="M 37,44 L 28,176 Q 28,184 38,184 L 122,184 Q 132,184 132,176 L 123,44"
+      fill="none" stroke="#d0c8bc" stroke-width="0.7" opacity="0.45"/>
+
+${hasCream ? `
+<!-- ⑧a 芝士奶盖层 -->
+<g clip-path="url(#${cupClipId})">
+  <ellipse cx="80" cy="62" rx="52" ry="14" fill="#f8f0d8" opacity="0.97"/>
+  <ellipse cx="60" cy="57" rx="22" ry="10" fill="#fff8e8" opacity="0.82"/>
+  <ellipse cx="100" cy="59" rx="18" ry="9"  fill="#fffaea" opacity="0.75"/>
+  <ellipse cx="80" cy="54" rx="36" ry="6"   fill="white"   opacity="0.4"/>
+  <!-- 奶盖纹路 -->
+  <path d="M 35,62 Q 55,55 75,63 Q 95,70 115,60 Q 125,56 135,62"
+        fill="none" stroke="#e8dcc0" stroke-width="1.5" opacity="0.6"/>
+</g>
+` : `
+<!-- ⑧b 液面反光（非奶盖款） -->
+<ellipse cx="80" cy="61" rx="48" ry="7" fill="white" opacity="0.18" clip-path="url(#${cupClipId})"/>
+<ellipse cx="72" cy="59" rx="28" ry="3.5" fill="white" opacity="0.22" clip-path="url(#${cupClipId})"/>
+`}
+
+<!-- ⑨ 杯盖（半透明磨砂感） -->
+<!-- 盖沿 -->
+<ellipse cx="80" cy="46" rx="54" ry="11" fill="url(#${lid1Id})" stroke="#c4bcb0" stroke-width="0.8"/>
+<!-- 盖顶面（稍小椭圆） -->
+<ellipse cx="80" cy="43" rx="46" ry="8"  fill="#eceae2" opacity="0.88"/>
+<!-- 盖高光 -->
+<ellipse cx="80" cy="41" rx="30" ry="4"  fill="url(#${lid2Id})"/>
+<!-- 吸管孔 -->
+<ellipse cx="100" cy="43" rx="5" ry="3"  fill="#d0c8bc" opacity="0.7"/>
+
+<!-- ⑩ 吸管 -->
+<g>
+  <!-- 吸管主体 -->
+  <rect x="97" y="2" width="8" height="56" rx="4"
+        fill="${strawHue}" opacity="0.92"/>
+  <!-- 吸管高光 -->
+  <rect x="97" y="2" width="3.5" height="56" rx="3"
+        fill="white" opacity="0.28"/>
+  <!-- 吸管底部渐隐 -->
+  <rect x="97" y="48" width="8" height="10" rx="4"
+        fill="${c3}" opacity="0.3"/>
+</g>
+
+<!-- ⑪ 品牌标签贴纸（杯身中部） -->
+<g opacity="0.85" clip-path="url(#${cupClipId})">
+  <rect x="44" y="96" width="72" height="46" rx="9"
+        fill="white" fill-opacity="0.14" stroke="white" stroke-width="0.6" stroke-opacity="0.3"/>
+  <text x="80" y="116" text-anchor="middle" font-size="7.5" fill="white" fill-opacity="0.6"
+        font-family="'Georgia',serif" letter-spacing="0.5">${drink.brand}</text>
+  <text x="80" y="130" text-anchor="middle" font-size="6" fill="white" fill-opacity="0.4"
+        font-family="sans-serif" letter-spacing="0.3">${drink.type}</text>
+</g>
+
+<!-- ⑫ 杯底厚度感 -->
+<ellipse cx="80" cy="188" rx="54" ry="7" fill="${c4}" fill-opacity="0.22"/>
+<ellipse cx="80" cy="188" rx="46" ry="5" fill="${c3}" fill-opacity="0.18"/>
+
+</svg>`;
+}
+
+function shadeColor(hex, percent) {
+  const num = parseInt(hex.replace('#',''), 16);
+  const r = Math.min(255, Math.max(0, (num >> 16) + percent));
+  const g = Math.min(255, Math.max(0, ((num >> 8) & 0xff) + percent));
+  const b = Math.min(255, Math.max(0, (num & 0xff) + percent));
+  return '#' + ((1<<24)|(r<<16)|(g<<8)|b).toString(16).slice(1);
+}
+
+// ─────────────────────────────────────────────
+//  STATE
+// ─────────────────────────────────────────────
+
+let STATE = { birthDate: '', zodiac: null, shengxiao: null, fortune: null, mood: null, scored: [] };
+
+// ─────────────────────────────────────────────
+//  STEP LOGIC
+// ─────────────────────────────────────────────
+
+// Init mood grid
+(function initMoods() {
+  const grid = document.getElementById('moodGrid');
+  MOODS.forEach(m => {
+    const el = document.createElement('div');
+    el.className = 'mood-item';
+    el.dataset.id = m.id;
+    el.innerHTML = `<div class="mood-emoji">${m.emoji}</div><div class="mood-name">${m.name}</div>`;
+    el.onclick = () => selectMood(m.id, el);
+    grid.appendChild(el);
+  });
+})();
+
+// Date input — manual year/month/day
+function onBirthInputChange() {
+  const yearEl  = document.getElementById('birthYear');
+  const monthEl = document.getElementById('birthMonth');
+  const dayEl   = document.getElementById('birthDay');
+
+  const year  = parseInt(yearEl.value.trim(),  10);
+  const month = parseInt(monthEl.value.trim(), 10);
+  const day   = parseInt(dayEl.value.trim(),   10);
+
+  // 任意一项未填时隐藏结果、锁定按钮
+  if (isNaN(year) || isNaN(month) || isNaN(day) || !year || !month || !day) {
+    document.getElementById('zodiacRow').classList.add('hidden');
+    document.getElementById('btn1').disabled = true;
+    return;
+  }
+  if (year < 1920 || year > 2025) { document.getElementById('zodiacRow').classList.add('hidden'); document.getElementById('btn1').disabled = true; return; }
+  if (month < 1 || month > 12)    { document.getElementById('zodiacRow').classList.add('hidden'); document.getElementById('btn1').disabled = true; return; }
+  if (day < 1 || day > 31)        { document.getElementById('zodiacRow').classList.add('hidden'); document.getElementById('btn1').disabled = true; return; }
+
+  // 检查日期是否真实存在（如2月30日）
+  const d = new Date(year, month - 1, day);
+  if (d.getFullYear() !== year || d.getMonth() + 1 !== month || d.getDate() !== day) {
+    document.getElementById('zodiacRow').classList.add('hidden');
+    document.getElementById('btn1').disabled = true;
+    return;
+  }
+
+  // 日期合法，格式化为 YYYY-MM-DD
+  const mm = String(month).padStart(2, '0');
+  const dd = String(day).padStart(2, '0');
+  STATE.birthDate = `${year}-${mm}-${dd}`;
+
+  const z  = getZodiac(month, day);
+  const sx = getShengxiao(year);
+  const wx = getWuxing(year, month, day);
+  STATE.zodiac = z; STATE.shengxiao = sx;
+
+  document.getElementById('zodiacIcon').textContent = z.icon;
+  document.getElementById('zodiacName').textContent = z.name;
+  document.getElementById('shengxiaoIcon').textContent = sx.icon;
+  document.getElementById('shengxiaoName').textContent = sx.name;
+  document.getElementById('elementName').textContent = wx;
+  document.getElementById('elementName').style.color = WUXING_COLORS[wx] || '#b09060';
+
+  document.getElementById('zodiacRow').classList.remove('hidden');
+  document.getElementById('btn1').disabled = false;
+}
+// blur（离开输入框）时触发，避免输入中途误判
+['birthYear', 'birthMonth', 'birthDay'].forEach(function(id) {
+  document.getElementById(id).addEventListener('blur', onBirthInputChange);
+  document.getElementById(id).addEventListener('input', onBirthInputChange);
+});
+
+function goStep2() {
+  const fortune = generateFortune(STATE.birthDate);
+  STATE.fortune = fortune;
+
+  // 日期显示
+  const today = new Date();
+  document.getElementById('fortuneDate').textContent =
+    `${today.getFullYear()}年${today.getMonth()+1}月${today.getDate()}日 · ${STATE.zodiac.name}`;
+  document.getElementById('fortuneTitle').textContent = fortune.title;
+  document.getElementById('scoreNum').textContent = fortune.score;
+
+  // 圆弧动画
+  const arc = document.getElementById('scoreArc');
+  const circum = 188.5;
+  setTimeout(() => {
+    arc.style.transition = 'stroke-dashoffset 1.2s cubic-bezier(.4,0,.2,1)';
+    arc.style.strokeDashoffset = circum * (1 - fortune.score / 100);
+  }, 100);
+
+  // 维度条
+  const barsEl = document.getElementById('fortuneBars');
+  barsEl.innerHTML = '';
+  DIMENSION_LABELS.forEach((lbl, i) => {
+    const row = document.createElement('div');
+    row.className = 'fortune-bar-row';
+    row.innerHTML = `
+      <span class="bar-label">${lbl}</span>
+      <div class="fortune-bar-track">
+        <div class="fortune-bar-fill" id="bar${i}"
+             style="width:0%;background:linear-gradient(90deg,${DIMENSION_COLORS[i]}99,${DIMENSION_COLORS[i]})"></div>
+      </div>
+      <span style="font-size:11px;color:${DIMENSION_COLORS[i]};width:28px;text-align:right;font-weight:600">${fortune.dims[i]}</span>`;
+    barsEl.appendChild(row);
+    setTimeout(() => {
+      document.getElementById('bar'+i).style.width = fortune.dims[i]+'%';
+    }, 200 + i * 100);
+  });
+
+  const localQuote = '「' + getFortuneQuote(STATE.zodiac.name, STATE.shengxiao.name, fortune.quoteSeed) + '」';
+  document.getElementById('fortuneQuote').textContent = localQuote;
+  // ── AI 联网：今日运势文案 ──
+  document.getElementById('fortuneQuote').style.opacity = '0.5';
+  callAI('fortune', {
+    birthday: STATE.birthDate,
+    zodiac: STATE.zodiac.name,
+    shengxiao: STATE.shengxiao.name,
+    score: fortune.score,
+    dims: Object.fromEntries(DIMENSION_KEYS.map((k,i) => [DIMENSION_LABELS[i], fortune.dims[i]])),
+    luckyColor: fortune.luckyColor,
+    luckyDir: fortune.luckyDir,
+    title: fortune.title,
+  }).then(aiText => {
+    if (aiText) {
+      document.getElementById('fortuneQuote').textContent = '「' + aiText + '」';
+    }
+    document.getElementById('fortuneQuote').style.opacity = '1';
+  });
+
+  // 幸运标签（去掉生命数字）
+  const luckyEl = document.getElementById('luckyRow');
+  luckyEl.innerHTML = `
+    <div class="lucky-tag"><span class="tag-icon">🎨</span>幸运色：${fortune.luckyColor}</div>
+    <div class="lucky-tag"><span class="tag-icon">🧭</span>幸运方位：${fortune.luckyDir}</div>
+  `;
+
+  // ── 今日能量解读 ──
+  (function renderFortuneInsight() {
+    const b = new Date(STATE.birthDate);
+    const bMonth = b.getMonth() + 1;
+    const bDay   = b.getDate();
+    const bYear  = b.getFullYear();
+    const today  = new Date();
+
+    // ── 月相计算（朔望周期 29.53天，以2000-01-06新月为基准）──
+    const KNOWN_NEW_MOON = new Date(2000, 0, 6).getTime();
+    const LUNAR_CYCLE = 29.530588853 * 24 * 3600 * 1000;
+    const daysSinceNew = ((today.getTime() - KNOWN_NEW_MOON) % LUNAR_CYCLE + LUNAR_CYCLE) % LUNAR_CYCLE / (24 * 3600 * 1000);
+    let moonPhase, moonEmoji;
+    if      (daysSinceNew < 1.85)  { moonPhase = '新月';   moonEmoji = '🌑'; }
+    else if (daysSinceNew < 7.38)  { moonPhase = '娥眉月'; moonEmoji = '🌒'; }
+    else if (daysSinceNew < 9.22)  { moonPhase = '上弦月'; moonEmoji = '🌓'; }
+    else if (daysSinceNew < 14.77) { moonPhase = '盈凸月'; moonEmoji = '🌔'; }
+    else if (daysSinceNew < 16.61) { moonPhase = '满月';   moonEmoji = '🌕'; }
+    else if (daysSinceNew < 22.15) { moonPhase = '亏凸月'; moonEmoji = '🌖'; }
+    else if (daysSinceNew < 23.99) { moonPhase = '下弦月'; moonEmoji = '🌗'; }
+    else if (daysSinceNew < 29.53) { moonPhase = '残月';   moonEmoji = '🌘'; }
+    else                           { moonPhase = '新月';   moonEmoji = '🌑'; }
+
+    // 月相对能量的影响描述
+    const MOON_EFFECT = {
+      '新月':   '新月期，能量处于重启状态，适合定新目标、开新坑，不适合做最终决定',
+      '娥眉月': '月亮在积蓄，行动力开始上升，今天推进中的事情会比昨天顺一点',
+      '上弦月': '上弦月，能量上升到一半，今天适合检查进度、做调整，推进感会很强',
+      '盈凸月': '月亮快满了，能量场偏强，今天做事容易进入状态，创意和执行力都在线',
+      '满月':   '满月，能量场达到峰值，情绪和感知都会被放大，今天的灵感和直觉特别准',
+      '亏凸月': '满月刚过，能量开始收敛，今天适合整理、复盘，不适合强行冲刺',
+      '下弦月': '下弦月，能量进入休整期，今天适合放慢节奏，把精力放在真正重要的事上',
+      '残月':   '月末残月，能量场偏低，今天适合休息和蓄力，不用强求结果',
+    };
+
+    // ── 节气计算（精确到日）──
+    // 二十四节气近似公式（基于天文算法简化版）
+    function getSolarTerm(y, m, d) {
+      const TERMS = [
+        [1,  [6,20],  '小寒'],  [1,  [20,21], '大寒'],
+        [2,  [3,5],   '立春'],  [2,  [18,20], '雨水'],
+        [3,  [5,7],   '惊蛰'],  [3,  [20,21], '春分'],
+        [4,  [4,6],   '清明'],  [4,  [19,21], '谷雨'],
+        [5,  [5,7],   '立夏'],  [5,  [20,22], '小满'],
+        [6,  [5,7],   '芒种'],  [6,  [21,22], '夏至'],
+        [7,  [6,8],   '小暑'],  [7,  [22,24], '大暑'],
+        [8,  [7,9],   '立秋'],  [8,  [22,24], '处暑'],
+        [9,  [7,9],   '白露'],  [9,  [22,24], '秋分'],
+        [10, [7,9],   '寒露'],  [10, [23,24], '霜降'],
+        [11, [7,8],   '立冬'],  [11, [22,23], '小雪'],
+        [12, [6,8],   '大雪'],  [12, [21,22], '冬至'],
+      ];
+      for (const [tm, [lo, hi], name] of TERMS) {
+        if (m === tm && d >= lo && d <= hi) return name;
+      }
+      return null;
+    }
+    const todayTerm = getSolarTerm(today.getFullYear(), today.getMonth()+1, today.getDate());
+    const TERM_EFFECT = {
+      '立春':'立春节气，万物开始萌动，今天的能量场有种「重新开始」的底色，适合启动新计划',
+      '雨水':'雨水节气，滋养型能量，今天适合沉淀和积累，不适合急着出结果',
+      '惊蛰':'惊蛰节气，蛰伏的能量开始爆发，今天行动力会比平时强，有什么一直拖着的事可以动了',
+      '春分':'春分节气，阴阳平衡，今天的能量场特别稳，适合做需要平衡感的决策',
+      '清明':'清明节气，气场清明，今天思路会比平时清晰，适合梳理复杂的事情',
+      '谷雨':'谷雨节气，生长型能量，今天播下的种子（想法、计划）会有好的回报',
+      '立夏':'立夏节气，能量开始旺盛，今天整体状态会往上走，适合推进重要的事',
+      '小满':'小满节气，「小满」不是「大满」，今天适合稳步推进，不要贪多',
+      '芒种':'芒种节气，播种和收获并行，今天既适合开新项目，也适合收尾旧的',
+      '夏至':'夏至节气，阳气最盛，今天能量场达到上半年峰值，创意和行动力都在线',
+      '小暑':'小暑节气，热度上升，今天情绪能量偏强，适合表达，不适合压抑',
+      '大暑':'大暑节气，能量最旺也最耗，今天做事容易进入状态，但注意别透支',
+      '立秋':'立秋节气，能量开始收敛，今天适合整理和规划，为下一阶段做准备',
+      '处暑':'处暑节气，暑气消退，今天的能量场开始变得清爽，思路会更清晰',
+      '白露':'白露节气，清醒型能量，今天适合做需要冷静判断的事，直觉也比较准',
+      '秋分':'秋分节气，阴阳再次平衡，今天适合做收支平衡、得失权衡类的决策',
+      '寒露':'寒露节气，能量开始向内收，今天适合深度思考，不适合大张旗鼓',
+      '霜降':'霜降节气，收藏型能量，今天适合总结和沉淀，把经验变成自己的东西',
+      '立冬':'立冬节气，能量进入蓄积期，今天适合休整，为冬天的爆发做准备',
+      '小雪':'小雪节气，安静型能量，今天适合独处和思考，灵感往往在安静里出现',
+      '大雪':'大雪节气，能量深藏，今天适合做长期规划，不适合追求即时反馈',
+      '冬至':'冬至节气，阴极阳生，今天是能量转折点，适合定新方向，新的周期从今天开始',
+    };
+
+    // ── 星座元素特质 ──
+    const zodiacName = STATE.zodiac.name;
+    const zodiacEl   = STATE.zodiac.element || '';
+    const ELEMENT_TODAY = {
+      '火': '火象星座的你，今天的行动力和感染力都在线，适合主动出击，别等',
+      '土': '土象星座的你，今天的稳定感是你最大的优势，踏实做事比任何技巧都管用',
+      '风': '风象星座的你，今天的思维和沟通能量特别强，适合表达、谈判、写东西',
+      '水': '水象星座的你，今天的直觉和感知力比平时更敏锐，相信第一感觉',
+    };
+    const elementLine = ELEMENT_TODAY[zodiacEl] || `${zodiacName}的你，今天的能量场有自己的节奏，顺着走就好`;
+
+    // ── 生肖特质 ──
+    const shengxiaoName = STATE.shengxiao.name;
+    const SHENGXIAO_TODAY = {
+      '鼠':'鼠年生人今天反应快、思路活，适合处理需要灵活应变的事',
+      '牛':'牛年生人今天耐力强、执行稳，适合推进需要持续投入的事',
+      '虎':'虎年生人今天气场强、行动力足，适合主动出击，别憋着',
+      '兔':'兔年生人今天感知细腻、人缘好，适合沟通和协调',
+      '龙':'龙年生人今天能量旺、气场足，适合做需要气势的事',
+      '蛇':'蛇年生人今天直觉准、洞察力强，适合做需要判断力的决策',
+      '马':'马年生人今天行动力强、状态活跃，适合推进和冲刺',
+      '羊':'羊年生人今天创意感强、审美在线，适合做创意类工作',
+      '猴':'猴年生人今天思维灵活、点子多，适合头脑风暴和创新',
+      '鸡':'鸡年生人今天执行力强、细节到位，适合做需要精准的事',
+      '狗':'狗年生人今天责任感强、可靠度高，适合承担重要任务',
+      '猪':'猪年生人今天运气偏好、贵人缘强，适合推进需要外部支持的事',
+    };
+    const shengxiaoLine = SHENGXIAO_TODAY[shengxiaoName] || '';
+
+    // ── 六维度最强/最弱描述 ──
+    const dims = fortune.dims;
+    const maxIdx = dims.indexOf(Math.max(...dims));
+    const minIdx = dims.indexOf(Math.min(...dims));
+    const maxLabel = DIMENSION_LABELS[maxIdx];
+    const minLabel = DIMENSION_LABELS[minIdx];
+
+    const MAX_DIM_TIPS = {
+      '爱情': '今天感情能量场偏强，适合主动表达，或者好好感受身边的人，别错过',
+      '工作': '今天工作状态很在线，效率比平时高，适合推进重要任务或者提方案',
+      '财运': '今天财运能量活跃，适合做和钱有关的决定，或者谈一谈那个一直没谈的事',
+      '健康': '今天身体能量不错，适合运动或者好好吃一顿，善待自己',
+      '创意': '今天创意通道比平时畅通，灵感来了要抓住，适合写东西、出方案、搞创作',
+      '气场': '今天整体气场偏强，做什么都有点「今天状态不错」的感觉，适合出现在重要场合',
+    };
+    const MIN_DIM_TIPS = {
+      '爱情': '感情方面今天能量偏内敛，不适合强行推进，观察比行动更重要',
+      '工作': '工作方面今天不是冲刺的时机，稳着来，把基础打好比什么都强',
+      '财运': '财运今天相对平稳，不适合大额消费或冒险，等能量回来再说',
+      '健康': '健康方面今天需要多注意，别透支，早点休息比什么都管用',
+      '创意': '今天创意能量偏低，不适合强行出想法，执行已有的计划反而更顺',
+      '气场': '今天气场偏内敛，不适合高调出场，低调做事反而更有效',
+    };
+
+    // ── 生日共振 ──
+    const todayMD = (today.getMonth()+1) * 100 + today.getDate();
+    const birthMD = bMonth * 100 + bDay;
+    const mdDiff  = Math.abs(todayMD - birthMD);
+    let birthdayLine = '';
+    if (mdDiff === 0) {
+      birthdayLine = '对了，今天是你的生日——个人能量场今天到年度峰值，全维度都有加持，好好过。';
+    } else if (mdDiff <= 3) {
+      birthdayLine = `生日就在这几天，个人能量场正在快速积累，今天整体运势有额外加持。`;
+    } else if (mdDiff <= 14) {
+      birthdayLine = `生日能量场还有余韵，今天的运势有一点额外加持，不多，但是真的有。`;
+    }
+
+    // ── 组装解读文案 ──
+    const moonLine    = MOON_EFFECT[moonPhase];
+    const termLine    = todayTerm ? TERM_EFFECT[todayTerm] : null;
+
+    const insightEl = document.getElementById('fortuneInsight');
+    if (insightEl) {
+      insightEl.innerHTML = `
+        <div class="insight-title">✦ &nbsp;今日能量解读</div>
+        <div class="insight-body">
+          ${moonEmoji} <strong>${moonPhase}</strong>——${moonLine}。${termLine ? '<br>🌿 <strong>' + todayTerm + '节气</strong>——' + termLine + '。' : ''}
+          <br><br>
+          ${elementLine}。${shengxiaoLine ? shengxiaoLine + '。' : ''}
+          <br><br>
+          今天能量最强的维度是<strong>${maxLabel}</strong>（${dims[maxIdx]}分）——${MAX_DIM_TIPS[maxLabel]}。最需要留意的是<strong>${minLabel}</strong>（${dims[minIdx]}分）——${MIN_DIM_TIPS[minLabel]}。${birthdayLine ? '<br><br>🎂 ' + birthdayLine : ''}
+        </div>
+      `;
+    }
+    // ── AI 联网：今日能量解读 ──
+    const insightElLoading = document.getElementById('fortuneInsight');
+    if (insightElLoading) insightElLoading.style.opacity = '0.5';
+    callAI('energy', {
+      birthday: STATE.birthDate,
+      zodiac: STATE.zodiac.name,
+      shengxiao: STATE.shengxiao.name,
+      score: fortune.score,
+      dims: Object.fromEntries(DIMENSION_KEYS.map((k,i) => [DIMENSION_LABELS[i], fortune.dims[i]])),
+      maxDim: maxLabel,
+      minDim: minLabel,
+      moonPhase: moonPhase,
+      moonEmoji: moonEmoji,
+      todayTerm: todayTerm,
+      elementLine: elementLine,
+      shengxiaoLine: shengxiaoLine,
+      birthdayLine: birthdayLine,
+    }).then(aiText => {
+      const insightEl2 = document.getElementById('fortuneInsight');
+      if (insightEl2) {
+        insightEl2.style.opacity = '1';
+        if (aiText) {
+          insightEl2.innerHTML = `<div class="insight-title">✦ &nbsp;今日能量解读</div><div class="insight-body">${aiText}</div>`;
+        }
+      }
+    });
+  })();
+
+  document.getElementById('step2').classList.remove('hidden');
+  document.getElementById('step2').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function selectMood(id, el) {
+  document.querySelectorAll('.mood-item').forEach(e => e.classList.remove('selected'));
+  el.classList.add('selected');
+  STATE.mood = id;
+  document.getElementById('btn3').disabled = false;
+}
+
+function goStep3() {
+  document.getElementById('step3').classList.remove('hidden');
+  document.getElementById('step3').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function goStep4() {
+  const scored = recommendDrink(STATE.fortune, STATE.mood, STATE.birthDate);
+  STATE.scored = scored;
+  renderResult(0);
+  document.getElementById('step4').classList.remove('hidden');
+  document.getElementById('step4').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  spawnConfetti();
+}
+
+function renderResult(idx) {
+  const drink = STATE.scored[idx];
+  const mood = MOODS.find(m => m.id === STATE.mood);
+  const alts = STATE.scored.slice(1, 5).filter((_,i) => i !== idx-1);
+
+  // 推荐理由 —— 按心情类型走不同叙事角度
+  const topDimIdx = STATE.fortune.dims.indexOf(Math.max(...STATE.fortune.dims));
+  const topDimLabel = DIMENSION_LABELS[topDimIdx];
+  const topDimScore = STATE.fortune.dims[topDimIdx];
+  const zodiac = STATE.zodiac.name;
+  const moodName = mood.name;
+  const tag0 = drink.tags[0];
+  const tag1 = drink.tags[1] || drink.tags[0];
+  const drinkDesc = drink.desc || '';
+
+  // ── 推荐理由：运势宜忌 → 饮品连接 → 俏皮勾单 三段式 ──
+  const shengxiao  = STATE.shengxiao.name;
+  const luckyColor = STATE.fortune.luckyColor;
+  const luckyDir   = STATE.fortune.luckyDir;
+  const tag2       = drink.tags[2] || drink.tags[0];
+
+  // 幸运色 → 口语化茶色描述
+  const COLOR_TEA = {
+    '绿色': { hint: '绿茶系', desc: '今天和绿色最对眼，绿茶的清苦刚好把运气"激活"' },
+    '蓝色': { hint: '清透系', desc: '蓝色主清醒，今天适合一杯喝起来"透"的茶，让脑子跟上好运' },
+    '金色': { hint: '暖金系', desc: '金色主财气，今天来一杯颜色好看、暖暖的茶，财运和心情一起到' },
+    '红色': { hint: '果茶系', desc: '红色主热情，今天适合一杯颜色鲜亮的果茶，把这份劲儿喝进去' },
+    '紫色': { hint: '紫芋系', desc: '紫色主灵感，今天适合一杯有点"神秘感"的茶，喝了感觉什么都想通了' },
+    '橙色': { hint: '橙果系', desc: '橙色主活力，今天适合一杯酸甜开胃的橙果茶，元气值直接拉满' },
+  };
+  const ctea     = COLOR_TEA[luckyColor] || { hint: luckyColor, desc: `今天幸运色是${luckyColor}，选一杯气质相符的茶，运势顺水推舟` };
+  const colorHint = ctea.hint;
+  const colorDesc = ctea.desc;
+
+  // 用 birthDate + 今天日期 + 饮品名 生成稳定 pickSeed，避免因 score 浮点差异导致所有人选出同一条文案
+  const _pb = new Date(STATE.birthDate);
+  const _today = new Date();
+  const _moodHash = (STATE.mood || '').split('').reduce((a,c) => a + c.charCodeAt(0), 0);
+  const pickSeed = _pb.getFullYear() * 100000 + (_pb.getMonth()+1) * 10000 + _pb.getDate() * 1000
+    + _today.getMonth() * 53 + _today.getDate() * 17
+    + drink.name.split('').reduce((a,c) => a + c.charCodeAt(0), 0) * 7
+    + _moodHash * 3 + idx * 13;
+
+  // 用 tpl 替换模板变量（含奶茶名）
+  function tpl(str) {
+    return str
+      .replace(/\{drinkName\}/g,     drink.name)
+      .replace(/\$\{topDimLabel\}/g, topDimLabel)
+      .replace(/\$\{topDimScore\}/g, topDimScore)
+      .replace(/\$\{colorHint\}/g,   colorHint)
+      .replace(/\$\{luckyColor\}/g,  luckyColor)
+      .replace(/\$\{luckyDir\}/g,    luckyDir)
+      .replace(/\$\{tag0\}/g,        tag0)
+      .replace(/\$\{tag1\}/g,        tag1)
+      .replace(/\$\{tag2\}/g,        tag2)
+.replace(/\$\{zodiac\}/g,      zodiac)
+.replace(/\$\{drinkDesc\}/g,   drinkDesc);
+  }
+
+  // ── 推荐理由：动态生成，基于奶茶真实特质 ──
+  // 优先级：① 幸运色与奶茶颜色匹配 → ② fortune_fit+mood_fit 双中 → ③ 单中 → ④ 兜底用 desc
+  (function buildReasonStr() {
+    // 幸运色 → 奶茶色系对应表（使用6位hex前两位做范围匹配，修复3位简写永远匹配失败的bug）
+    // 匹配规则：将6位hex的前两位（即R通道）+ 第3-4位的高4位做启发式比对
+    // 更健壮的方案：转为RGB后按色相范围判断
+    function colorClose(lucky, hex) {
+      // 将 hex 转为 HSL，按色相范围判断色系
+      const h6 = hex.replace('#', '').padEnd(6, '0').slice(0, 6);
+      const r = parseInt(h6.slice(0, 2), 16) / 255;
+      const g = parseInt(h6.slice(2, 4), 16) / 255;
+      const b = parseInt(h6.slice(4, 6), 16) / 255;
+      const max = Math.max(r, g, b), min = Math.min(r, g, b);
+      const d = max - min;
+      let hue = 0;
+      if (d > 0.01) {
+        if (max === r) hue = ((g - b) / d + 6) % 6 * 60;
+        else if (max === g) hue = ((b - r) / d + 2) * 60;
+        else hue = ((r - g) / d + 4) * 60;
+      }
+      const sat = max < 0.001 ? 0 : d / max;
+      // 低饱和度（灰白系）不匹配任何颜色
+      if (sat < 0.12) return false;
+      const HUE_RANGE = {
+        '红色':   [[0, 20], [340, 360]],
+        '橙色':   [[20, 45]],
+        '金色':   [[38, 58]],
+        '绿色':   [[70, 170]],
+        '蓝色':   [[190, 260]],
+        '紫色':   [[260, 320]],
+        '粉色':   [[310, 345]],
+      };
+      return (HUE_RANGE[lucky] || []).some(([lo, hi]) => hue >= lo && hue <= hi);
+    }
+
+    const dname   = drink.name;
+    const dbrand  = drink.brand || '';
+    const dtype   = drink.type  || '';
+    const dtags   = drink.tags;
+    const ddesc   = drink.desc;
+    // 取 desc 第一个有意义分句：至少要8字，不够则取前两个分句拼合（避免"红豆绵绵"这种4字断句过短）
+    const rawSnip = ddesc.split(/[，,。！？]/);
+    const dsnip   = rawSnip[0].length >= 8
+      ? rawSnip[0].slice(0, 20)
+      : (rawSnip[0] + (rawSnip[1] ? '，' + rawSnip[1] : '')).slice(0, 22);
+    const dtag0   = dtags[0] || '';
+    const dtag1   = dtags[1] || dtags[0] || '';
+    const dtag2   = dtags[2] || dtags[0] || '';
+    const denergy = drink.energy || '';
+    const dtexture= drink.texture || '';
+
+    // ── 个性化变量：生命数字 + 生日月份 + 生日日 ──
+    const _b2 = new Date(STATE.birthDate);
+    const _bY = _b2.getFullYear(), _bM = _b2.getMonth()+1, _bD = _b2.getDate();
+    const lifeNumLocal = ((_bY + _bM + _bD) % 9) || 9;
+    // 生命数字对应的核心特质词（嵌入句子用）
+    const LIFE_TRAIT = {
+      1:'主动出击', 2:'顺势而为', 3:'灵感爆发', 4:'稳扎稳打',
+      5:'灵活变通', 6:'联结共鸣', 7:'深度洞察', 8:'务实行动', 9:'格局开阔'
+    };
+    const lifeTrait = LIFE_TRAIT[lifeNumLocal] || '顺势而为';
+    // 生日月份季节感
+    const BIRTH_MONTH_FEEL = [
+      '一月生人自带冷静底色','二月生人感知力特别细腻','三月生人骨子里有股萌动劲',
+      '四月生人天生有种向上的力','五月生人能量充沛','六月生人情感丰富',
+      '七月生人热烈而直接','八月生人目标感强','九月生人沉稳有韧性',
+      '十月生人平衡感好','十一月生人洞察力强','十二月生人有种沉淀的厚度'
+    ];
+    const birthMonthFeel = BIRTH_MONTH_FEEL[_bM - 1] || '';
+    // 生日日期尾数特质（个位数）
+    const BDAY_TAIL = {
+      0:'今天是个收尾的好日子', 1:'今天适合开新局', 2:'今天适合顺着感觉走',
+      3:'今天灵感比平时多', 4:'今天适合把事情做扎实', 5:'今天变化是主旋律',
+      6:'今天人际能量特别好', 7:'今天适合安静深想', 8:'今天行动力加成',
+      9:'今天格局放大一点'
+    };
+    const bdayTail = BDAY_TAIL[_bD % 10] || '';
+
+    const fortuneHit = (drink.fortune_fit || []).includes(DIMENSION_KEYS[topDimIdx]);
+    const moodHit    = (drink.mood_fit    || []).includes(mood.id);
+    const colorHit   = colorClose(luckyColor, drink.color);
+
+    // ── 完整段落模板库 ──
+    // 设计原则：每条模板本身就是一段通顺完整的话，不需要任何外部拼接。
+    // 变量直接嵌入句子中充当语义角色，而不是作为独立句被空格连接。
+    // 按"命中条件"分组，运行时找到最匹配的分组后随机选一条。
+
+    // 运势维度中文描述（用于自然嵌入句子）
+    const DIM_CN = { love:'爱情运', career:'工作运', wealth:'财运', health:'健康运', creative:'创意力', aura:'整体气场' };
+    const dimCn = DIM_CN[DIMENSION_KEYS[topDimIdx]] || '运势';
+
+    // 心情中文描述
+    const MOOD_CN = {
+      happy:'心情好', calm:'心平气和', tired:'有点累', anxious:'有点焦虑',
+      excited:'状态很亢奋', sad:'有点丧', focused:'专注状态', lazy:'很慵懒',
+      bored:'有点无聊', stressed:'压力大',
+    };
+    const moodCn = MOOD_CN[mood.id] || mood.name || '';
+
+    // 口感特质：从 energy+texture 映射成一个纯口感描述短语，直接嵌入段落句中
+    // 原则：不含奶茶名、不含 dsnip（避免和品名重复），读来像是在描述喝的感受
+    const FEEL_MAP = {
+      calm_light:    `喝下去清而舒缓，嘴里干净，整个人的节奏会跟着慢一格`,
+      calm_creamy:   `奶感醇厚，喝完那一刻整个人的节奏会慢下来`,
+      calm_floral:   `花香先飘进来，茶味跟上，这种层次感让人自然地静下来`,
+      calm_fruity:   `果香清甜，喝下去脑子里的线会先松一根`,
+      calm_earthy:   `带着草木的重量，喝完有种踩地的稳定感`,
+      calm_jelly:    `Q弹的口感配上舒缓的茶底，有种被好好托住的感觉`,
+      boost_light:   `喝起来清爽，后劲有股提振的劲道，喝完状态往上走一档`,
+      boost_creamy:  `醇厚的奶感下藏着冲劲，喝完整个人的转速高一档`,
+      boost_floral:  `花香里有股精神劲，喝完会想主动出击`,
+      boost_fruity:  `果酸一激，脑子跟着清，喝完眼睛都亮了`,
+      boost_earthy:  `大地气息里有一股向上的力，喝完不飘也不沉`,
+      boost_jelly:   `嚼劲和提振劲叠在一起，喝完手里有点想干点什么`,
+      cozy_light:    `清淡但有温度，喝完是那种被轻轻照顾到的感觉`,
+      cozy_creamy:   `奶感厚实，入口有重量，喝完有种被填满的踏实`,
+      cozy_floral:   `花香温柔，配上醇厚的底，整杯像是一个温暖的拥抱`,
+      cozy_fruity:   `果香甜润，酸甜比例刚好，喝完嘴里是暖的`,
+      cozy_earthy:   `草木香里带着暖意，喝完有种被好好接住的感觉`,
+      cozy_jelly:    `软糯的口感配着热茶，整杯喝起来像是在被认真对待`,
+      bright_light:  `清爽透亮，喝完整个人会稍微昂一下头`,
+      bright_creamy: `奶感里藏着明快的果酸，两层味道叠在一起，思路会跟着清`,
+      bright_floral: `花香和明快的茶底交替进来，喝完眼睛都亮了一点`,
+      bright_fruity: `果味直接，酸甜比例调得很准，一口下去人会莫名觉得今天还行`,
+      bright_earthy: `大地气息配着果香的明快，喝完脚踩地、眼放光`,
+      bright_jelly:  `Q弹加上明快的果茶底，嚼一口整个人的状态都往上走`,
+      grounded_light:`喝起来清淡但不飘，喝完有种踩得稳的感觉`,
+      grounded_creamy:`奶感厚实，入口就有种"没问题"的笃定`,
+      grounded_floral:`花香雅而不浮，喝完像是把心压了压`,
+      grounded_fruity:`果香不张扬，喝下去有种踩得稳的感觉，不飘`,
+      grounded_earthy:`草木的重量往下压，喝完不飘，踩得实`,
+      grounded_jelly: `嚼劲给了整杯一种扎实感，喝完心里有底`,
+    };
+    const feelKey = `${denergy||'calm'}_${dtexture||'light'}`;
+    const feelDesc = FEEL_MAP[feelKey] || `口感独特，喝完有种恰好被照顾到的感觉`;
+
+    // 颜色加成短语（命中时嵌入句末，不命中时为空字符串）
+    const COLOR_BONUS = {
+      '绿色': `，今天幸运色绿色，这杯的颜色恰好往那边偏，连颜色都在帮你`,
+      '紫色': `，今天幸运色紫色，${dname}的色调刚好对上，视觉上就先赢了一层`,
+      '红色': `，今天幸运色红色，${dname}的暖红茶色把这一票也投了过来`,
+      '橙色': `，今天幸运色橙色，${dname}倒出来的颜色正好在这个方向`,
+      '金色': `，今天幸运色金色，${dname}偏暖金的茶色和今天的财运对上了`,
+      '蓝色': `，今天幸运色蓝色，${dname}清透的颜色气质刚好呼应`,
+      '粉色': `，今天幸运色粉色，${dname}的颜色往那边偏，今天连颜色都站你这边`,
+    };
+    const colorBonus = colorHit ? (COLOR_BONUS[luckyColor] || `，今天幸运色${luckyColor}，${dname}的颜色也在这个方向`) : '';
+
+    // ── 推荐理由模板 ──
+    // 核心原则：先说奶茶本身好在哪，运势/心情/颜色只做「恰好」的呼应，不做主论点
+    // 每条模板独立成段，读起来像是真的在说这杯茶，而不是在凑理由
+    const PARA = {
+
+      // ── 全命中（运势 + 心情 + 颜色）──
+      all: [
+        `${dbrand}的${dname}，${feelDesc}。今天你${moodCn}，${dimCn}又刚好偏高${colorBonus}——这种时候喝这杯，是真的合适。`,
+        `${dname}这杯，${dtag0}、${dtag1}，${feelDesc}。你现在${moodCn}，今天${dimCn}也在帮你${colorBonus}，几件事凑在一起，选它没有悬念。`,
+        `${feelDesc}，这是${dname}本来就有的东西。今天${dimCn}好，你${moodCn}${colorBonus}，刚好都对上了，不是硬凑的。`,
+        `${dbrand}出的${dname}，${dtag0}的底子，${feelDesc}。今天你${moodCn}，${dimCn}偏高${colorBonus}，这杯是今天最顺手的选择。`,
+        `${dname}，${feelDesc}。${birthMonthFeel}，今天${dimCn}又来配合，你还${moodCn}${colorBonus}——这杯今天有点特别。`,
+        `今天${dimCn}不错，你${moodCn}${colorBonus}。${dname}的${feelDesc}，${dbrand}出品，这几件事凑在一起，今天就是它了。`,
+        `生命数字${lifeNumLocal}，${lifeTrait}。今天${dimCn}在线，你${moodCn}${colorBonus}，${dname}的${feelDesc}——这杯今天是认真推的。`,
+      ],
+
+      // ── 运势 + 心情 命中 ──
+      fortune_mood: [
+        `${dname}，${feelDesc}。你今天${moodCn}，${dimCn}也刚好偏高，这两件事撞在一起，${dbrand}这杯是今天最顺的选择。`,
+        `${dbrand}的${dname}，${dtag0}、${dtag1}，${feelDesc}。你现在${moodCn}，今天${dimCn}又在帮你，这杯不是随便推的。`,
+        `${feelDesc}，这是${dname}本来就有的东西，跟运势没关系。但今天${dimCn}好，你又${moodCn}，喝这杯刚好是顺势的。`,
+        `你今天${moodCn}，${dimCn}也不错——这种状态适合喝一杯${dtag0}的茶。${dname}，${feelDesc}，${dbrand}出品，今天选它有道理。`,
+        `${birthMonthFeel}，${bdayTail}。今天你${moodCn}，${dimCn}又在配合，${dname}的${feelDesc}，这杯今天喝起来会觉得对。`,
+        `${lifeTrait}的你今天${moodCn}，${dimCn}也在帮忙。${dname}，${feelDesc}，${dbrand}的${dtype}，今天这杯是认真选的。`,
+        `${dname}的${feelDesc}，本来就适合${moodCn}的时候喝。今天${dimCn}又偏高，${dbrand}出品，两件事都对上了。`,
+      ],
+
+      // ── 运势 + 颜色 命中 ──
+      fortune_color: [
+        `${dname}，${dtag0}、${dtag1}，${feelDesc}。今天${dimCn}偏高${colorBonus}，这杯的口感和今天的运势方向是一回事。`,
+        `${dbrand}的${dname}，${feelDesc}。今天${dimCn}好${colorBonus}，口感和颜色都对上了，这杯今天点不亏。`,
+        `${feelDesc}，这是${dname}本来就有的东西。今天${dimCn}在线${colorBonus}，喝这杯是顺势的，不是硬凑的。`,
+        `今天${dimCn}不错${colorBonus}。${dname}，${dtag0}的底子，${feelDesc}，${dbrand}出品，运势和颜色都站你这边。`,
+        `${birthMonthFeel}。今天${dimCn}偏高${colorBonus}，${dname}的${feelDesc}，这杯今天有两层理由。`,
+      ],
+
+      // ── 心情 + 颜色 命中 ──
+      mood_color: [
+        `${dname}，${feelDesc}。你今天${moodCn}${colorBonus}，这杯的口感和你现在的状态是一回事，不用多想。`,
+        `${dbrand}的${dname}，${dtag0}、${dtag1}，${feelDesc}。你现在${moodCn}${colorBonus}，这杯今天是认真推的。`,
+        `你今天${moodCn}，幸运色又是${luckyColor}。${dname}的${feelDesc}，${dbrand}出品，状态和颜色都对上了。`,
+        `${feelDesc}，这是${dname}本来就有的东西。你今天${moodCn}${colorBonus}，喝这杯刚好是顺着感觉走。`,
+        `${birthMonthFeel}，今天你${moodCn}${colorBonus}。${dname}，${feelDesc}，${dbrand}出品，这杯今天接得住你。`,
+      ],
+
+      // ── 仅运势命中 ──
+      fortune_only: [
+        `${dname}，${feelDesc}。今天${dimCn}偏高，这杯的${dtag0}和今天的运势方向是一回事，${dbrand}出品，点它。`,
+        `${dbrand}的${dname}，${dtag0}、${dtag1}，${feelDesc}。今天${dimCn}不错，这杯是对应这个方向的选择，不是随机推的。`,
+        `今天${dimCn}好。${dname}，${feelDesc}，${dtag0}的质感和今天的运势频率对得上，${dbrand}出品，今天就它。`,
+        `${bdayTail}，今天${dimCn}又来配合。${dname}的${feelDesc}，${dbrand}出品，这杯今天喝起来会觉得顺。`,
+        `生命数字${lifeNumLocal}，${lifeTrait}。今天${dimCn}在帮你，${dname}，${feelDesc}，这杯今天是认真推的。`,
+        `${dname}，${dtype}，${feelDesc}。今天${dimCn}偏高，${dbrand}出品，这杯和今天的运势方向对得上。`,
+      ],
+
+      // ── 仅心情命中 ──
+      mood_only: [
+        `${dname}，${feelDesc}。你今天${moodCn}，这杯的${dtag0}和你现在的状态是一回事，${dbrand}出品，今天就它。`,
+        `你今天${moodCn}，适合喝一杯${dtag0}的茶。${dname}，${feelDesc}，${dbrand}的${dtype}，口感和状态对上了。`,
+        `${feelDesc}，这是${dname}本来就有的东西。你今天${moodCn}，喝这杯是顺着感觉走，不是硬凑的。`,
+        `${moodCn}的时候，最需要一杯${dtag0}的茶。${dname}，${feelDesc}，${dbrand}出品，今天这杯接得住你。`,
+        `${birthMonthFeel}，今天你${moodCn}。${dname}的${feelDesc}，${dtag0}的质感正好是你现在需要的那种。`,
+        `${lifeTrait}的你今天${moodCn}，${dname}，${feelDesc}，${dbrand}的${dtype}，喝完状态会往好的方向走一格。`,
+      ],
+
+      // ── 仅颜色命中 ──
+      color_only: [
+        `${dname}，${feelDesc}。今天幸运色${luckyColor}，这杯的颜色刚好在这个方向，颜色是缘分，口感是理由。`,
+        `${dbrand}的${dname}，${dtag0}、${dtag1}，${feelDesc}。今天幸运色${luckyColor}，这杯的颜色对上了，点它。`,
+        `今天幸运色${luckyColor}，${dname}的颜色刚好。${feelDesc}，${dbrand}出品，颜色是加分项，口感才是真正的理由。`,
+        `${dname}，${feelDesc}。今天幸运色${luckyColor}，这杯的颜色往那边偏，连颜色都在帮你，今天就它。`,
+      ],
+
+      // ── 兜底 ──
+      fallback: [
+        `${dname}，${feelDesc}。你今天${moodCn}，${dbrand}出品，这杯今天接得住，喝完会觉得选对了。`,
+        `${dbrand}的${dname}，${dtag0}、${dtag1}，${feelDesc}。今天就这杯，不用再想了。`,
+        `${feelDesc}，这是${dname}本来就有的东西。你今天${moodCn}，喝这杯是顺着感觉走。`,
+        `${birthMonthFeel}，${bdayTail}。${dname}，${feelDesc}，${dbrand}出品，今天这杯是认真推的。`,
+        `今天${moodCn}，想喝点${dtag0}的。${dname}，${feelDesc}，${dbrand}出的，感觉就是它了。`,
+      ],
+    };
+
+    // 选池逻辑
+    const paraKey = (fortuneHit && moodHit && colorHit) ? 'all'
+      : (fortuneHit && moodHit)  ? 'fortune_mood'
+      : (fortuneHit && colorHit) ? 'fortune_color'
+      : (moodHit    && colorHit) ? 'mood_color'
+      : fortuneHit               ? 'fortune_only'
+      : moodHit                  ? 'mood_only'
+      : colorHit                 ? 'color_only'
+      :                            'fallback';
+    const pool = PARA[paraKey];
+    window.__reasonStr = pool[Math.floor(seededRand(pickSeed + 1) * pool.length)];
+  })();
+  const reasonStr = window.__reasonStr;
+
+  // ── 日签卡片：强绑定奶茶名 ──
+  // quote = 奶茶名谐音/双关/特质的趣味文案；sub = 促转发短句
+  // 用奶茶名动态替换 {drinkName}，可用 {drinkName} 拼出谐音或直接引用
+const FORTUNE_CARDS = {
+// 爱情运 × 心情
+love_happy:    { quote: '喝了{drinkName}，今天见谁都顺眼，连陌生人都觉得可爱。' },
+love_calm:     { quote: '{drinkName}慢慢喝，缘分慢慢来。不急的人，运气都不差。' },
+love_tired:    { quote: '身体在说话，先听它一次。{drinkName}，今天的善待从这里开始。' },
+love_anxious:  { quote: '先把{drinkName}喝完，心跳慢下来，那个人的事才看得清。' },
+love_excited:  { quote: '{drinkName}配今天的你，刚好发光。这种状态，谁见了都心动。' },
+love_sad:      { quote: '{drinkName}陪着你，这一刻够了。不是所有事都需要立刻解决。' },
+love_focused:  { quote: '认真的人，喝{drinkName}最好看。专注本身就是一种吸引力。' },
+love_lazy:     { quote: '躺着喝{drinkName}，缘分说不定就来了。好运从不嫌你懒。' },
+love_bored:    { quote: '{drinkName}拿着出门，无聊就变有趣了。说不定今天有意外相遇。' },
+love_stressed: { quote: '压力大的时候更要对自己好。{drinkName}先喝完，其他的一会儿再说。' },
+
+// 事业运 × 心情
+career_happy:  { quote: '喝了{drinkName}，今天冲什么都顺。好心情是最强的工作外挂。' },
+career_calm:   { quote: '{drinkName}在手，稳的是我。今天的节奏，你说了算。' },
+career_tired:  { quote: '扛了这么久，先停下来喝这一口。{drinkName}，今天你值得。' },
+career_anxious:{ quote: '{drinkName}喝完，大脑清醒再出发。焦虑是信号，不是答案。' },
+career_excited:{ quote: '{drinkName}配今天的干劲，满杯冲。这种状态，抓住它。' },
+career_sad:    { quote: '低谷也要喝好的。{drinkName}，这是原则，不是奢侈。' },
+career_focused:{ quote: '{drinkName}续杯，心流继续。专注的人，今天运势也在帮你。' },
+career_lazy:   { quote: '精致地摆烂，从{drinkName}开始。充好电，才能继续冲。' },
+career_bored:  { quote: '无聊是大脑在要求充电。{drinkName}先给它一个交代，下一步自然就清了。' },
+career_stressed:{ quote: '{drinkName}先落胃，然后继续扛。宇宙看见你在努力了。' },
+
+// 财运 × 心情
+wealth_happy:  { quote: '{drinkName}是今天最值的一笔消费。财运好的时候，花在自己身上最划算。' },
+wealth_calm:   { quote: '{drinkName}的稳，就是今天财运的样子。不急不躁，钱自然来。' },
+wealth_tired:  { quote: '钱花在自己身上，从不亏。{drinkName}值，今天的你更值。' },
+wealth_anxious:{ quote: '先把{drinkName}喝完，财运的事急不来。心静了，机会才看得见。' },
+wealth_excited:{ quote: '{drinkName}财气加持，花了算值。今天的消费，是对好运的回应。' },
+wealth_sad:    { quote: '宇宙记账，这笔不亏。{drinkName}喝完，财运的低谷也快到头了。' },
+wealth_focused:{ quote: '认真的人，{drinkName}都特别好喝。专注本身就是最好的财运。' },
+wealth_lazy:   { quote: '{drinkName}，今天允许先充个电。财运不会因为你休息一下就跑掉。' },
+wealth_bored:  { quote: '{drinkName}喝着，灵感说不定就来了。无聊有时候是财运在酝酿。' },
+wealth_stressed:{ quote: '{drinkName}，先松一口气再说钱的事。绷太紧，好运也进不来。' },
+
+// 健康运 × 心情
+health_happy:  { quote: '心情好，{drinkName}更好喝。今天的健康运，从这一口开始加分。' },
+health_calm:   { quote: '{drinkName}，今天算善待自己。身体记得每一次被好好对待。' },
+health_tired:  { quote: '累了就先停下来。{drinkName}这一口，是今天给自己最实在的照顾。' },
+health_anxious:{ quote: '{drinkName}喝完，身体先松一口气。焦虑的时候，先从生理上缓一缓。' },
+health_excited:{ quote: '{drinkName}满电，能量对准方向。今天的活力，值得好好用。' },
+health_sad:    { quote: '照顾自己，从{drinkName}这一口开始。情绪低的时候，身体更需要被善待。' },
+health_focused:{ quote: '{drinkName}续了燃料，专注继续。今天的健康运在帮你保持状态。' },
+health_lazy:   { quote: '{drinkName}配躺平，这叫高质量养生。今天允许慢下来。' },
+health_bored:  { quote: '无聊的解法不是刷手机，是出门买一杯{drinkName}。动起来，健康运就来了。' },
+health_stressed:{ quote: '先停下来喝这一口。{drinkName}先，压力的事，喝完再说。' },
+
+// 幸运运 × 心情
+lucky_happy:   { quote: '好运 + 好心情，{drinkName}是今天的公式。三件事凑齐了，今天赢定了。' },
+lucky_calm:    { quote: '{drinkName}在手，好运刚刚好。平静的人，好运最喜欢停在身边。' },
+lucky_tired:   { quote: '{drinkName}，好运今天直接送到了。不用追，它自己来的。' },
+lucky_anxious: { quote: '{drinkName}先喝，好运在等你静下来。越急越跑，越慢越来。' },
+lucky_excited: { quote: '{drinkName}配双倍好运，今天的天花板。这种状态，什么都挡不住。' },
+lucky_sad:     { quote: '{drinkName}，宇宙今天补偿你了。低谷之后，好运是有利息的。' },
+lucky_focused: { quote: '{drinkName}加持，专注里有好运。今天认真做的每件事，都算数。' },
+lucky_lazy:    { quote: '{drinkName}躺着喝，好运自己来。今天的幸运值，不需要你费力。' },
+lucky_bored:   { quote: '{drinkName}喝着，好运已经在路上了。无聊只是好运到来前的等待。' },
+lucky_stressed:{ quote: '{drinkName}，宇宙看见你在扛了。扛过去的人，好运都不会亏待。' },
+};
+
+  const dimKey = DIMENSION_KEYS[topDimIdx];
+  const cardKey = `${dimKey}_${mood.id}`;
+  const fortuneCardRaw = FORTUNE_CARDS[cardKey] || FORTUNE_CARDS[`lucky_${mood.id}`] || { quote: '今天的{drinkName}，专门为你准备的。' };
+  const fortuneCard = { quote: tpl(fortuneCardRaw.quote) };
+
+
+  const canvasDataURL = getDrinkImage(drink);
+  window.__curDrink = drink; // 供 onerror 降级用
+
+  document.getElementById('resultContent').innerHTML = `
+    <div class="result-hero">
+      <div class="drink-img-wrap">
+        <div class="sticker-ring"></div>
+        <img src="${canvasDataURL}" alt="${drink.name}" onerror="this.onerror=null;this.src=getDrinkImageSVG(window.__curDrink);">
+      </div>
+      <div class="drink-name">${drink.name}</div>
+      <div class="drink-brand">
+        <div class="dot"></div>${drink.brand} &nbsp;·&nbsp; ${drink.type}
+      </div>
+      <div class="drink-meta-tags">
+        <span class="meta-tag sweet">🍃 ${ ['','极淡甜','少甜','中甜','偏甜'][drink.sweetness] }</span>
+        ${ drink.tags.map(t => `<span class="meta-tag">${t}</span>`).join('') }
+      </div>
+    </div>
+<div class="reason-card">
+  <div class="reason-title">✦ &nbsp; 今日专属推荐理由</div>
+  <div class="reason-body">${reasonStr}</div>
+  ${drink.nameQuote ? `<div class="name-quote">✨ ${drink.nameQuote}</div>` : ''}
+  <hr class="reason-divider">
+<div class="reason-punchline">${fortuneCard.quote}</div>
+</div>
+    <div class="alts-section">
+      <div class="alts-title">也可以试试 →</div>
+      <div class="alts-grid">
+        ${alts.map((d,i) => `<div class="alt-chip" onclick="renderResult(${i+1})">${d.name} <span style="color:var(--text-mute);font-size:10px">${d.brand}</span></div>`).join('')}
+      </div>
+    </div>
+  `;
+  // ── AI 联网：奶茶推荐理由 ──
+  callAI('drink_reason', {
+    birthday: STATE.birthDate,
+    zodiac: STATE.zodiac.name,
+    shengxiao: STATE.shengxiao.name,
+    drinkName: drink.name,
+    drinkBrand: drink.brand,
+    drinkType: drink.type,
+    drinkTags: drink.tags,
+    mood: mood ? mood.name : '',
+    topDim: topDimLabel,
+    luckyColor: STATE.fortune.luckyColor,
+    luckyDir: STATE.fortune.luckyDir,
+  }).then(aiText => {
+    if (aiText) {
+      const bodyEl = document.querySelector('.reason-card .reason-body');
+      if (bodyEl) {
+        bodyEl.textContent = aiText;
+      }
+    }
+  });
+}
+
+function orderOnMeituan() {
+  window.open('https://i.meituan.com/c/ZjY2MGU4YTMt', '_blank');
+}
+
+function shuffleRec() {
+// scored 包含推荐列表，idx=0 是当前首选，从剩余中随机取一个（防越界）
+const maxIdx = (STATE.scored.length || 2) - 1;
+  const nextIdx = maxIdx > 0 ? Math.floor(Math.random() * maxIdx) + 1 : 0;
+  renderResult(nextIdx);
+  document.getElementById('step4').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// 生命数字 tooltip 点击显示/隐藏
+function showLifeNumTip(el) {
+  const existing = el.querySelector('.life-num-tooltip');
+  if (existing) { existing.remove(); return; }
+  const tip = document.createElement('div');
+  tip.className = 'life-num-tooltip';
+  tip.innerHTML = '把你的出生年月日所有数字相加，再反复化简到个位（1-9），就是你的<strong style="color:#d4a85a">生命数字</strong>。<br>它代表你天生的能量底色，影响今日五维运势的基础权重。';
+  el.appendChild(tip);
+  // 点击其他地方关闭
+  setTimeout(() => {
+    document.addEventListener('click', function close(e) {
+      if (!el.contains(e.target)) { tip.remove(); document.removeEventListener('click', close); }
+    });
+  }, 10);
+}
+
+function restart() {
+  document.getElementById('step2').classList.add('hidden');
+  document.getElementById('step3').classList.add('hidden');
+  document.getElementById('step4').classList.add('hidden');
+  document.getElementById('birthYear').value = '';
+  document.getElementById('birthMonth').value = '';
+  document.getElementById('birthDay').value = '';
+  document.getElementById('zodiacRow').classList.add('hidden');
+  document.getElementById('btn1').disabled = true;
+  document.querySelectorAll('.mood-item').forEach(e => e.classList.remove('selected'));
+  document.getElementById('btn3').disabled = true;
+  // reset arc
+  const arc = document.getElementById('scoreArc');
+  arc.style.transition = 'none';
+  arc.style.strokeDashoffset = '188.5';
+  STATE = { birthDate: '', zodiac: null, shengxiao: null, fortune: null, mood: null, scored: [] };
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ─────────────────────────────────────────────
+//  CONFETTI
+// ─────────────────────────────────────────────
+
+function spawnConfetti() {
+  const colors = ['#d4a85a','#c9896a','#7a9b6e','#8a7aaa','#d4849a','#6a8fb0'];
+  for (let i = 0; i < 30; i++) {
+    const p = document.createElement('div');
+    p.className = 'confetti-particle';
+    p.style.cssText = `
+      left:${Math.random()*100}vw;
+      top:0;
+      background:${colors[Math.floor(Math.random()*colors.length)]};
+      width:${6+Math.random()*6}px;
+      height:${6+Math.random()*6}px;
+      border-radius:${Math.random()>0.5?'50%':'2px'};
+      animation-duration:${1.5+Math.random()*2}s;
+      animation-delay:${Math.random()*0.5}s;
+    `;
+    document.body.appendChild(p);
+    setTimeout(() => p.remove(), 3500);
+  }
+}
+
+// ─────────────────────────────────────────────
+//  SHARE CARD
+// ─────────────────────────────────────────────
+
+// 全局存储当前分享卡片的 dataURL，避免嵌入 onclick 属性
+window.__shareCardDataURL = null;
+
+// 检测是否支持 Web Share API（且能分享文件）
+function canNativeShare() {
+  return !!(navigator.share && navigator.canShare);
+}
+
+async function openShareCard() {
+  // ── 先弹出 Modal（loading 状态）──
+  const overlay = document.createElement('div');
+  overlay.className = 'share-modal-overlay';
+
+  // 根据平台决定按钮区域
+  const shareBtn = canNativeShare()
+    ? `<button class="btn btn-primary btn-full" style="padding:13px;font-size:13px;background:linear-gradient(135deg,#8a70b0,#6a50a0);box-shadow:0 4px 16px rgba(106,80,160,0.25)" onclick="nativeShareCard()">
+         📤 &nbsp; 分享给朋友
+       </button>`
+    : '';
+
+  overlay.innerHTML = `
+    <div class="share-modal">
+      <div class="share-modal-handle"></div>
+      <button class="share-modal-close" onclick="this.closest('.share-modal-overlay').remove()">✕</button>
+      <div class="share-modal-title">✦ &nbsp; 今日运势卡片 &nbsp; ✦</div>
+      <div class="share-canvas-wrap" id="shareCanvasWrap"
+           style="min-height:180px;display:flex;align-items:center;justify-content:center;">
+        <div style="color:#b5843a;font-size:13px;letter-spacing:2px;padding:20px 0">
+          ✦ &nbsp; 生成中… &nbsp; ✦
+        </div>
+      </div>
+      <div class="share-modal-hint" id="shareHint" style="opacity:0">
+        移动端长按图片可直接保存 ✨
+      </div>
+      <div class="share-modal-btns" id="shareBtns" style="opacity:0;pointer-events:none">
+        ${shareBtn}
+        <button class="btn-outline" style="padding:12px;font-size:13px" onclick="copyShareCard(this)">
+          📋 &nbsp; 复制图片
+        </button>
+        <button class="btn btn-primary" style="padding:12px;font-size:13px;background:linear-gradient(135deg,#b5843a,#c9896a);box-shadow:0 4px 16px rgba(181,132,58,0.3)" onclick="downloadShareCard()">
+          ⬇️ &nbsp; 保存图片
+        </button>
+      </div>
+    </div>
+  `;
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); });
+  document.body.appendChild(overlay);
+
+  // ── 异步生成卡片 ──
+  window.__shareCardDataURL = await generateShareCanvas();
+
+  // ── 替换 loading → 图片 ──
+  const wrap = overlay.querySelector('#shareCanvasWrap');
+  if (wrap) {
+    wrap.style.cssText = '';
+    wrap.innerHTML = `<img src="${window.__shareCardDataURL}" alt="运势卡片" draggable="true">`;
+  }
+
+  // ── 显示按钮区 ──
+  const hint = overlay.querySelector('#shareHint');
+  const btns = overlay.querySelector('#shareBtns');
+  if (hint) hint.style.opacity = '1';
+  if (btns) { btns.style.opacity = '1'; btns.style.pointerEvents = ''; }
+}
+
+// Web Share API 原生分享
+async function nativeShareCard() {
+  const dataURL = window.__shareCardDataURL;
+  if (!dataURL) return;
+  try {
+    const res  = await fetch(dataURL);
+    const blob = await res.blob();
+    const file = new File([blob], '奶茶运势.png', { type: 'image/png' });
+    if (navigator.canShare({ files: [file] })) {
+      await navigator.share({
+        title: '今日奶茶运势',
+        text: `我的今日运势分数是 ${STATE.fortune.score} 分，推荐喝${STATE.scored[0].name}！`,
+        files: [file],
+      });
+    } else {
+      // 降级：只分享文字
+      await navigator.share({
+        title: '今日奶茶运势',
+        text: `我的今日运势分数是 ${STATE.fortune.score} 分，推荐喝${STATE.scored[0].name}！`,
+      });
+    }
+  } catch (e) {
+    if (e.name !== 'AbortError') console.warn('Share failed:', e);
+  }
+}
+
+// 复制图片到剪贴板
+async function copyShareCard(btn) {
+  const dataURL = window.__shareCardDataURL;
+  if (!dataURL) return;
+  try {
+    const res  = await fetch(dataURL);
+    const blob = await res.blob();
+    await navigator.clipboard.write([
+      new ClipboardItem({ 'image/png': blob })
+    ]);
+    const orig = btn.innerHTML;
+    btn.innerHTML = '✅ &nbsp; 已复制';
+    btn.disabled = true;
+    setTimeout(() => { btn.innerHTML = orig; btn.disabled = false; }, 2000);
+  } catch (e) {
+    // 降级：提示用户长按保存
+    alert('当前浏览器不支持直接复制图片，请长按图片保存 🙏');
+  }
+}
+
+function downloadShareCard() {
+  const dataURL = window.__shareCardDataURL;
+  if (!dataURL) return;
+  const today = new Date();
+  const dateStr = `${today.getFullYear()}${String(today.getMonth()+1).padStart(2,'0')}${String(today.getDate()).padStart(2,'0')}`;
+  const a = document.createElement('a');
+  a.href = dataURL;
+  a.download = `奶茶运势_${dateStr}.png`;
+  a.click();
+}
+
+async function generateShareCanvas() {
+  // ── 等待字体加载完成，确保 Canvas 文字渲染正确 ──
+  await document.fonts.ready;
+
+  const drink   = STATE.scored[0];
+  const fortune = STATE.fortune;
+  const zodiac  = STATE.zodiac;
+  const today   = new Date();
+
+  // ── 先异步加载奶茶 SVG 图 ──
+  const drinkImg = await new Promise((res) => {
+    const img = new Image();
+    img.onload  = () => res(img);
+    img.onerror = () => res(null);
+    img.src = getDrinkImageSVG(drink);
+    if (img.complete) res(img);
+  });
+  const hasImg = drinkImg && drinkImg.naturalWidth > 0;
+
+  // ── 布局常量 ──
+  const W = 750;
+  const PAD = 60;          // 左右边距
+  const barH = 14, barGap = 36, barLeft = 100, barRight = W - 100;
+  const imgW = 180, imgH = 240;
+
+  // ── 动态计算各区块 Y 坐标 ──
+  let y = 0;
+  y += 8;                  // 顶部色条
+  const tagY    = y + 20;  // TODAY'S BREW 标签
+  y = tagY + 36 + 20;
+  const titleY  = y + 52;  // 主标题
+  y = titleY + 16;
+  const dateY   = y + 26;  // 日期星座
+  y = dateY + 22;
+  const div1Y   = y;       // 第一条分割线
+  y = div1Y + 30;
+  const ringCY  = y + 90;  // 圆环圆心
+  y = ringCY + 90 + 20;
+  const ftitleY = y + 36;  // 运势标题
+  y = ftitleY + 20;
+  const barStartY = y + 10;
+  y = barStartY + DIMENSION_LABELS.length * barGap;
+  const div2Y   = y + 10;  // 第二条分割线
+  y = div2Y + 30;
+  const drinkAreaY = y;    // 奶茶区域起点
+
+  // 奶茶图 + 名称
+  const nameY = hasImg ? drinkAreaY + imgH + 44 : drinkAreaY + 50;
+  y = nameY + 38 + 20;
+
+  // nameQuote
+  const quoteH = drink.nameQuote ? 72 : 0;
+  const quoteY = y;
+  y = quoteY + quoteH + (drink.nameQuote ? 20 : 0);
+
+  // 幸运标签
+  const tagH2 = 52, luckyY = y;
+  y = luckyY + tagH2 + 50;
+
+  // 底部签名
+  const sigY = y + 20;
+  y = sigY + 24 + 20;
+
+  // 底部色条
+  const H = y + 8;
+
+  // ── 创建 Canvas ──
+  const canvas = document.createElement('canvas');
+  canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext('2d');
+
+  // ── 背景渐变 ──
+  const bgGrad = ctx.createLinearGradient(0, 0, 0, H);
+  bgGrad.addColorStop(0,   '#f5f0e8');
+  bgGrad.addColorStop(0.5, '#f0ece3');
+  bgGrad.addColorStop(1,   '#e8e2d8');
+  ctx.fillStyle = bgGrad;
+  ctx.fillRect(0, 0, W, H);
+
+  // ── 背景纹理噪点 ──
+  ctx.save();
+  ctx.globalAlpha = 0.025;
+  for (let i = 0; i < 3000; i++) {
+    const nx = Math.random() * W, ny = Math.random() * H;
+    const nr = Math.random() * 1.5;
+    ctx.fillStyle = Math.random() > 0.5 ? '#8a7060' : '#c0b090';
+    ctx.beginPath(); ctx.arc(nx, ny, nr, 0, Math.PI*2); ctx.fill();
+  }
+  ctx.restore();
+
+  // ── 顶部 & 底部装饰条（渐变复用）──
+  const barGradH = ctx.createLinearGradient(0, 0, W, 0);
+  barGradH.addColorStop(0,   '#c9946a');
+  barGradH.addColorStop(0.5, '#b5843a');
+  barGradH.addColorStop(1,   '#c9896a');
+  ctx.fillStyle = barGradH;
+  ctx.fillRect(0, 0, W, 8);
+
+  // ── TODAY'S BREW 标签 ──
+  ctx.save();
+  ctx.fillStyle = '#b5843a';
+  roundRect(ctx, W/2 - 90, tagY, 180, 36, 18);
+  ctx.fill();
+  ctx.font = '500 22px "Noto Sans SC", sans-serif';
+  ctx.fillStyle = '#fff';
+  ctx.textAlign = 'center';
+  ctx.fillText('✦  TODAY\'S BREW  ✦', W/2, tagY + 24);
+  ctx.restore();
+
+  // ── 主标题 ──
+  ctx.font = 'bold 52px "Noto Serif SC", serif';
+  ctx.fillStyle = '#3d3530';
+  ctx.textAlign = 'center';
+  ctx.fillText('今日奶茶运势', W/2, titleY);
+
+  // ── 日期 + 星座 ──
+  ctx.font = '300 26px "Noto Sans SC", sans-serif';
+  ctx.fillStyle = '#9b9085';
+  ctx.fillText(`${today.getFullYear()}年${today.getMonth()+1}月${today.getDate()}日  ·  ${zodiac.name}`, W/2, dateY);
+
+  // ── 分割线 1 ──
+  ctx.strokeStyle = '#e2ddd3'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(PAD, div1Y); ctx.lineTo(W-PAD, div1Y); ctx.stroke();
+
+  // ── 运势分数圆环 ──
+  const ringCX = W/2, ringR = 90;
+  ctx.strokeStyle = '#e8dfd0'; ctx.lineWidth = 12;
+  ctx.beginPath(); ctx.arc(ringCX, ringCY, ringR, 0, Math.PI*2); ctx.stroke();
+  const arcGrad = ctx.createLinearGradient(ringCX-ringR, ringCY, ringCX+ringR, ringCY);
+  arcGrad.addColorStop(0, '#d4a85a');
+  arcGrad.addColorStop(1, '#c9896a');
+  ctx.strokeStyle = arcGrad; ctx.lineWidth = 12; ctx.lineCap = 'round';
+  const startAngle = -Math.PI / 2;
+  ctx.beginPath(); ctx.arc(ringCX, ringCY, ringR, startAngle, startAngle + (fortune.score/100)*Math.PI*2); ctx.stroke();
+  ctx.font = 'bold 72px "Playfair Display", serif';
+  ctx.fillStyle = '#b5843a'; ctx.textAlign = 'center';
+  ctx.fillText(fortune.score, ringCX, ringCY + 24);
+  ctx.font = '400 22px "Noto Sans SC", sans-serif';
+  ctx.fillStyle = '#9b9085';
+  ctx.fillText('分', ringCX, ringCY + 56);
+
+  // ── 运势标题 ──
+  ctx.font = 'bold 36px "Noto Serif SC", serif';
+  ctx.fillStyle = '#3d3530'; ctx.textAlign = 'center';
+  ctx.fillText(fortune.title, W/2, ftitleY);
+
+  // ── 五维度条形图 ──
+  DIMENSION_LABELS.forEach((lbl, i) => {
+    const by = barStartY + i * barGap;
+    const bw = barRight - barLeft - 80;
+    ctx.font = '400 22px "Noto Sans SC", sans-serif';
+    ctx.fillStyle = '#9b9085'; ctx.textAlign = 'left';
+    ctx.fillText(lbl, barLeft, by + barH - 1);
+    ctx.fillStyle = '#e8e0d4';
+    roundRect(ctx, barLeft+60, by, bw, barH, barH/2); ctx.fill();
+    const fw = Math.max(barH, bw * fortune.dims[i] / 100);
+    const fg = ctx.createLinearGradient(barLeft+60, 0, barLeft+60+fw, 0);
+    fg.addColorStop(0, DIMENSION_COLORS[i] + '99');
+    fg.addColorStop(1, DIMENSION_COLORS[i]);
+    ctx.fillStyle = fg;
+    roundRect(ctx, barLeft+60, by, fw, barH, barH/2); ctx.fill();
+    ctx.font = '600 22px "Noto Sans SC", sans-serif';
+    ctx.fillStyle = DIMENSION_COLORS[i]; ctx.textAlign = 'right';
+    ctx.fillText(fortune.dims[i], barRight, by + barH - 1);
+  });
+
+  // ── 分割线 2 ──
+  ctx.strokeStyle = '#e2ddd3'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(PAD, div2Y); ctx.lineTo(W-PAD, div2Y); ctx.stroke();
+
+  // ── 奶茶图 ──
+  if (hasImg) {
+    ctx.drawImage(drinkImg, W/2 - imgW/2, drinkAreaY, imgW, imgH);
+  }
+
+  // ── 奶茶名 ──
+  ctx.font = 'bold 44px "Playfair Display", "Noto Serif SC", serif';
+  ctx.fillStyle = '#3d3530'; ctx.textAlign = 'center';
+  ctx.fillText(drink.name, W/2, nameY);
+
+  // ── 品牌 + 类型 ──
+  ctx.font = '400 24px "Noto Sans SC", sans-serif';
+  ctx.fillStyle = '#9b9085';
+  ctx.fillText(`${drink.brand}  ·  ${drink.type}`, W/2, nameY + 38);
+
+  // ── nameQuote 引用框 ──
+  if (drink.nameQuote) {
+    ctx.save();
+    ctx.fillStyle = '#f0f7ee';
+    roundRect(ctx, PAD+20, quoteY, W-PAD*2-40, quoteH, 12); ctx.fill();
+    ctx.fillStyle = '#7a9b6e';
+    ctx.fillRect(PAD+20, quoteY, 5, quoteH);
+    ctx.font = 'italic 400 22px "Noto Sans SC", sans-serif';
+    ctx.fillStyle = '#4a7040'; ctx.textAlign = 'center';
+    const nq = drink.nameQuote;
+    if (nq.length <= 22) {
+      ctx.fillText(nq, W/2, quoteY + quoteH/2 + 8);
+    } else {
+      const mid = Math.ceil(nq.length / 2);
+      ctx.fillText(nq.slice(0, mid), W/2, quoteY + 26);
+      ctx.fillText(nq.slice(mid),    W/2, quoteY + 52);
+    }
+    ctx.restore();
+  }
+
+  // ── 幸运标签 ──
+  const luckyItems = [
+    { icon: '🎨', label: `幸运色 ${fortune.luckyColor}` },
+    { icon: '🔢', label: `幸运数 ${fortune.luckyNum}` },
+    { icon: '🧭', label: `幸运方位 ${fortune.luckyDir}` },
+  ];
+  const tagW2 = 190, tagGap2 = 20;
+  const totalTagW = luckyItems.length * tagW2 + (luckyItems.length-1) * tagGap2;
+  const tagStartX = (W - totalTagW) / 2;
+  luckyItems.forEach((item, i) => {
+    const tx = tagStartX + i * (tagW2 + tagGap2);
+    ctx.fillStyle = '#fdfaf4'; ctx.strokeStyle = '#e2ddd3'; ctx.lineWidth = 1;
+    roundRect(ctx, tx, luckyY, tagW2, tagH2, tagH2/2); ctx.fill(); ctx.stroke();
+    ctx.font = '400 22px "Noto Sans SC", sans-serif';
+    ctx.fillStyle = '#3d3530'; ctx.textAlign = 'center';
+    ctx.fillText(item.icon + ' ' + item.label, tx + tagW2/2, luckyY + 33);
+  });
+
+  // ── 底部签名 ──
+  ctx.font = '300 20px "Noto Sans SC", sans-serif';
+  ctx.fillStyle = '#c0b8b0'; ctx.textAlign = 'center';
+  ctx.fillText('今日奶茶运势  ·  专属于你的灵魂饮品', W/2, sigY);
+  ctx.fillText('✦', W/2, sigY + 28);
+
+  // ── 底部装饰条 ──
+  ctx.fillStyle = barGradH;
+  ctx.fillRect(0, H - 8, W, 8);
+
+  return canvas.toDataURL('image/png');
+}
+</script>
+
+<div id="ai-debug-btn" style="position:fixed;bottom:20px;right:20px;z-index:9999">
+  <button onclick="testAI()" style="background:#333;color:#fff;padding:10px 16px;border:none;border-radius:8px;font-size:13px;cursor:pointer">🔍 测试AI</button>
+</div>
+<div id="ai-debug-result" style="display:none;position:fixed;bottom:70px;right:10px;left:10px;z-index:9999;background:#fff;border:1px solid #ccc;border-radius:8px;padding:12px;font-size:12px;max-height:60vh;overflow:auto;word-break:break-all"></div>
+<script>
+async function testAI() {
+  const el = document.getElementById('ai-debug-result');
+  el.style.display = 'block';
+  el.textContent = '请求中...';
+  try {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 15000);
+    const resp = await fetch('https://milktea-fortune-ai.qingrui519.workers.dev', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({type:'fortune', birthday:'1990-04-25', zodiac:'金牛座', shengxiao:'狗', score:74, dims:{爱情:94,工作:75,财运:59,健康:70,创意:87,气场:64}, luckyColor:'金色', luckyDir:'东', title:'踏实前行'}),
+      signal: controller.signal,
+    });
+    clearTimeout(timer);
+    el.textContent = '状态:' + resp.status + ' | ';
+    const data = await resp.json();
+    el.textContent += JSON.stringify(data);
+  } catch(e) {
+    el.textContent = '错误: ' + e.name + ' - ' + e.message;
+  }
+}
+</script>
+</body>
+</html>
