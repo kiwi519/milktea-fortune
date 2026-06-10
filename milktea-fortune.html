@@ -3003,6 +3003,59 @@ function onBirthInputChange() {
 // ─────────────────────────────────────────────
 //  冲泡过渡（Step1 → Step2）
 // ─────────────────────────────────────────────
+const DS_KEY = 'sk-43835cfdce53457faddba655f212919a';
+const DS_URL = 'https://api.deepseek.com/chat/completions';
+
+// 调用 DeepSeek 获取运势元数据（标题/维度解读/幸运元素）
+async function fetchFortuneMeta(fortune, zodiac, shengxiao, birthDate) {
+  const today = new Date();
+  const todayStr = today.toISOString().slice(0, 10);
+  const dimsDesc = DIMENSION_LABELS.map((l, i) => `${l}${fortune.dims[i]}分`).join('、');
+
+  const prompt = `你是一个懂玄学又接地气的运势解读师，语气像朋友聊天，简洁有力。
+
+今天是 ${todayStr}，请为以下用户生成今日运势内容：
+- 星座：${zodiac.name}
+- 生肖：${shengxiao.name}
+- 今日六维度得分：${dimsDesc}
+- 综合运势分：${fortune.score}
+
+请严格按以下 JSON 格式返回，不要有任何多余文字：
+{
+  "title": "今日运势标题（8字以内，有意境，如「万事俱备，只欠行动」）",
+  "dimHints": ["爱情一句话解读（15字内）","工作一句话解读","财运一句话解读","健康一句话解读","创意一句话解读","气场一句话解读"],
+  "luckyColor": "幸运色（2-4字，如「珊瑚橙」）",
+  "luckyNum": 数字（1-9的整数）,
+  "luckyDir": "幸运方位（如「东南」）",
+  "drinkReason": "根据今日运势推荐奶茶的理由（30字内，口语化，结合运势特点）"
+}`;
+
+  const res = await fetch(DS_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${DS_KEY}`,
+    },
+    body: JSON.stringify({
+      model: 'deepseek-chat',
+      messages: [
+        { role: 'system', content: '你是运势解读师，只返回 JSON，不要 markdown 代码块，不要任何解释。' },
+        { role: 'user', content: prompt },
+      ],
+      max_tokens: 300,
+      stream: false,
+    }),
+  });
+
+  if (!res.ok) throw new Error('DS ' + res.status);
+  const data = await res.json();
+  const raw = data.choices?.[0]?.message?.content || '';
+  // 提取 JSON（防止模型多输出文字）
+  const match = raw.match(/\{[\s\S]*\}/);
+  if (!match) throw new Error('no JSON');
+  return JSON.parse(match[0]);
+}
+
 function startFortuneLoading() {
   const bridge = document.getElementById('brewingBridge');
   if (bridge) {
@@ -3012,7 +3065,18 @@ function startFortuneLoading() {
     });
     setTimeout(() => bridge.scrollIntoView({ behavior: 'smooth', block: 'center' }), 80);
   }
-  // 1.5s 后进入结果页
+
+  // 本地先算分（作为 AI 的输入种子）
+  const fortune = generateFortune(STATE.birthDate);
+  STATE.fortune = fortune;
+  STATE._aiMeta = null; // 重置
+
+  // 并行发起 AI 请求，结果存到 STATE._aiMeta
+  fetchFortuneMeta(fortune, STATE.zodiac, STATE.shengxiao, STATE.birthDate)
+    .then(meta => { STATE._aiMeta = meta; })
+    .catch(() => { STATE._aiMeta = null; }); // 失败则降级本地
+
+  // 1.5s 后进入结果页（AI 请求通常 800ms~1.2s 内完成）
   setTimeout(() => _realGoStep2(), 1500);
 }
 
@@ -3021,19 +3085,21 @@ function _realGoStep2() {
   const bridge = document.getElementById('brewingBridge');
   if (bridge) {
     bridge.classList.remove('visible');
-    setTimeout(() => {
-      bridge.classList.add('hidden');
-    }, 450);
+    setTimeout(() => bridge.classList.add('hidden'), 450);
   }
 
-  const fortune = generateFortune(STATE.birthDate);
-  STATE.fortune = fortune;
+  // fortune 已在 startFortuneLoading 里算好，直接用
+  const fortune = STATE.fortune;
+  // AI meta（可能为 null，降级本地）
+  const meta = STATE._aiMeta;
 
   // 日期显示
   const today = new Date();
   document.getElementById('fortuneDate').textContent =
     `${today.getFullYear()}年${today.getMonth()+1}月${today.getDate()}日 · ${STATE.zodiac.name}`;
-  document.getElementById('fortuneTitle').textContent = fortune.title;
+
+  // 标题：AI 优先
+  document.getElementById('fortuneTitle').textContent = meta?.title || fortune.title;
   document.getElementById('scoreNum').textContent = fortune.score;
 
   // 圆弧动画
@@ -3047,8 +3113,8 @@ function _realGoStep2() {
   // 维度条
   const barsEl = document.getElementById('fortuneBars');
   barsEl.innerHTML = '';
-  // 维度一句话解读文案库
-  const DIM_HINTS = {
+  // 维度一句话解读：AI 优先，降级本地
+  const DIM_HINTS_LOCAL = {
     love:     { high: '桃花运旺，今天主动一点没坏处', mid: '感情平稳，细水长流', low: '感情运偏弱，少些计较多些耐心' },
     career:   { high: '工作状态在线，适合推进重要事项', mid: '工作运平稳，按计划走', low: '工作运偏低，今日不宜强行推进' },
     wealth:   { high: '财运亨通，小投入可能有惊喜', mid: '财运平稳，量入为出', low: '财运偏弱，今日不宜大额消费' },
@@ -3061,7 +3127,8 @@ function _realGoStep2() {
     const score = fortune.dims[i];
     const key = DIMENSION_KEYS[i];
     const level = score >= 80 ? 'high' : score >= 60 ? 'mid' : 'low';
-    const hintText = DIM_HINTS[key]?.[level] || '';
+    // AI dimHints 是按顺序的数组，直接取第 i 项
+    const hintText = (meta?.dimHints?.[i]) || DIM_HINTS_LOCAL[key]?.[level] || '';
     const row = document.createElement('div');
     row.className = 'fortune-bar-row';
     row.innerHTML = `
@@ -3101,12 +3168,15 @@ function _realGoStep2() {
     });
   }, 300);
 
-// 幸运标签
+// 幸运标签：AI 优先
 const luckyEl = document.getElementById('luckyRow');
+const luckyColor = meta?.luckyColor || fortune.luckyColor;
+const luckyDir   = meta?.luckyDir   || fortune.luckyDir;
+const luckyNum   = meta?.luckyNum   || fortune.luckyNum;
 luckyEl.innerHTML = `
-<div class="lucky-tag"><span class="tag-icon">🎨</span>幸运色：${fortune.luckyColor}</div>
-<div class="lucky-tag"><span class="tag-icon">🧭</span>幸运方位：${fortune.luckyDir}</div>
-<div class="lucky-tag"><span class="tag-icon">🔢</span>幸运数字：${fortune.luckyNum}</div>
+<div class="lucky-tag"><span class="tag-icon">🎨</span>幸运色：${luckyColor}</div>
+<div class="lucky-tag"><span class="tag-icon">🧭</span>幸运方位：${luckyDir}</div>
+<div class="lucky-tag"><span class="tag-icon">🔢</span>幸运数字：${luckyNum}</div>
 `;
 
   // ── 今日能量解读（AI 实时生成 + 本地降级）──
@@ -3226,9 +3296,6 @@ luckyEl.innerHTML = `
     }
 
     // ── 直接调用 DeepSeek API（流式输出，边生成边显示）──
-    const DS_KEY = 'sk-43835cfdce53457faddba655f212919a';
-    const DS_URL = 'https://api.deepseek.com/chat/completions';
-
     const dimsDesc2 = DIMENSION_LABELS.map((label, i) => `${label}${dims[i]}分`).join('、');
     const birthdayHint2 = isBirthday
       ? '今天是ta的生日，能量场在年度峰值。'
@@ -3865,8 +3932,6 @@ lucky_stressed:{ quote: '{drinkName}，宇宙看见你在扛了。扛过去的�
 
   // ── AI 推荐理由（流式生成，失败降级本地模板）──
   (async () => {
-    const DS_KEY = 'sk-43835cfdce53457faddba655f212919a';
-    const DS_URL = 'https://api.deepseek.com/chat/completions';
     const reasonEl = document.getElementById('reasonBody');
     if (!reasonEl) return;
 
