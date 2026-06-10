@@ -4369,10 +4369,17 @@ async function generateShareCanvas() {
   // ── 先异步加载奶茶 SVG 图 ──
   const drinkImg = await new Promise((res) => {
     const img = new Image();
+    img.crossOrigin = 'anonymous';
     img.onload  = () => res(img);
-    img.onerror = () => res(null);
-    img.src = getDrinkImageSVG(drink);
-    if (img.complete) res(img);
+    img.onerror = () => {
+      // 真实图片加载失败，降级到 SVG
+      const fallback = new Image();
+      fallback.onload  = () => res(fallback);
+      fallback.onerror = () => res(null);
+      fallback.src = getDrinkImageSVG(drink);
+    };
+    img.src = getDrinkImage(drink);
+    if (img.complete && img.naturalWidth > 0) res(img);
   });
   const hasImg = drinkImg && drinkImg.naturalWidth > 0;
 
