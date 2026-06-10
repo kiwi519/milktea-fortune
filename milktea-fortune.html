@@ -3249,6 +3249,8 @@ lucky_stressed:{ quote: '{drinkName}，宇宙看见你在扛了。扛过去的�
 
   const canvasDataURL = getDrinkImage(drink);
   window.__curDrink = drink; // 供 onerror 降级用
+  // 保存本地降级文案，供 AI 失败时使用
+  window.__reasonStrFallback = reasonStr;
 
   document.getElementById('resultContent').innerHTML = `
     <div class="result-hero">
@@ -3267,7 +3269,7 @@ lucky_stressed:{ quote: '{drinkName}，宇宙看见你在扛了。扛过去的�
     </div>
 <div class="reason-card">
   <div class="reason-title">✦ &nbsp; 今日专属推荐理由</div>
-  <div class="reason-body">${reasonStr}</div>
+  <div class="reason-body" id="reasonBody"><div class="insight-loading"><span class="insight-dot"></span><span class="insight-dot"></span><span class="insight-dot"></span><span style="margin-left:6px;color:var(--text-mute);font-size:12px;">正在为你匹配今日奶茶理由…</span></div></div>
   ${drink.nameQuote ? `<div class="name-quote">✨ ${drink.nameQuote}</div>` : ''}
   <hr class="reason-divider">
 <div class="reason-punchline">${fortuneCard.quote}</div>
@@ -3279,6 +3281,87 @@ lucky_stressed:{ quote: '{drinkName}，宇宙看见你在扛了。扛过去的�
       </div>
     </div>
   `;
+
+  // ── AI 推荐理由（流式生成，失败降级本地模板）──
+  (async () => {
+    const DS_KEY = 'sk-43835cfdce53457faddba655f212919a';
+    const DS_URL = 'https://api.deepseek.com/chat/completions';
+    const reasonEl = document.getElementById('reasonBody');
+    if (!reasonEl) return;
+
+    const reasonPrompt = `你是一个懂奶茶又懂玄学的文案师，语气像朋友推荐，口语化，不装。
+帮我写一段奶茶推荐理由：
+- 推荐饮品：${drink.name}（${drink.brand}，${drink.type}）
+- 饮品描述：${drink.desc || ''}
+- 饮品标签：${drink.tags.join('、')}
+- 用户星座：${zodiac}，今日心情：${moodName}
+- 今日最强维度：${topDimLabel}（${topDimScore}分），幸运色：${luckyColor}
+要求：3句话，先说这杯饮品本身好在哪（具体到口感/特点），再说和今天运势/心情的呼应，最后一句俏皮勾单。不超过80字。直接输出正文，不要序号。`;
+
+    const controller = new AbortController();
+    const timeout = setTimeout(() => {
+      controller.abort();
+      if (reasonEl && reasonEl.querySelector('.insight-loading')) {
+        reasonEl.innerHTML = window.__reasonStrFallback || '';
+      }
+    }, 20000);
+
+    try {
+      const res = await fetch(DS_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${DS_KEY}` },
+        body: JSON.stringify({
+          model: 'deepseek-chat',
+          messages: [
+            { role: 'system', content: '你是一个懂奶茶又懂玄学的文案师，用中文回答，语气口语化，简洁有力。' },
+            { role: 'user', content: reasonPrompt },
+          ],
+          max_tokens: 200,
+          stream: true,
+        }),
+        signal: controller.signal,
+      });
+
+      if (!res.ok) throw new Error('API error ' + res.status);
+
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let accumulated = '';
+      let buffer = '';
+      reasonEl.innerHTML = ''; // 清除 loading
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split('\n');
+        buffer = lines.pop();
+        for (const line of lines) {
+          if (!line.startsWith('data: ')) continue;
+          const raw = line.slice(6).trim();
+          if (raw === '[DONE]') break;
+          try {
+            const parsed = JSON.parse(raw);
+            const token = parsed.choices?.[0]?.delta?.content || '';
+            accumulated += token;
+            if (token) {
+              reasonEl.innerHTML = accumulated
+                .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\n\n/g, '<br><br>')
+                .replace(/\n/g, '<br>');
+            }
+          } catch {}
+        }
+      }
+
+      clearTimeout(timeout);
+      if (!accumulated || accumulated.length < 10) throw new Error('内容为空');
+
+    } catch (e) {
+      clearTimeout(timeout);
+      if (reasonEl) reasonEl.innerHTML = window.__reasonStrFallback || '';
+    }
+  })();
 }
 
 function orderOnMeituan() {
