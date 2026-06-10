@@ -2012,7 +2012,9 @@ function hexA(hex, a) {
 
 function getDrinkImage(drink) {
   if (drink.imgFile) {
-    return `milktea-imgs/${drink.imgFile}`;
+    // 优先 WebP（体积小 95%），降级 PNG
+    const webp = drink.imgFile.replace(/\.png$/i, '.webp');
+    return `milktea-imgs/${webp}`;
   }
   return getDrinkImageSVG(drink);
 }
