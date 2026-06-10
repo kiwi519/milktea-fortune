@@ -3962,9 +3962,11 @@ lucky_stressed:{ quote: '{drinkName}，宇宙看见你在扛了。扛过去的�
   const _rc = document.getElementById('resultContent');
   const _isFirstRender = !_rc.hasChildNodes() || _rc.children.length === 0;
   function _doRender() {
+    // 首次渲染加 entering（入场动画），切换奶茶时不加（避免闪屏）
+    const _enteringClass = _isFirstRender ? ' entering' : '';
     _rc.innerHTML = `
     <div class="result-hero">
-      <div class="drink-img-wrap entering" id="drinkImgWrap">
+      <div class="drink-img-wrap${_enteringClass}" id="drinkImgWrap">
         <div class="sticker-ring"></div>
         <img src="${canvasDataURL}" alt="${drink.name}" onerror="this.onerror=null;this.src=getDrinkImageSVG(window.__curDrink);">
       </div>
@@ -3988,10 +3990,16 @@ lucky_stressed:{ quote: '{drinkName}，宇宙看见你在扛了。扛过去的�
         ${alts.map((d,i) => `<div class="alt-chip" onclick="renderResult(${i+1})">${d.name} <span style="color:var(--text-mute);font-size:10px">${d.brand}</span></div>`).join('')}
       </div>
     </div>
-  `;
-    // 淡入
-    _rc.style.transition = 'opacity 0.22s ease';
-    _rc.style.opacity = '1';
+    `;
+    // 淡入：等浏览器完成 DOM 渲染后再触发 opacity 过渡，避免闪屏
+    _rc.style.transition = 'none';
+    _rc.style.opacity = '0';
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        _rc.style.transition = 'opacity 0.22s ease';
+        _rc.style.opacity = '1';
+      });
+    });
     // DOM 已就绪，执行后续依赖 DOM 的逻辑
     _afterRender();
   } // end _doRender
@@ -4028,26 +4036,24 @@ lucky_stressed:{ quote: '{drinkName}，宇宙看见你在扛了。扛过去的�
     const reasonEl = document.getElementById('reasonBody');
     if (!reasonEl) return;
 
-    const reasonPrompt = `你是一个混合了算命先生玄学感和闺蜜毒舌风的奶茶文案师。语气口语化，不用书面语，不说废话。
+    const reasonPrompt = `你是一个懂生活的奶茶推荐师，说话简洁有逻辑，让人觉得"有道理"。
 
-今天要为一个${zodiac}写一段奶茶推荐文案，信息如下：
+今天要为一个${zodiac}写一段奶茶推荐理由，信息如下：
 - 推荐饮品：${drink.name}（${drink.brand}，${drink.type}）
 - 饮品口感/特点：${drink.desc || drink.tags.join('、')}
 - 用户今日心情：${moodName}
-- 今日最强运势维度：${topDimLabel}（${topDimScore}分）
-- 今日幸运色：${luckyColor}
+- 今日最强运势维度：${topDimLabel}
 
-写作要求：
-1. 【玄学起】开头用算命先生的口吻，点出这个${zodiac}今天的气场或状态，要有"被看穿"的感觉，带点神秘感，一两句话
-2. 【毒舌转】中间转成闺蜜毒舌风，带点调侃地说清楚这杯饮品的口感特点，再把饮品和今天的状态/心情强行但合理地绑定，语气笃定有点损但不刻薄
-3. 【笃定收】最后一句像算命先生下结论，不容置疑，带点宿命感，让人觉得"就该喝这个"
+写作要求（三层因果链，缺一不可）：
+1. 【状态】先说这个人今天是什么状态——结合心情"${moodName}"和${zodiac}的特质，一句话点出来，要具体，不要泛泛
+2. 【为什么这杯】说清楚这杯${drink.name}的哪个特点，正好对应这个状态——要有逻辑，让人觉得"确实是这样"
+3. 【喝了会怎样】说喝完之后会有什么感受或变化——要落地，不要玄学，说人话
 
 格式要求：
-- 用"${zodiac}的你"这样的称呼，自然融入正文，不要单独列出
-- 5到7句话，总字数120到160字之间
-- 不要分段，不要序号，不要标题，直接输出正文
-- 语气词可以用"啊""嘛""吧""哦"，但不要用"宝""姐妹"
-- 禁止出现"能量""加持""治愈系""满满"这类烂大街词`;
+- 三层连贯写成一段，不分段，不加序号，不加标题
+- 总字数严格控制在80到100字之间
+- 语气自然口语化，不用书面语，不说废话
+- 禁止出现：能量、加持、治愈、满满、宇宙、频率、赋能、宝、姐妹`;
 
     const controller = new AbortController();
     const timeout = setTimeout(() => {
@@ -4064,10 +4070,10 @@ lucky_stressed:{ quote: '{drinkName}，宇宙看见你在扛了。扛过去的�
         body: JSON.stringify({
           model: 'deepseek-chat',
           messages: [
-            { role: 'system', content: '你是一个融合了算命先生玄学感和闺蜜毒舌风的奶茶文案师，用中文写作，口语化，不说废话，不用书面语，语气有点损但真心，让人觉得被看穿又想笑。' },
+            { role: 'system', content: '你是一个懂生活的奶茶推荐师，用中文写作，口语化，逻辑清晰，说话简洁有说服力，让人觉得"有道理"。' },
             { role: 'user', content: reasonPrompt },
           ],
-          max_tokens: 350,
+          max_tokens: 200,
           stream: true,
         }),
         signal: controller.signal,
@@ -4372,216 +4378,201 @@ async function generateShareCanvas() {
 
   // ── 布局常量 ──
   const W = 750;
-  const PAD = 60;          // 左右边距
-  const barH = 14, barGap = 36, barLeft = 100, barRight = W - 100;
-  const imgW = 180, imgH = 240;
+  const PAD = 60;
+  const imgW = 340, imgH = 400;
 
   // ── 动态计算各区块 Y 坐标 ──
   let y = 0;
-  y += 8;                  // 顶部色条
-  const tagY    = y + 20;  // TODAY'S BREW 标签
-  y = tagY + 36 + 20;
-  const titleY  = y + 52;  // 主标题
-  y = titleY + 16;
-  const dateY   = y + 26;  // 日期星座
-  y = dateY + 22;
-  const div1Y   = y;       // 第一条分割线
-  y = div1Y + 30;
-  const ringCY  = y + 90;  // 圆环圆心
-  y = ringCY + 90 + 20;
-  const ftitleY = y + 36;  // 运势标题
-  y = ftitleY + 20;
-  const barStartY = y + 10;
-  y = barStartY + DIMENSION_LABELS.length * barGap;
-  const div2Y   = y + 10;  // 第二条分割线
-  y = div2Y + 30;
-  const drinkAreaY = y;    // 奶茶区域起点
+  y += 6;                   // 顶部色条
 
-  // 奶茶图 + 名称
-  const nameY = hasImg ? drinkAreaY + imgH + 44 : drinkAreaY + 50;
-  y = nameY + 38 + 20;
+  // ② 头部区：胶囊标签 + 主标题 + 日期
+  const headerBgH = 280;
+  const headerBgY = y;
+  y += headerBgH;
+  const tagY   = headerBgY + 40;
+  const titleY = headerBgY + 136;
+  const dateY  = headerBgY + 192;
+
+  // ③ 奶茶主角区
+  const drinkSecY  = y + 44;
+  const drinkImgY  = drinkSecY;
+  const drinkNameY = drinkImgY + (hasImg ? imgH + 52 : 40);
+  const drinkSubY  = drinkNameY + 50;
+  y = drinkSubY + 40;
 
   // nameQuote
-  const quoteH = drink.nameQuote ? 72 : 0;
-  const quoteY = y;
-  y = quoteY + quoteH + (drink.nameQuote ? 20 : 0);
+  const quoteH = drink.nameQuote ? 96 : 0;
+  const quoteY = y + (drink.nameQuote ? 20 : 0);
+  y = quoteY + quoteH + (drink.nameQuote ? 28 : 0);
 
-  // 幸运标签
-  const tagH2 = 52, luckyY = y;
-  y = luckyY + tagH2 + 50;
+  // ④ Social Badges
+  const badgeH = 112, badgeGap = 16;
+  const badgeW = (W - PAD*2 - badgeGap) / 2;
+  const badgesY = y + 40;
+  y = badgesY + badgeH;
 
-  // 底部签名
-  const sigY = y + 20;
-  y = sigY + 24 + 20;
+  // ⑤ 底部签名
+  const sigY = y + 48;
+  y = sigY + 52;
 
-  // 底部色条
-  const H = y + 8;
+  const H = y + 6;
 
   // ── 创建 Canvas ──
   const canvas = document.createElement('canvas');
   canvas.width = W; canvas.height = H;
   const ctx = canvas.getContext('2d');
 
-  // ── 背景渐变 ──
-  const bgGrad = ctx.createLinearGradient(0, 0, 0, H);
-  bgGrad.addColorStop(0,   '#f5f0e8');
-  bgGrad.addColorStop(0.5, '#f0ece3');
-  bgGrad.addColorStop(1,   '#e8e2d8');
-  ctx.fillStyle = bgGrad;
+  // ── 颜色系统 ──
+  const C = {
+    bg0: '#12100e', bg1: '#1c1814', bg2: '#252018',
+    border: '#3a3228', gold: '#d4a85a', goldL: '#f0c878', goldD: '#a07830',
+    amber: '#c9896a', text0: '#f5ede0', text1: '#c8b898', text2: '#7a6a58', accent: '#e8c87a',
+  };
+
+  // ── 背景（深色）──
+  ctx.fillStyle = C.bg1;
   ctx.fillRect(0, 0, W, H);
 
-  // ── 背景纹理噪点 ──
+  // ── 顶部装饰条 ──
+  const topGrad = ctx.createLinearGradient(0, 0, W, 0);
+  topGrad.addColorStop(0, C.goldD); topGrad.addColorStop(0.5, C.gold); topGrad.addColorStop(1, C.amber);
+  ctx.fillStyle = topGrad; ctx.fillRect(0, 0, W, 6);
+
+  // ── 头部背景块 ──
   ctx.save();
-  ctx.globalAlpha = 0.025;
-  for (let i = 0; i < 3000; i++) {
-    const nx = Math.random() * W, ny = Math.random() * H;
-    const nr = Math.random() * 1.5;
-    ctx.fillStyle = Math.random() > 0.5 ? '#8a7060' : '#c0b090';
-    ctx.beginPath(); ctx.arc(nx, ny, nr, 0, Math.PI*2); ctx.fill();
-  }
+  const hdrGrad = ctx.createLinearGradient(0, headerBgY, 0, headerBgY + headerBgH);
+  hdrGrad.addColorStop(0, '#1e1a14'); hdrGrad.addColorStop(1, '#181410');
+  ctx.fillStyle = hdrGrad;
+  roundRect(ctx, 0, headerBgY, W, headerBgH, 0); ctx.fill();
   ctx.restore();
 
-  // ── 顶部 & 底部装饰条（渐变复用）──
-  const barGradH = ctx.createLinearGradient(0, 0, W, 0);
-  barGradH.addColorStop(0,   '#c9946a');
-  barGradH.addColorStop(0.5, '#b5843a');
-  barGradH.addColorStop(1,   '#c9896a');
-  ctx.fillStyle = barGradH;
-  ctx.fillRect(0, 0, W, 8);
-
-  // ── TODAY'S BREW 标签 ──
+  // ── TODAY'S BREW 胶囊标签 ──
   ctx.save();
-  ctx.fillStyle = '#b5843a';
-  roundRect(ctx, W/2 - 90, tagY, 180, 36, 18);
-  ctx.fill();
-  ctx.font = '500 22px "Noto Sans SC", sans-serif';
-  ctx.fillStyle = '#fff';
-  ctx.textAlign = 'center';
-  ctx.fillText('✦  TODAY\'S BREW  ✦', W/2, tagY + 24);
+  const tagGrad = ctx.createLinearGradient(W/2-80, 0, W/2+80, 0);
+  tagGrad.addColorStop(0, C.goldD); tagGrad.addColorStop(1, C.amber);
+  ctx.fillStyle = tagGrad;
+  roundRect(ctx, W/2 - 78, tagY, 156, 30, 15); ctx.fill();
+  ctx.font = '500 17px "Noto Sans SC", sans-serif';
+  ctx.fillStyle = '#fff'; ctx.textAlign = 'center';
+  ctx.fillText('✦  TODAY\'S BREW  ✦', W/2, tagY + 20);
   ctx.restore();
 
   // ── 主标题 ──
   ctx.font = 'bold 52px "Noto Serif SC", serif';
-  ctx.fillStyle = '#3d3530';
-  ctx.textAlign = 'center';
+  ctx.fillStyle = C.text0; ctx.textAlign = 'center';
   ctx.fillText('今日奶茶运势', W/2, titleY);
 
   // ── 日期 + 星座 ──
-  ctx.font = '300 26px "Noto Sans SC", sans-serif';
-  ctx.fillStyle = '#9b9085';
+  ctx.font = '300 22px "Noto Sans SC", sans-serif';
+  ctx.fillStyle = C.text2;
   ctx.fillText(`${today.getFullYear()}年${today.getMonth()+1}月${today.getDate()}日  ·  ${zodiac.name}`, W/2, dateY);
 
-  // ── 分割线 1 ──
-  ctx.strokeStyle = '#e2ddd3'; ctx.lineWidth = 1;
-  ctx.beginPath(); ctx.moveTo(PAD, div1Y); ctx.lineTo(W-PAD, div1Y); ctx.stroke();
-
-  // ── 运势分数圆环 ──
-  const ringCX = W/2, ringR = 90;
-  ctx.strokeStyle = '#e8dfd0'; ctx.lineWidth = 12;
-  ctx.beginPath(); ctx.arc(ringCX, ringCY, ringR, 0, Math.PI*2); ctx.stroke();
-  const arcGrad = ctx.createLinearGradient(ringCX-ringR, ringCY, ringCX+ringR, ringCY);
-  arcGrad.addColorStop(0, '#d4a85a');
-  arcGrad.addColorStop(1, '#c9896a');
-  ctx.strokeStyle = arcGrad; ctx.lineWidth = 12; ctx.lineCap = 'round';
-  const startAngle = -Math.PI / 2;
-  ctx.beginPath(); ctx.arc(ringCX, ringCY, ringR, startAngle, startAngle + (fortune.score/100)*Math.PI*2); ctx.stroke();
-  ctx.font = 'bold 72px "Playfair Display", serif';
-  ctx.fillStyle = '#b5843a'; ctx.textAlign = 'center';
-  ctx.fillText(fortune.score, ringCX, ringCY + 24);
-  ctx.font = '400 22px "Noto Sans SC", sans-serif';
-  ctx.fillStyle = '#9b9085';
-  ctx.fillText('分', ringCX, ringCY + 56);
-
-  // ── 运势标题 ──
-  ctx.font = 'bold 36px "Noto Serif SC", serif';
-  ctx.fillStyle = '#3d3530'; ctx.textAlign = 'center';
-  ctx.fillText(fortune.title, W/2, ftitleY);
-
-  // ── 五维度条形图 ──
-  DIMENSION_LABELS.forEach((lbl, i) => {
-    const by = barStartY + i * barGap;
-    const bw = barRight - barLeft - 80;
-    ctx.font = '400 22px "Noto Sans SC", sans-serif';
-    ctx.fillStyle = '#9b9085'; ctx.textAlign = 'left';
-    ctx.fillText(lbl, barLeft, by + barH - 1);
-    ctx.fillStyle = '#e8e0d4';
-    roundRect(ctx, barLeft+60, by, bw, barH, barH/2); ctx.fill();
-    const fw = Math.max(barH, bw * fortune.dims[i] / 100);
-    const fg = ctx.createLinearGradient(barLeft+60, 0, barLeft+60+fw, 0);
-    fg.addColorStop(0, DIMENSION_COLORS[i] + '99');
-    fg.addColorStop(1, DIMENSION_COLORS[i]);
-    ctx.fillStyle = fg;
-    roundRect(ctx, barLeft+60, by, fw, barH, barH/2); ctx.fill();
-    ctx.font = '600 22px "Noto Sans SC", sans-serif';
-    ctx.fillStyle = DIMENSION_COLORS[i]; ctx.textAlign = 'right';
-    ctx.fillText(fortune.dims[i], barRight, by + barH - 1);
-  });
-
-  // ── 分割线 2 ──
-  ctx.strokeStyle = '#e2ddd3'; ctx.lineWidth = 1;
-  ctx.beginPath(); ctx.moveTo(PAD, div2Y); ctx.lineTo(W-PAD, div2Y); ctx.stroke();
-
-  // ── 奶茶图 ──
+  // ── 奶茶图（按原始比例渲染）──
+  let actualDrinkNameY = drinkNameY;
   if (hasImg) {
-    ctx.drawImage(drinkImg, W/2 - imgW/2, drinkAreaY, imgW, imgH);
+    // 光晕
+    const imgCX = W/2, imgCY = drinkImgY + imgH/2;
+    const haloOuter = ctx.createRadialGradient(imgCX, imgCY, 0, imgCX, imgCY, 260);
+    haloOuter.addColorStop(0, C.gold + '30'); haloOuter.addColorStop(1, 'transparent');
+    ctx.fillStyle = haloOuter; ctx.fillRect(0, drinkImgY - 40, W, imgH + 80);
+    // 图片
+    const naturalRatio = drinkImg.naturalHeight / drinkImg.naturalWidth;
+    const renderW = imgW;
+    const renderH = naturalRatio > 0 ? Math.round(imgW * naturalRatio) : imgH;
+    ctx.drawImage(drinkImg, W/2 - renderW/2, drinkImgY, renderW, renderH);
+    actualDrinkNameY = drinkImgY + renderH + 48;
   }
 
   // ── 奶茶名 ──
-  ctx.font = 'bold 44px "Playfair Display", "Noto Serif SC", serif';
-  ctx.fillStyle = '#3d3530'; ctx.textAlign = 'center';
-  ctx.fillText(drink.name, W/2, nameY);
+  ctx.font = 'bold 56px "Noto Serif SC", serif';
+  ctx.fillStyle = C.goldL; ctx.textAlign = 'center';
+  ctx.fillText(drink.name, W/2, actualDrinkNameY);
 
   // ── 品牌 + 类型 ──
   ctx.font = '400 24px "Noto Sans SC", sans-serif';
-  ctx.fillStyle = '#9b9085';
-  ctx.fillText(`${drink.brand}  ·  ${drink.type}`, W/2, nameY + 38);
+  ctx.fillStyle = C.text2;
+  ctx.fillText(`${drink.brand}  ·  ${drink.type}`, W/2, actualDrinkNameY + 44);
 
-  // ── nameQuote 引用框 ──
+  // ── nameQuote 引用框（自动换行）──
   if (drink.nameQuote) {
     ctx.save();
-    ctx.fillStyle = '#f0f7ee';
-    roundRect(ctx, PAD+20, quoteY, W-PAD*2-40, quoteH, 12); ctx.fill();
-    ctx.fillStyle = '#7a9b6e';
-    ctx.fillRect(PAD+20, quoteY, 5, quoteH);
+    ctx.fillStyle = C.bg2;
+    roundRect(ctx, PAD, quoteY, W - PAD*2, quoteH, 14); ctx.fill();
+    ctx.strokeStyle = C.border; ctx.lineWidth = 1;
+    roundRect(ctx, PAD, quoteY, W - PAD*2, quoteH, 14); ctx.stroke();
     ctx.font = 'italic 400 22px "Noto Sans SC", sans-serif';
-    ctx.fillStyle = '#4a7040'; ctx.textAlign = 'center';
+    ctx.fillStyle = C.text1; ctx.textAlign = 'center';
     const nq = drink.nameQuote;
-    if (nq.length <= 22) {
-      ctx.fillText(nq, W/2, quoteY + quoteH/2 + 8);
-    } else {
-      const mid = Math.ceil(nq.length / 2);
-      ctx.fillText(nq.slice(0, mid), W/2, quoteY + 26);
-      ctx.fillText(nq.slice(mid),    W/2, quoteY + 52);
+    const maxW = W - PAD*2 - 48;
+    // 按宽度自动换行
+    const words = nq.split('');
+    let line = '', lines = [];
+    for (const ch of words) {
+      const test = line + ch;
+      if (ctx.measureText(test).width > maxW && line) { lines.push(line); line = ch; }
+      else line = test;
     }
+    if (line) lines.push(line);
+    lines = lines.slice(0, 2);
+    const lineH = 36;
+    const startY = quoteY + quoteH/2 - (lines.length - 1) * lineH/2;
+    lines.forEach((l, i) => ctx.fillText(l, W/2, startY + i * lineH));
     ctx.restore();
   }
 
-  // ── 幸运标签 ──
-const luckyItems = [
-{ icon: '🎨', label: `幸运色 ${fortune.luckyColor}` },
-{ icon: '🧭', label: `幸运方位 ${fortune.luckyDir}` },
-];
-  const tagW2 = 190, tagGap2 = 20;
-  const totalTagW = luckyItems.length * tagW2 + (luckyItems.length-1) * tagGap2;
-  const tagStartX = (W - totalTagW) / 2;
-  luckyItems.forEach((item, i) => {
-    const tx = tagStartX + i * (tagW2 + tagGap2);
-    ctx.fillStyle = '#fdfaf4'; ctx.strokeStyle = '#e2ddd3'; ctx.lineWidth = 1;
-    roundRect(ctx, tx, luckyY, tagW2, tagH2, tagH2/2); ctx.fill(); ctx.stroke();
-    ctx.font = '400 22px "Noto Sans SC", sans-serif';
-    ctx.fillStyle = '#3d3530'; ctx.textAlign = 'center';
-    ctx.fillText(item.icon + ' ' + item.label, tx + tagW2/2, luckyY + 33);
-  });
+  // ── Social Badges ──
+  const WUXING_BADGE = window.WUXING_BADGE || {};
+  const ZODIAC_BADGE = window.ZODIAC_BADGE || {};
+  const wx = STATE.wuxing || '';
+  const zn = zodiac.name || '';
+  const wb = WUXING_BADGE[wx] || { icon:'☯️', title:'五行', sub:'神秘体质', desc:'连玄学都看不透你', color:'#b09060' };
+  const zb = ZODIAC_BADGE[zn] || { icon:'✨', tag:'玄学体质', desc:'天生自带神秘感' };
+
+  function drawDarkBadge(bx, by, bw, bh, accentColor, title, sub, desc) {
+    ctx.save();
+    ctx.fillStyle = C.bg2;
+    roundRect(ctx, bx, by, bw, bh, 16); ctx.fill();
+    ctx.strokeStyle = accentColor + '55'; ctx.lineWidth = 1;
+    roundRect(ctx, bx, by, bw, bh, 16); ctx.stroke();
+    // 顶部色条
+    ctx.fillStyle = accentColor + 'cc';
+    roundRect(ctx, bx, by, bw, 4, [16, 16, 0, 0]); ctx.fill();
+    ctx.font = '600 13px "Noto Sans SC", sans-serif';
+    ctx.fillStyle = accentColor; ctx.textAlign = 'left';
+    ctx.fillText(title, bx + 16, by + 26);
+    ctx.font = '700 20px "Noto Sans SC", sans-serif';
+    ctx.fillStyle = C.text0;
+    ctx.fillText(sub, bx + 16, by + 52);
+    // desc 两行自动换行
+    ctx.font = '400 17px "Noto Sans SC", sans-serif';
+    ctx.fillStyle = C.text2;
+    const maxDescW = bw - 32;
+    let dLine = '', dLines = [];
+    for (const ch of desc) {
+      const t = dLine + ch;
+      if (ctx.measureText(t).width > maxDescW && dLine) { dLines.push(dLine); dLine = ch; }
+      else dLine = t;
+    }
+    if (dLine) dLines.push(dLine);
+    dLines.slice(0, 2).forEach((l, i) => ctx.fillText(l, bx + 16, by + 76 + i * 22));
+    ctx.restore();
+  }
+
+  drawDarkBadge(PAD, badgesY, badgeW, badgeH, C.amber,
+    `${wb.icon} ${wx}行`, wb.sub, wb.desc);
+  drawDarkBadge(PAD + badgeW + badgeGap, badgesY, badgeW, badgeH, '#9a8aee',
+    `${zb.icon} ${zn}`, `# ${zb.tag}`, zb.desc);
 
   // ── 底部签名 ──
-  ctx.font = '300 20px "Noto Sans SC", sans-serif';
-  ctx.fillStyle = '#c0b8b0'; ctx.textAlign = 'center';
+  ctx.font = '300 18px "Noto Sans SC", sans-serif';
+  ctx.fillStyle = C.text2; ctx.textAlign = 'center';
   ctx.fillText('今日奶茶运势  ·  专属于你的灵魂饮品', W/2, sigY);
-  ctx.fillText('✦', W/2, sigY + 28);
+  ctx.font = '400 20px "Noto Sans SC", sans-serif';
+  ctx.fillStyle = C.gold + '88';
+  ctx.fillText('✦', W/2, sigY + 32);
 
   // ── 底部装饰条 ──
-  ctx.fillStyle = barGradH;
-  ctx.fillRect(0, H - 8, W, 8);
+  ctx.fillStyle = topGrad; ctx.fillRect(0, H - 6, W, 6);
 
   return canvas.toDataURL('image/png');
 }
