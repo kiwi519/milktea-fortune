@@ -412,11 +412,24 @@ gap: 8px;
     color: var(--gold);
     margin-bottom: 12px;
   }
-  .reason-card .reason-body {
-    font-size: 13.5px;
-    line-height: 1.9;
-    color: var(--text);
-  }
+.reason-card .reason-body {
+font-size: 13.5px;
+line-height: 1.9;
+color: var(--text);
+}
+.reason-card .reason-divider {
+margin: 14px 0 12px;
+border: none;
+border-top: 1px dashed #e2d0b0;
+}
+.reason-card .reason-punchline {
+font-family: 'Noto Serif SC', serif;
+font-size: 14px;
+font-weight: 700;
+line-height: 1.65;
+color: var(--text);
+letter-spacing: 0.02em;
+}
   .reason-card .reason-body em {
     font-style: normal;
     color: var(--gold);
@@ -3987,7 +4000,8 @@ lucky_stressed:{ quote: '{drinkName}，宇宙看见你在扛了。扛过去的�
 <div class="reason-card">
   <div class="reason-title">✦ &nbsp; 今日专属推荐理由</div>
   <div class="reason-body" id="reasonBody"><div class="insight-loading"><span class="insight-dot"></span><span class="insight-dot"></span><span class="insight-dot"></span><span style="margin-left:6px;color:var(--text-mute);font-size:12px;">正在为你匹配今日奶茶理由…</span></div></div>
-  ${drink.nameQuote ? `<div class="name-quote">✨ ${drink.nameQuote}</div>` : ''}
+  <hr class="reason-divider">
+  <div class="reason-punchline">${fortuneCard.quote}</div>
 </div>
     <div class="alts-section">
       <div class="alts-title">也可以试试 →</div>
