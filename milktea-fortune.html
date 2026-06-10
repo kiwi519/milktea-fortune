@@ -3172,11 +3172,9 @@ function _realGoStep2() {
 const luckyEl = document.getElementById('luckyRow');
 const luckyColor = meta?.luckyColor || fortune.luckyColor;
 const luckyDir   = meta?.luckyDir   || fortune.luckyDir;
-const luckyNum   = meta?.luckyNum   || fortune.luckyNum;
 luckyEl.innerHTML = `
 <div class="lucky-tag"><span class="tag-icon">🎨</span>幸运色：${luckyColor}</div>
 <div class="lucky-tag"><span class="tag-icon">🧭</span>幸运方位：${luckyDir}</div>
-<div class="lucky-tag"><span class="tag-icon">🔢</span>幸运数字：${luckyNum}</div>
 `;
 
   // ── 今日能量解读（AI 实时生成 + 本地降级）──
@@ -4456,11 +4454,10 @@ async function generateShareCanvas() {
   }
 
   // ── 幸运标签 ──
-  const luckyItems = [
-    { icon: '🎨', label: `幸运色 ${fortune.luckyColor}` },
-    { icon: '🔢', label: `幸运数 ${fortune.luckyNum}` },
-    { icon: '🧭', label: `幸运方位 ${fortune.luckyDir}` },
-  ];
+const luckyItems = [
+{ icon: '🎨', label: `幸运色 ${fortune.luckyColor}` },
+{ icon: '🧭', label: `幸运方位 ${fortune.luckyDir}` },
+];
   const tagW2 = 190, tagGap2 = 20;
   const totalTagW = luckyItems.length * tagW2 + (luckyItems.length-1) * tagGap2;
   const tagStartX = (W - totalTagW) / 2;
