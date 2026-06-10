@@ -3341,9 +3341,9 @@ luckyEl.innerHTML = `
       const elementLine = ELEMENT_TODAY[zodiacEl] || `${zodiacName}的你，今天的能量场有自己的节奏，顺着走就好`;
       const moonLine = MOON_EFFECT[moonPhase];
       let birthdayLine = '';
-      if (isBirthday) birthdayLine = '对了，今天是你的生日——个人能量场今天到年度峰值，全维度都有加持，好好过。';
-      else if (nearBirthday === '生日就在这几天') birthdayLine = '生日就在这几天，个人能量场正在快速积累，今天整体运势有额外加持。';
-      else if (nearBirthday === '生日能量余韵') birthdayLine = '生日能量场还有余韵，今天的运势有一点额外加持，不多，但是真的有。';
+      if (isBirthday) birthdayLine = '对了，今天是你的生日。不管这一年过得怎样，今天可以先对自己好一点。';
+      else if (nearBirthday === '生日就在这几天') birthdayLine = '生日就在这几天了，可以开始想想怎么过。';
+      else if (nearBirthday === '生日能量余韵') birthdayLine = '生日刚过没多久，希望那天过得还不错。';
       const body = document.getElementById('insightBody');
       if (body) body.innerHTML = `
         ${moonEmoji} <strong>${moonPhase}</strong>——${moonLine}。${todayTerm ? '<br>🌿 <strong>' + todayTerm + '节气</strong>，今天的能量场有节气的底色加持。' : ''}
@@ -3355,11 +3355,11 @@ luckyEl.innerHTML = `
     // ── 直接调用 DeepSeek API（流式输出，边生成边显示）──
     const dimsDesc2 = DIMENSION_LABELS.map((label, i) => `${label}${dims[i]}分`).join('、');
     const birthdayHint2 = isBirthday
-      ? '今天是ta的生日，能量场在年度峰值。'
-      : nearBirthday === '生日就在这几天' ? '生日就在这几天，个人能量场正在积累。'
-      : nearBirthday === '生日能量余韵' ? '生日刚过不久，能量场还有余韵。' : '';
+      ? '今天就是ta的生日，要有温度地说一句生日快乐，提醒ta今天可以对自己好一点。'
+      : nearBirthday === '生日就在这几天' ? '生日就在这几天，可以轻描淡写提一句。'
+      : nearBirthday === '生日能量余韵' ? '生日刚过没多久，可以轻描淡写提一句。' : '';
 
-    const insightPrompt = `你是一个懂玄学又接地气的能量解读师，语气像朋友聊天，不装神弄鬼，偶尔带点玄学腔但不过分。
+    const insightPrompt = `你是一个混合了算命先生神秘感和好朋友毒舌风的运势解读师。你的受众是25-35岁的打工人，他们不信玄学但喜欢被"说中"，喜欢有点损但真心的表达，讨厌废话和鸡汤。
 
 今天是 ${today.toISOString().slice(0,10)}，帮我为以下这个人写「今日能量解读」：
 - 星座：${STATE.zodiac.name}（${STATE.zodiac.element || ''}象星座）
@@ -3371,13 +3371,16 @@ ${todayTerm ? `- 今日节气：${todayTerm}` : ''}
 - 能量最弱维度：${minLabel}（${dims[minIdx]}分）
 ${birthdayHint2 ? `- 特殊提示：${birthdayHint2}` : ''}
 
-要求：
-1. 200字以内，分3段，每段1-2句
-2. 第一段：结合月相${todayTerm ? '和节气' : ''}说今天整体能量场的状态
-3. 第二段：结合星座元素特质和生肖，说今天这个人的能量底色
-4. 第三段：点出最强维度（给具体行动建议）和最弱维度（给保守提示），如有生日加持则在结尾加一句
-5. 语气口语化，像朋友随口说，不要用"您"，不要用感叹号堆砌，不要说废话
-6. 直接输出正文，不要标题，不要序号`;
+写作要求：
+1. 200字以内，分3段，每段1-2句，段落之间空行
+2. 第一段：用月相${todayTerm ? '或节气' : ''}切入，说今天整体是什么状态——要有画面感，不要说"能量场"这种词，换成打工人能感受到的描述，比如"今天适合推进那件拖了很久的事"或"今天脑子转得快，但容易想太多"
+3. 第二段：结合星座和生肖说这个人今天的状态底色——要有点"被看穿"的感觉，说一个具体的、真实的状态，不要泛泛而谈
+4. 第三段：点出最强维度给一个具体可执行的建议（不要说"适合"，要说"去做XX"），最弱维度给一个保守提示（要有点损，但是真心的）
+5. 如果今天是生日：不要说"能量峰值"，改成真实的生日感受，比如"今天是你的生日，不管今年过得怎样，今天可以先对自己好一点"，要有温度，不要玄学
+6. 如果生日快到了：轻描淡写提一句就好，不要大做文章
+7. 禁止使用：能量场、加持、峰值、宇宙、频率、共振、治愈、满满、赋能
+8. 语气：像一个了解你的朋友随口说，有点损但真心，口语化，不用书面语，不用感叹号堆砌
+9. 直接输出正文，不要标题，不要序号，不要分点`;
 
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 30000);
