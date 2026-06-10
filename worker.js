@@ -1,173 +1,224 @@
-// Cloudflare Worker - Moonshot AI 中转服务
-// API Key 通过环境变量注入，不暴露在前端
-
-const MOONSHOT_API = "https://api.moonshot.cn/v1/chat/completions";
+/**
+ * Cloudflare Worker: milktea-fortune-ai
+ * 统一处理所有 AI 生成请求（运势文案、能量解读、推荐理由）
+ * 使用 DeepSeek API（流式输出，避免超时）
+ */
 
 const CORS_HEADERS = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type",
-  "Content-Type": "application/json",
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type',
 };
+
+const DEEPSEEK_API = 'https://api.deepseek.com/chat/completions';
 
 export default {
   async fetch(request, env) {
-    if (request.method === "OPTIONS") {
-      return new Response(null, { headers: CORS_HEADERS });
+    // 处理 CORS 预检
+    if (request.method === 'OPTIONS') {
+      return new Response(null, { status: 204, headers: CORS_HEADERS });
+    }
+    if (request.method !== 'POST') {
+      return new Response('Method Not Allowed', { status: 405, headers: CORS_HEADERS });
     }
 
-    let body = {};
-    if (request.method === "POST") {
-      try { body = await request.json(); } catch(e) {}
-    } else if (request.method === "GET") {
-      const url = new URL(request.url);
-      // type 直接从 path 或 query 取
-      const pathType = url.pathname.replace(/^\//, '') || '';
-      body.type = url.searchParams.get("type") || pathType || "";
-      body.birthday = url.searchParams.get("birthday") || "";
-      body.zodiac = url.searchParams.get("zodiac") || "";
-      body.shengxiao = url.searchParams.get("shengxiao") || "";
-      body.score = url.searchParams.get("score") || "";
-      body.luckyColor = url.searchParams.get("luckyColor") || "";
-      body.luckyDir = url.searchParams.get("luckyDir") || "";
-      body.title = url.searchParams.get("title") || "";
-      body.maxDim = url.searchParams.get("maxDim") || "";
-      body.minDim = url.searchParams.get("minDim") || "";
-      body.moonPhase = url.searchParams.get("moonPhase") || "";
-      body.moonEmoji = url.searchParams.get("moonEmoji") || "";
-      body.todayTerm = url.searchParams.get("todayTerm") || "";
-      body.mood = url.searchParams.get("mood") || "";
-      body.drinkName = url.searchParams.get("drinkName") || "";
-      body.drinkBrand = url.searchParams.get("drinkBrand") || "";
-      body.drinkType = url.searchParams.get("drinkType") || "";
-      body.topDim = url.searchParams.get("topDim") || "";
-      try { body.dims = JSON.parse(url.searchParams.get("dims") || "{}"); } catch(e) { body.dims = {}; }
-      try { body.drinkTags = JSON.parse(url.searchParams.get("drinkTags") || "[]"); } catch(e) { body.drinkTags = []; }
-    } else {
-      return new Response(JSON.stringify({ error: "Method not allowed" }), { status: 405, headers: CORS_HEADERS });
-    }
-
-    const {
-      type, birthday, drinkName, mood, zodiac, shengxiao, score,
-      dims, maxDim, minDim, luckyColor, luckyDir, title,
-      drinkBrand, drinkType, drinkTags, topDim,
-      moonPhase, moonEmoji, todayTerm, elementLine, shengxiaoLine, birthdayLine
-    } = body;
-
+    let body;
     try {
-      const today = new Date().toLocaleDateString("zh-CN", {
-        timeZone: "Asia/Shanghai",
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-        weekday: "long",
+      body = await request.json();
+    } catch {
+      return new Response(JSON.stringify({ error: 'Invalid JSON' }), {
+        status: 400, headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' },
       });
+    }
 
-      const systemPrompt = "你是一个说话很直、不卖弄的占星助手。不讲虚的，每句话都讲一件具体的事——今天该做什么、躲什么、注意什么。用口语化的中文，像朋友聊天。";
+    const apiKey = env.DEEPSEEK_API_KEY;
+    if (!apiKey) {
+      return new Response(JSON.stringify({ error: 'API key not configured' }), {
+        status: 500, headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' },
+      });
+    }
 
-      let prompt = "";
+    const type = body.type || 'insight';
+    let prompt = '';
+    let needJson = false; // fortune 类型需要收集完整 JSON
 
-      if (type === "fortune") {
-        const dimsStr = dims
-          ? Object.entries(dims).map(([k, v]) => `${k}:${v}分`).join("、")
-          : "";
-        const highDims = dims
-          ? Object.entries(dims).filter(([, v]) => v >= 75).map(([k]) => k).join("、")
-          : "";
-        const lowDims = dims
-          ? Object.entries(dims).filter(([, v]) => v <= 65).map(([k]) => k).join("、")
-          : "";
+    if (type === 'insight') {
+      const {
+        zodiac, element, shengxiao,
+        moonPhase, moonEmoji, solarTerm,
+        maxDim, maxScore, minDim, minScore,
+        allDims, isBirthday, nearBirthday, date,
+      } = body;
 
-        prompt = `今天是${today}。用户是${zodiac || "未知星座"}座，今日运势总分${score || "未知"}分，各维度：${dimsStr || "未知"}。幸运色${luckyColor || ""}，幸运方位${luckyDir || ""}。
+      const dimsDesc = (allDims || []).map(d => `${d.label}${d.score}分`).join('、');
+      const birthdayHint = isBirthday
+        ? '今天是ta的生日，能量场在年度峰值。'
+        : nearBirthday === '生日就在这几天'
+        ? '生日就在这几天，个人能量场正在积累。'
+        : nearBirthday === '生日能量余韵'
+        ? '生日刚过不久，能量场还有余韵。'
+        : '';
 
-请生成今日运势文案，要求严格执行：
-- 禁止空话套话，比如"缓缓步入美好的一天""能量在悄悄积累"这类句子一律不要
-- 分数高的维度（${highDims || "工作"}）：直接说今天适合用这个优势做什么具体的事
-- 分数低的维度（${lowDims || "健康"}）：直接说今天要注意什么、别干什么
-- 幸运色${luckyColor}和方位${luckyDir}融入具体建议，比如"穿${luckyColor}系的出门""往${luckyDir}方向走走"
-- 语气像朋友聊天，不用"亲爱的"开头
-- 80-120字，自然段落，不要分点列举`;
+      prompt = `你是一个懂玄学又接地气的能量解读师，语气像朋友聊天，不装神弄鬼，偶尔带点玄学腔但不过分。
 
-      } else if (type === "energy") {
-        const contextStr = [
-          zodiac ? `${zodiac}座` : null,
-          score ? `今日总分${score}分` : null,
-          maxDim ? `最强：${maxDim}` : null,
-          minDim ? `最弱：${minDim}` : null,
-          moonPhase ? `${moonPhase}${moonEmoji || ""}` : null,
-          todayTerm ? `${todayTerm}节气` : null,
-        ].filter(Boolean).join("，");
+今天是 ${date}，帮我为以下这个人写「今日能量解读」：
+- 星座：${zodiac}（${element}象星座）
+- 生肖：${shengxiao}
+- 今日月相：${moonEmoji}${moonPhase}
+${solarTerm ? `- 今日节气：${solarTerm}` : ''}
+- 今日六维度得分：${dimsDesc}
+- 能量最强维度：${maxDim}（${maxScore}分）
+- 能量最弱维度：${minDim}（${minScore}分）
+${birthdayHint ? `- 特殊提示：${birthdayHint}` : ''}
 
-        prompt = `今天是${today}。用户${contextStr}。
+要求：
+1. 200字以内，分3段，每段1-2句
+2. 第一段：结合月相${solarTerm ? '和节气' : ''}说今天整体能量场的状态
+3. 第二段：结合星座元素特质和生肖，说今天这个人的能量底色
+4. 第三段：点出最强维度（给具体行动建议）和最弱维度（给保守提示），如有生日加持则在结尾加一句
+5. 语气口语化，像朋友随口说，不要用"您"，不要用感叹号堆砌，不要说废话
+6. 直接输出正文，不要标题，不要序号`;
 
-请生成今日能量解读，要求严格执行：
-- 禁止空话，每句话对应一件具体的事
-- 最强维度是${maxDim}，说清楚今天可以用它干什么（举一个具体场景）
-- 最弱维度是${minDim}，说清楚今天为什么要躲开它、或者怎么应对
-- 如果今天是${moonPhase}，用一句话说这个月相对今天有什么具体影响（不要说"能量达到峰值"这种废话）
-- ${todayTerm ? `今天是${todayTerm}节气，顺带一句具体的节气提示` : ""}
-- 给出 1-2 个今天可以实际操作的建议
-- 语气轻松直接，80-120字，自然段落`;
+    } else if (type === 'fortune') {
+      needJson = true;
+      const { zodiac, score, maxDim, date } = body;
+      prompt = `你是一个懂玄学的文案师。今天是${date}，${zodiac}今日运势${score}分，最强维度是${maxDim}。
+请写一句今日运势标题（8字以内，有点玄学感但不空洞）和一句奶茶金句（15字以内，把奶茶和今天的状态结合起来，口语化）。
+格式：{"title":"...","quote":"..."}，只输出JSON，不要其他内容。`;
 
-      } else if (type === "drink_reason") {
-        const drinkInfo = [drinkName || "", drinkBrand || "", drinkType || ""]
-          .filter(Boolean).join(" · ");
-        const tags = (drinkTags || []).slice(0, 3).join("、");
+    } else if (type === 'reason') {
+      const { drinkName, drinkDesc, tags, zodiac, mood, maxDim, maxScore, luckyColor, date } = body;
+      prompt = `你是一个懂奶茶又懂玄学的文案师，语气像朋友推荐，口语化，不装。
+今天是${date}，帮我写一段奶茶推荐理由：
+- 推荐饮品：${drinkName}（${drinkDesc || ''}）
+- 饮品标签：${(tags||[]).join('、')}
+- 用户星座：${zodiac}，今日心情：${mood}
+- 今日最强维度：${maxDim}（${maxScore}分），幸运色：${luckyColor}
+要求：3句话，先说饮品本身的特点，再说和今天运势/心情的呼应，最后一句俏皮勾单。不超过80字。直接输出正文。`;
 
-        prompt = `用户是${zodiac || ""}座，心情${mood || ""}，今天运势最强的面是${topDim || ""}，幸运色${luckyColor || ""}。今天推荐的奶茶：${drinkInfo}，口感特点：${tags}。
+    } else {
+      return new Response(JSON.stringify({ error: 'Unknown type: ' + type }), {
+        status: 400, headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' },
+      });
+    }
 
-用 2-3 句话解释为什么这杯奶茶适合今天，要求严格执行：
-- 结合这杯奶茶的具体口感（${tags}）和用户今天的状态做匹配，说具体
-- 禁止说"命中注定""宇宙安排"这种过度玄学套话
-- 读完让人想立刻去买
-- 可以加一句轻松的收尾，不要强行煽情
-- 50-80字，口语化`;
-
-      } else {
-        return new Response(JSON.stringify({ error: "Unknown type: " + type }), {
-          status: 400,
-          headers: CORS_HEADERS,
-        });
-      }
-
-      const response = await fetch(MOONSHOT_API, {
-        method: "POST",
+    // ── 调用 DeepSeek API（流式）──
+    try {
+      const dsRes = await fetch(DEEPSEEK_API, {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${env.MOONSHOT_API_KEY}`,
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`,
         },
         body: JSON.stringify({
-          model: "moonshot-v1-8k",
+          model: 'deepseek-chat',
           messages: [
-            { role: "system", content: systemPrompt },
-            { role: "user", content: prompt },
+            { role: 'system', content: '你是一个懂玄学又接地气的能量解读师，用中文回答，语气口语化，简洁有力。' },
+            { role: 'user', content: prompt },
           ],
-          temperature: 0.85,
           max_tokens: 400,
+          stream: true,
         }),
       });
 
-      if (!response.ok) {
-        const err = await response.text();
-        console.error("Moonshot API error:", err);
-        return new Response(JSON.stringify({ error: "AI service error: " + response.status }), {
-          status: 502,
-          headers: CORS_HEADERS,
+      if (!dsRes.ok) {
+        const errText = await dsRes.text();
+        return new Response(JSON.stringify({ error: 'DeepSeek API error', detail: errText }), {
+          status: 502, headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' },
         });
       }
 
-      const data = await response.json();
-      const text = data.choices?.[0]?.message?.content || "";
+      // fortune 类型：收集完整内容再解析 JSON
+      if (needJson) {
+        const reader = dsRes.body.getReader();
+        const decoder = new TextDecoder();
+        let fullText = '';
+        let buffer = '';
 
-      return new Response(JSON.stringify({ result: text }), {
-        headers: CORS_HEADERS,
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          buffer += decoder.decode(value, { stream: true });
+          const lines = buffer.split('\n');
+          buffer = lines.pop();
+          for (const line of lines) {
+            if (!line.startsWith('data: ')) continue;
+            const raw = line.slice(6).trim();
+            if (raw === '[DONE]') break;
+            try {
+              const parsed = JSON.parse(raw);
+              fullText += parsed.choices?.[0]?.delta?.content || '';
+            } catch {}
+          }
+        }
+
+        try {
+          const jsonMatch = fullText.match(/\{[\s\S]*\}/);
+          const parsed = JSON.parse(jsonMatch ? jsonMatch[0] : fullText);
+          return new Response(JSON.stringify(parsed), {
+            headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' },
+          });
+        } catch {
+          return new Response(JSON.stringify({ title: fullText.slice(0, 10), quote: fullText }), {
+            headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' },
+          });
+        }
+      }
+
+      // insight / reason：把 DeepSeek SSE 流转换后透传给前端
+      const { readable, writable } = new TransformStream();
+      const writer = writable.getWriter();
+      const encoder = new TextEncoder();
+
+      (async () => {
+        const reader = dsRes.body.getReader();
+        const decoder = new TextDecoder();
+        let buffer = '';
+        try {
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) {
+              await writer.write(encoder.encode('data: [DONE]\n\n'));
+              break;
+            }
+            buffer += decoder.decode(value, { stream: true });
+            const lines = buffer.split('\n');
+            buffer = lines.pop();
+            for (const line of lines) {
+              if (!line.startsWith('data: ')) continue;
+              const raw = line.slice(6).trim();
+              if (raw === '[DONE]') {
+                await writer.write(encoder.encode('data: [DONE]\n\n'));
+                break;
+              }
+              try {
+                const parsed = JSON.parse(raw);
+                const token = parsed.choices?.[0]?.delta?.content || '';
+                if (token) {
+                  await writer.write(encoder.encode(`data: ${JSON.stringify({ token })}\n\n`));
+                }
+              } catch {}
+            }
+          }
+        } catch (e) {
+          await writer.write(encoder.encode(`data: ${JSON.stringify({ error: String(e) })}\n\n`));
+        } finally {
+          await writer.close();
+        }
+      })();
+
+      return new Response(readable, {
+        headers: {
+          ...CORS_HEADERS,
+          'Content-Type': 'text/event-stream',
+          'Cache-Control': 'no-cache',
+          'X-Accel-Buffering': 'no',
+        },
       });
 
-    } catch (e) {
-      console.error("Worker error:", e);
-      return new Response(JSON.stringify({ error: "Internal error: " + e.message }), {
-        status: 500,
-        headers: CORS_HEADERS,
+    } catch (err) {
+      return new Response(JSON.stringify({ error: 'Fetch failed', detail: String(err) }), {
+        status: 502, headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' },
       });
     }
   },
