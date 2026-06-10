@@ -3024,9 +3024,6 @@ async function fetchFortuneMeta(fortune, zodiac, shengxiao, birthDate) {
 {
   "title": "今日运势标题（8字以内，有意境，如「万事俱备，只欠行动」）",
   "dimHints": ["爱情一句话解读（15字内）","工作一句话解读","财运一句话解读","健康一句话解读","创意一句话解读","气场一句话解读"],
-  "luckyColor": "幸运色（2-4字，如「珊瑚橙」）",
-  "luckyNum": 数字（1-9的整数）,
-  "luckyDir": "幸运方位（如「东南」）",
   "drinkReason": "根据今日运势推荐奶茶的理由（30字内，口语化，结合运势特点）"
 }`;
 
@@ -3168,10 +3165,10 @@ function _realGoStep2() {
     });
   }, 300);
 
-// 幸运标签：AI 优先
+// 幸运标签：固定用本地算法（同一天同一生日结果稳定）
 const luckyEl = document.getElementById('luckyRow');
-const luckyColor = meta?.luckyColor || fortune.luckyColor;
-const luckyDir   = meta?.luckyDir   || fortune.luckyDir;
+const luckyColor = fortune.luckyColor;
+const luckyDir   = fortune.luckyDir;
 luckyEl.innerHTML = `
 <div class="lucky-tag"><span class="tag-icon">🎨</span>幸运色：${luckyColor}</div>
 <div class="lucky-tag"><span class="tag-icon">🧭</span>幸运方位：${luckyDir}</div>
