@@ -1181,9 +1181,138 @@ transition: opacity 0.15s ease;
   }
   @keyframes floatBtnPulse {
     0%   { box-shadow: 0 0 0 0 rgba(181,132,58,0.45); }
-    70%  { box-shadow: 0 0 0 12px rgba(181,132,58,0); }
-    100% { box-shadow: 0 0 0 0 rgba(181,132,58,0); }
-  }
+70%  { box-shadow: 0 0 0 12px rgba(181,132,58,0); }
+100% { box-shadow: 0 0 0 0 rgba(181,132,58,0); }
+}
+
+/* ══════════════════════════════════════
+   Step1→Step2 冲泡过渡区 #brewingBridge
+══════════════════════════════════════ */
+.brewing-bridge {
+  position: relative;
+  width: 100%;
+  padding: 48px 0 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--card);
+  border-radius: 20px;
+  margin: 16px 0;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.45s ease, transform 0.45s ease;
+}
+.brewing-bridge.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.brewing-bridge.hidden {
+  display: none;
+}
+
+.bb-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  position: relative;
+}
+
+/* ── 奶茶杯 ── */
+.bb-cup {
+  width: 88px;
+  height: 110px;
+  animation: bbCupWobble 1.8s ease-in-out infinite;
+  filter: drop-shadow(0 6px 18px rgba(180,120,50,0.22));
+}
+@keyframes bbCupWobble {
+  0%,100% { transform: rotate(-3deg) translateY(0); }
+  25%      { transform: rotate(3deg)  translateY(-4px); }
+  50%      { transform: rotate(-2deg) translateY(-2px); }
+  75%      { transform: rotate(2deg)  translateY(-5px); }
+}
+
+/* ── 液面上升 ── */
+.bb-liquid {
+  animation: bbLiquidRise 2.4s ease-in-out infinite alternate;
+}
+@keyframes bbLiquidRise {
+  0%   { transform: translateY(0); }
+  100% { transform: translateY(-14px); }
+}
+
+/* ── 蒸汽 ── */
+.bb-steam {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 4px;
+  height: 36px;
+  align-items: flex-end;
+}
+.bb-steam-line {
+  display: block;
+  width: 4px;
+  border-radius: 2px;
+  background: linear-gradient(to top, rgba(180,130,60,0.55), transparent);
+  animation: bbSteamRise 1.6s ease-in-out infinite;
+}
+.bb-steam-line:nth-child(1) { height: 22px; animation-delay: 0s;    animation-duration: 1.5s; }
+.bb-steam-line:nth-child(2) { height: 30px; animation-delay: 0.3s;  animation-duration: 1.8s; }
+.bb-steam-line:nth-child(3) { height: 18px; animation-delay: 0.6s;  animation-duration: 1.4s; }
+@keyframes bbSteamRise {
+  0%   { opacity: 0;   transform: translateY(0)    scaleX(1); }
+  30%  { opacity: 0.7; transform: translateY(-8px) scaleX(1.2); }
+  70%  { opacity: 0.4; transform: translateY(-18px) scaleX(0.9); }
+  100% { opacity: 0;   transform: translateY(-28px) scaleX(0.7); }
+}
+
+/* ── 粒子 ── */
+.bb-particles {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  pointer-events: none;
+}
+.bb-p {
+  position: absolute;
+  font-size: 13px;
+  opacity: 0;
+  animation: bbParticleFloat 3s ease-in-out infinite;
+  color: var(--accent);
+}
+.bb-p:nth-child(1) { left: 12%; top: 20%; animation-delay: 0s;    animation-duration: 2.8s; }
+.bb-p:nth-child(2) { left: 75%; top: 30%; animation-delay: 0.7s;  animation-duration: 3.2s; }
+.bb-p:nth-child(3) { left: 20%; top: 65%; animation-delay: 1.2s;  animation-duration: 2.6s; }
+.bb-p:nth-child(4) { left: 80%; top: 60%; animation-delay: 0.4s;  animation-duration: 3.5s; }
+.bb-p:nth-child(5) { left: 50%; top: 15%; animation-delay: 1.8s;  animation-duration: 2.9s; }
+@keyframes bbParticleFloat {
+  0%   { opacity: 0;   transform: translateY(0)     rotate(0deg); }
+  20%  { opacity: 0.8; }
+  80%  { opacity: 0.5; }
+  100% { opacity: 0;   transform: translateY(-30px) rotate(180deg); }
+}
+
+/* ── 文字 ── */
+.bb-label {
+  margin-top: 14px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: 0.03em;
+  animation: bbLabelPulse 2s ease-in-out infinite;
+}
+.bb-sublabel {
+  margin-top: 5px;
+  font-size: 12px;
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+  opacity: 0.75;
+  animation: bbLabelPulse 2s ease-in-out infinite 0.5s;
+}
+@keyframes bbLabelPulse {
+  0%,100% { opacity: 0.75; }
+  50%      { opacity: 1; }
+}
 </style>
 </head>
 <body>
@@ -1322,6 +1451,56 @@ transition: opacity 0.15s ease;
           <div class="fl-progress-fill" id="flProgressFill"></div>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- Step 1→2 冲泡过渡区 -->
+  <div class="brewing-bridge hidden" id="brewingBridge">
+    <div class="bb-inner">
+      <!-- 蒸汽 -->
+      <div class="bb-steam">
+        <span class="bb-steam-line"></span>
+        <span class="bb-steam-line"></span>
+        <span class="bb-steam-line"></span>
+      </div>
+      <!-- 奶茶杯 SVG -->
+      <svg class="bb-cup" viewBox="0 0 80 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="16" y="7" width="48" height="9" rx="4.5" fill="#d4a85a" opacity="0.9"/>
+        <rect x="20" y="3" width="40" height="7" rx="3.5" fill="#c9946a" opacity="0.8"/>
+        <rect x="36" y="0" width="7" height="30" rx="3.5" fill="#b5843a" opacity="0.7"/>
+        <path d="M18 16 L22 88 Q22 93 27 93 L53 93 Q58 93 58 88 L62 16 Z" fill="url(#bbCupGrad)" opacity="0.93"/>
+        <clipPath id="bbCupClip">
+          <path d="M18 16 L22 88 Q22 93 27 93 L53 93 Q58 93 58 88 L62 16 Z"/>
+        </clipPath>
+        <g clip-path="url(#bbCupClip)">
+          <rect class="bb-liquid" x="10" y="44" width="70" height="55" fill="url(#bbLiquidGrad)" opacity="0.78" rx="2"/>
+          <circle cx="30" cy="80" r="4.5" fill="#7a5030" opacity="0.55"/>
+          <circle cx="40" cy="85" r="4.5" fill="#6a4020" opacity="0.55"/>
+          <circle cx="50" cy="79" r="4.5" fill="#7a5030" opacity="0.55"/>
+          <circle cx="35" cy="88" r="4"   fill="#6a4020" opacity="0.45"/>
+          <circle cx="46" cy="87" r="4"   fill="#7a5030" opacity="0.45"/>
+        </g>
+        <ellipse cx="28" cy="34" rx="4" ry="9" fill="white" opacity="0.1" transform="rotate(-10 28 34)"/>
+        <defs>
+          <linearGradient id="bbCupGrad" x1="18" y1="16" x2="62" y2="93" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#f2ead8"/>
+            <stop offset="100%" stop-color="#e0d2b8"/>
+          </linearGradient>
+          <linearGradient id="bbLiquidGrad" x1="0" y1="0" x2="0" y2="1" gradientUnits="objectBoundingBox">
+            <stop offset="0%" stop-color="#c9896a"/>
+            <stop offset="100%" stop-color="#a06840"/>
+          </linearGradient>
+        </defs>
+      </svg>
+      <!-- 粒子 -->
+      <div class="bb-particles">
+        <span class="bb-p">✦</span><span class="bb-p">☽</span>
+        <span class="bb-p">✧</span><span class="bb-p">⊕</span>
+        <span class="bb-p">✦</span>
+      </div>
+      <!-- 文字 -->
+      <div class="bb-label" id="bbLabel">正在冲泡你的命运茶底…</div>
+      <div class="bb-sublabel" id="bbSublabel">解析生辰八字中</div>
     </div>
   </div>
 
@@ -3156,6 +3335,46 @@ function startFortuneLoading() {
   ];
   let subIdx = 0;
 
+  // 显示 brewingBridge 冲泡过渡区
+  const bridge = document.getElementById('brewingBridge');
+  let bbLabelTimer = null;
+  if (bridge) {
+    bridge.classList.remove('hidden');
+    // 下一帧触发淡入动画
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => bridge.classList.add('visible'));
+    });
+    // 滚动到 bridge 区域
+    setTimeout(() => bridge.scrollIntoView({ behavior: 'smooth', block: 'center' }), 80);
+    // bbLabel 文字轮播
+    const bbLabel = document.getElementById('bbLabel');
+    const bbSublabel = document.getElementById('bbSublabel');
+    const bbLabels = [
+      ['正在冲泡你的命运茶底…', '解析生辰八字中'],
+      ['感知今日星象能量…', '星盘对齐中'],
+      ['调配专属运势配方…', '五行平衡计算中'],
+      ['即将揭晓你的专属奶茶✨', '准备好了吗'],
+    ];
+    let bbIdx = 0;
+    bbLabelTimer = setInterval(() => {
+      bbIdx = (bbIdx + 1) % bbLabels.length;
+      if (bbLabel) {
+        bbLabel.style.opacity = '0';
+        setTimeout(() => {
+          bbLabel.textContent = bbLabels[bbIdx][0];
+          bbLabel.style.opacity = '1';
+        }, 200);
+      }
+      if (bbSublabel) {
+        bbSublabel.style.opacity = '0';
+        setTimeout(() => {
+          bbSublabel.textContent = bbLabels[bbIdx][1];
+          bbSublabel.style.opacity = '0.75';
+        }, 200);
+      }
+    }, 420);
+  }
+
   // 显示 overlay
   overlay.classList.remove('fade-out');
   overlay.classList.add('active');
@@ -3184,6 +3403,7 @@ function startFortuneLoading() {
   // 1.5s 后：进度条跑满 → fade-out → 调用真正的 goStep2
   setTimeout(() => {
     clearInterval(subTimer);
+    if (bbLabelTimer) clearInterval(bbLabelTimer);
     // 进度条跑满
     progressFill.style.transition = 'width 0.15s ease';
     progressFill.style.width = '100%';
@@ -3203,6 +3423,17 @@ function startFortuneLoading() {
 }
 
 function _realGoStep2() {
+  // 隐藏冲泡过渡区
+  const bridge = document.getElementById('brewingBridge');
+  if (bridge) {
+    const sublabel = document.getElementById('bbSublabel');
+    if (sublabel) sublabel.textContent = '茶底已就绪 ✨';
+    bridge.classList.remove('visible');
+    setTimeout(() => {
+      bridge.classList.add('hidden');
+    }, 450);
+  }
+
   const fortune = generateFortune(STATE.birthDate);
   STATE.fortune = fortune;
 
