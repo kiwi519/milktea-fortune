@@ -1925,15 +1925,15 @@ function generateFortune(birthDate) {
   // ── 6. 合并计算六维度分数 ──
   const dims = DIMENSION_KEYS.map((k, i) => {
     // 基础分：60，加各层因子
-    const base = 68;
+    const base = 60;
     const total = base
       + lifeBias[i]          // 命理底色 (-8 ~ +8)
       + monthBias[i]         // 月份季节 (-4 ~ +8)
       + dayBias[i]           // 日期微调 (-6 ~ +6)
       + todayWave[i]         // 今日波动 (-12 ~ +12)
       + birthdayBonus;       // 生日加成 (0 ~ +8)
-    // 钳制在 55~98 之间，避免极端值
-    return Math.min(98, Math.max(55, Math.round(total)));
+    // 钳制在 45~98 之间，避免极端值
+    return Math.min(98, Math.max(45, Math.round(total)));
   });
 
   const score = Math.floor(dims.reduce((a,b)=>a+b,0) / dims.length);
