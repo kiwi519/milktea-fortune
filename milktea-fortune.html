@@ -3887,12 +3887,6 @@ lucky_stressed:{ quote: '{drinkName}，宇宙看见你在扛了。扛过去的�
     </div>
 </div>
 <div class="mood-connect-bar" id="moodConnectBar"></div>
-<div class="reason-card">
-  <div class="reason-title">✦ &nbsp; 今日专属推荐理由</div>
-  <div class="reason-body" id="reasonBody"><div class="insight-loading"><span class="insight-dot"></span><span class="insight-dot"></span><span class="insight-dot"></span><span style="margin-left:6px;color:var(--text-mute);font-size:12px;">正在为你匹配今日奶茶理由…</span></div></div>
-  <hr class="reason-divider">
-  <div class="reason-punchline">${fortuneCard.quote}</div>
-</div>
     <div class="alts-section">
       <div class="alts-title">也可以试试 →</div>
       <div class="alts-grid">
@@ -3928,97 +3922,6 @@ lucky_stressed:{ quote: '{drinkName}，宇宙看见你在扛了。扛过去的�
     requestAnimationFrame(() => {
       requestAnimationFrame(() => bar.classList.add('visible'));
     });
-  })();
-
-  // ── AI 推荐理由（流式生成，失败降级本地模板）──
-  (async () => {
-    const reasonEl = document.getElementById('reasonBody');
-    if (!reasonEl) return;
-
-    const reasonPrompt = `你是一个混合了算命先生玄学感和闺蜜毒舌风的奶茶文案师。语气口语化，不用书面语，不说废话。
-
-今天要为一个${zodiac}写一段奶茶推荐文案，信息如下：
-- 推荐饮品：${drink.name}（${drink.brand}，${drink.type}）
-- 饮品口感/特点：${drink.desc || drink.tags.join('、')}
-- 用户今日心情：${moodName}
-- 今日最强运势维度：${topDimLabel}（${topDimScore}分）
-- 今日幸运色：${luckyColor}
-
-写作要求：
-1. 【玄学起】开头用算命先生的口吻，点出这个${zodiac}今天的气场或状态，要有"被看穿"的感觉，带点神秘感，一两句话
-2. 【毒舌转】中间转成闺蜜毒舌风，带点调侃地说清楚这杯饮品的口感特点，再把饮品和今天的状态/心情强行但合理地绑定，语气笃定有点损但不刻薄
-3. 【笃定收】最后一句像算命先生下结论，不容置疑，带点宿命感，让人觉得"就该喝这个"
-
-格式要求：
-- 用"${zodiac}的你"这样的称呼，自然融入正文，不要单独列出
-- 5到7句话，总字数120到160字之间
-- 不要分段，不要序号，不要标题，直接输出正文
-- 语气词可以用"啊""嘛""吧""哦"，但不要用"宝""姐妹"
-- 禁止出现"能量""加持""治愈系""满满"这类烂大街词`;
-
-    const controller = new AbortController();
-    const timeout = setTimeout(() => {
-      controller.abort();
-      if (reasonEl && reasonEl.querySelector('.insight-loading')) {
-        reasonEl.innerHTML = window.__reasonStrFallback || '';
-      }
-    }, 20000);
-
-    try {
-      const res = await fetch(DS_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${DS_KEY}` },
-        body: JSON.stringify({
-          model: 'deepseek-chat',
-          messages: [
-            { role: 'system', content: '你是一个融合了算命先生玄学感和闺蜜毒舌风的奶茶文案师，用中文写作，口语化，不说废话，不用书面语，语气有点损但真心，让人觉得被看穿又想笑。' },
-            { role: 'user', content: reasonPrompt },
-           ],
-           max_tokens: 350,
-           stream: true,
-        }),
-        signal: controller.signal,
-      });
-
-      if (!res.ok) throw new Error('API error ' + res.status);
-
-      const reader = res.body.getReader();
-      const decoder = new TextDecoder();
-      let accumulated = '';
-      let buffer = '';
-      reasonEl.innerHTML = ''; // 清除 loading
-
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        buffer += decoder.decode(value, { stream: true });
-        const lines = buffer.split('\n');
-        buffer = lines.pop();
-        for (const line of lines) {
-          if (!line.startsWith('data: ')) continue;
-          const raw = line.slice(6).trim();
-          if (raw === '[DONE]') break;
-          try {
-            const parsed = JSON.parse(raw);
-            const token = parsed.choices?.[0]?.delta?.content || '';
-            accumulated += token;
-            if (token) {
-              reasonEl.innerHTML = accumulated
-                .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-                .replace(/\n\n/g, '<br><br>')
-                .replace(/\n/g, '<br>');
-            }
-          } catch {}
-        }
-      }
-
-      clearTimeout(timeout);
-      if (!accumulated || accumulated.length < 10) throw new Error('内容为空');
-
-    } catch (e) {
-      clearTimeout(timeout);
-      if (reasonEl) reasonEl.innerHTML = window.__reasonStrFallback || '';
-    }
   })();
 
   // ── 奶茶图片入场动画（短暂延迟后移除 entering class）──
