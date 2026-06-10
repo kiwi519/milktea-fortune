@@ -1140,6 +1140,11 @@ letter-spacing: 0.02em;
                inputmode="numeric" pattern="[0-9]*">
       </div>
       <div class="birth-input-hint">请输入你的生日（示例：1995 / 8 / 20）</div>
+      <div id="savedBirthHint" style="display:none;margin-top:6px;font-size:12px;color:var(--text-mute);">
+        已记住你的生日 &nbsp;<span id="savedBirthVal" style="color:var(--gold);"></span>
+        &nbsp;·&nbsp;
+        <span onclick="clearSavedBirth()" style="cursor:pointer;text-decoration:underline;">换一个</span>
+      </div>
     </div>
     <div class="zodiac-row hidden" id="zodiacRow">
       <div class="zodiac-badge">
@@ -3000,6 +3005,40 @@ function onBirthInputChange() {
   document.getElementById(id).addEventListener('input', onBirthInputChange);
 });
 
+// 记住生日 —— 页面加载时自动填入
+const BIRTH_STORAGE_KEY = 'milktea_saved_birth';
+(function autoFillBirth() {
+  const saved = localStorage.getItem(BIRTH_STORAGE_KEY);
+  if (!saved) return;
+  const parts = saved.split('-');
+  if (parts.length !== 3) return;
+  document.getElementById('birthYear').value  = parts[0];
+  document.getElementById('birthMonth').value = String(parseInt(parts[1], 10));
+  document.getElementById('birthDay').value   = String(parseInt(parts[2], 10));
+  // 显示已记住提示
+  const hint = document.getElementById('savedBirthHint');
+  const val  = document.getElementById('savedBirthVal');
+  if (hint && val) {
+    val.textContent = `${parts[0]}年${parseInt(parts[1],10)}月${parseInt(parts[2],10)}日`;
+    hint.style.display = 'block';
+  }
+  // 触发一次校验，自动显示星座并解锁按钮
+  onBirthInputChange();
+})();
+
+// 清除已记住的生日
+function clearSavedBirth() {
+  localStorage.removeItem(BIRTH_STORAGE_KEY);
+  document.getElementById('birthYear').value  = '';
+  document.getElementById('birthMonth').value = '';
+  document.getElementById('birthDay').value   = '';
+  document.getElementById('savedBirthHint').style.display = 'none';
+  document.getElementById('zodiacRow').classList.add('hidden');
+  document.getElementById('btn1').disabled = true;
+  STATE.birthDate = null;
+  document.getElementById('birthYear').focus();
+}
+
 // ─────────────────────────────────────────────
 //  冲泡过渡（Step1 → Step2）
 // ─────────────────────────────────────────────
@@ -3063,6 +3102,9 @@ function startFortuneLoading() {
     });
     setTimeout(() => bridge.scrollIntoView({ behavior: 'smooth', block: 'center' }), 80);
   }
+
+  // 存储生日，下次自动填入
+  try { localStorage.setItem(BIRTH_STORAGE_KEY, STATE.birthDate); } catch {}
 
   // 先用本地算法生成兜底 fortune
   const fortune = generateFortune(STATE.birthDate);
