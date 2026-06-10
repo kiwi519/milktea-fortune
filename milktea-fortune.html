@@ -3006,26 +3006,27 @@ function onBirthInputChange() {
 const DS_KEY = 'sk-43835cfdce53457faddba655f212919a';
 const DS_URL = 'https://api.deepseek.com/chat/completions';
 
-// 调用 DeepSeek 获取运势元数据（标题/维度解读/幸运元素）
+// 调用 DeepSeek 获取运势元数据（标题/维度解读/分数）
 async function fetchFortuneMeta(fortune, zodiac, shengxiao, birthDate) {
   const today = new Date();
   const todayStr = today.toISOString().slice(0, 10);
-  const dimsDesc = DIMENSION_LABELS.map((l, i) => `${l}${fortune.dims[i]}分`).join('、');
 
   const prompt = `你是一个懂玄学又接地气的运势解读师，语气像朋友聊天，简洁有力。
 
 今天是 ${todayStr}，请为以下用户生成今日运势内容：
 - 星座：${zodiac.name}
 - 生肖：${shengxiao.name}
-- 今日六维度得分：${dimsDesc}
-- 综合运势分：${fortune.score}
 
 请严格按以下 JSON 格式返回，不要有任何多余文字：
 {
+  "dims": [爱情分,工作分,财运分,健康分,创意分,气场分],
+  "score": 综合分,
   "title": "今日运势标题（8字以内，有意境，如「万事俱备，只欠行动」）",
   "dimHints": ["爱情一句话解读（15字内）","工作一句话解读","财运一句话解读","健康一句话解读","创意一句话解读","气场一句话解读"],
   "drinkReason": "根据今日运势推荐奶茶的理由（30字内，口语化，结合运势特点）"
-}`;
+}
+
+要求：dims 每项为 55~98 之间的整数，score 为 dims 的平均值取整，每天结果不同但今天固定。`;
 
   const res = await fetch(DS_URL, {
     method: 'POST',
@@ -3063,16 +3064,30 @@ function startFortuneLoading() {
     setTimeout(() => bridge.scrollIntoView({ behavior: 'smooth', block: 'center' }), 80);
   }
 
-  // 本地先算分（作为 AI 的输入种子）
+  // 先用本地算法生成兜底 fortune
   const fortune = generateFortune(STATE.birthDate);
   STATE.fortune = fortune;
-  STATE._aiMeta = null; // 重置
+  STATE._aiMeta = null;
 
-  // AI 返回就立刻渲染，最多等 5s 超时降级本地
+  // 缓存 key：生日 + 今日日期
+  const todayStr = new Date().toISOString().slice(0, 10);
+  const cacheKey = `fm_${STATE.birthDate}_${todayStr}`;
+  const cached = (() => { try { const s = localStorage.getItem(cacheKey); return s ? JSON.parse(s) : null; } catch { return null; } })();
+
+  if (cached) {
+    // 命中缓存，直接用
+    STATE._aiMeta = cached;
+    _realGoStep2();
+    return;
+  }
+
+  // 无缓存，请求 AI，最多等 5s
   const _aiReq = fetchFortuneMeta(fortune, STATE.zodiac, STATE.shengxiao, STATE.birthDate).catch(() => null);
   const _aiTimeout = new Promise(resolve => setTimeout(() => resolve(null), 5000));
   Promise.race([_aiReq, _aiTimeout]).then(meta => {
-    STATE._aiMeta = meta; // null 则降级本地
+    STATE._aiMeta = meta;
+    // 写入缓存（只缓存成功结果）
+    if (meta) { try { localStorage.setItem(cacheKey, JSON.stringify(meta)); } catch {} }
     _realGoStep2();
   });
 }
@@ -3085,10 +3100,13 @@ function _realGoStep2() {
     setTimeout(() => bridge.classList.add('hidden'), 450);
   }
 
-  // fortune 已在 startFortuneLoading 里算好，直接用
   const fortune = STATE.fortune;
-  // AI meta（可能为 null，降级本地）
   const meta = STATE._aiMeta;
+  // AI 分数优先（缓存保证当天一致），降级本地算法
+  if (meta?.dims?.length === 6) {
+    fortune.dims = meta.dims;
+    fortune.score = meta.score ?? Math.round(meta.dims.reduce((a,b)=>a+b,0)/meta.dims.length);
+  }
 
   // 日期显示
   const today = new Date();
