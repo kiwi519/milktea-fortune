@@ -3958,9 +3958,20 @@ lucky_stressed:{ quote: '{drinkName}，宇宙看见你在扛了。扛过去的�
   // 保存本地降级文案，供 AI 失败时使用
   window.__reasonStrFallback = reasonStr;
 
-  // ── 淡出 → 替换 → 淡入，避免 innerHTML 大段替换时的白屏闪烁 ──
+  // ── 预加载奶茶图片，等 onload 后再渲染，避免图片异步加载导致的闪屏 ──
   const _rc = document.getElementById('resultContent');
   const _isFirstRender = !_rc.hasChildNodes() || _rc.children.length === 0;
+
+  var _renderCalled = false;
+  function _doRenderOnce() { if (_renderCalled) return; _renderCalled = true; _doRender(); }
+
+  const _preloadImg = new Image();
+  _preloadImg.onload  = _doRenderOnce;
+  _preloadImg.onerror = _doRenderOnce; // 加载失败也继续，img 标签自带 onerror 降级
+  _preloadImg.src = canvasDataURL;
+  // 已在浏览器缓存时 onload 不会触发，需手动检测
+  if (_preloadImg.complete) _doRenderOnce();
+
   function _doRender() {
     // 首次渲染加 entering（入场动画），切换奶茶时不加（避免闪屏）
     const _enteringClass = _isFirstRender ? ' entering' : '';
