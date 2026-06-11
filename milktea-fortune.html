@@ -2989,7 +2989,7 @@ function onBirthInputChange() {
   const z  = getZodiac(month, day);
   const sx = getShengxiao(year);
   const wx = getWuxing(year, month, day);
-  STATE.zodiac = z; STATE.shengxiao = sx;
+  STATE.zodiac = z; STATE.shengxiao = sx; STATE.wuxing = wx;
 
   document.getElementById('zodiacIcon').textContent = z.icon;
   document.getElementById('zodiacName').textContent = z.name;
@@ -4412,11 +4412,11 @@ async function generateShareCanvas() {
   const quoteY = y + (drink.nameQuote ? 20 : 0);
   y = quoteY + quoteH + (drink.nameQuote ? 28 : 0);
 
-  // ④ Social Badges
-  const badgeH = 112, badgeGap = 16;
-  const badgeW = (W - PAD*2 - badgeGap) / 2;
+  // ④ Social Badges (stacked full-width)
+  const badgeH = 148, badgeGap = 14;
+  const badgeW = W - PAD*2;
   const badgesY = y + 40;
-  y = badgesY + badgeH;
+  y = badgesY + badgeH * 2 + badgeGap;
 
   // ⑤ 底部签名
   const sigY = y + 48;
@@ -4528,47 +4528,97 @@ async function generateShareCanvas() {
   }
 
   // ── Social Badges ──
-  const WUXING_BADGE = window.WUXING_BADGE || {};
-  const ZODIAC_BADGE = window.ZODIAC_BADGE || {};
+  const WUXING_BADGE = {
+    '金': { icon:'⚜️', label:'五行吸金·人形财神', desc:'配方必须是"暴富厚乳茶"，喝完直接开窍', color:'#d4b870' },
+    '木': { icon:'🌿', label:'五行属木·当代植物人', desc:'坐在工位一动不动，全靠奶茶续命', color:'#7a9b6e' },
+    '水': { icon:'💧', label:'五行缺假·纯水体质', desc:'一上班就想摸鱼、流泪、化身鸽子', color:'#6a8fb0' },
+    '火': { icon:'🔥', label:'五行属火·易燃易爆炸', desc:'遇到傻X需求一点就着，急需冰美式灭火', color:'#c96a4a' },
+    '土': { icon:'🪨', label:'五行属土·稳如老狗', desc:'佛系打工人，啥都能扛，啥都不急', color:'#b09060' },
+  };
+  const ZODIAC_BADGE = {
+    '白羊座': { icon:'♈', label:'白羊座 | 尝鲜急先锋', desc:'新品必点，菜单还没看完已经下单了' },
+    '金牛座': { icon:'♉', label:'金牛座 | 性价比猎手', desc:'买一送一才是真爱，大杯不加价必点' },
+    '双子座': { icon:'♊', label:'双子座 | 今天换口味', desc:'上午要抹茶，下午改红茶，晚上再说' },
+    '巨蟹座': { icon:'♋', label:'巨蟹座 | 老板娘心态', desc:'帮全组点单，记住每个人的禁忌' },
+    '狮子座': { icon:'♌', label:'狮子座 | 颜值即正义', desc:'杯子好看才下单，拍完才喝' },
+    '处女座': { icon:'♍', label:'处女座 | 完美强迫症', desc:'奶茶加料必须对称，三分糖去冰不能少' },
+    '天秤座': { icon:'♎', label:'天秤座 | 选择困难户', desc:'在两杯之间纠结20分钟，最后都要了' },
+    '天蝎座': { icon:'♏', label:'天蝎座 | 细节控本控', desc:'精准到三分糖去冰，少一分都不行' },
+    '射手座': { icon:'♐', label:'射手座 | 随机应变派', desc:'今天心情好就加珍珠，心情差就加布丁' },
+    '摩羯座': { icon:'♑', label:'摩羯座 | 打工续命机', desc:'咖啡因依赖者，奶茶是工作燃料' },
+    '水瓶座': { icon:'♒', label:'水瓶座 | 奇葩口味研究员', desc:'专点隐藏菜单，越奇怪越感兴趣' },
+    '双鱼座': { icon:'♓', label:'双鱼座 | 氛围感大师', desc:'下雨天配奶茶，人间值得' },
+  };
   const wx = STATE.wuxing || '';
   const zn = zodiac.name || '';
-  const wb = WUXING_BADGE[wx] || { icon:'☯️', title:'五行', sub:'神秘体质', desc:'连玄学都看不透你', color:'#b09060' };
-  const zb = ZODIAC_BADGE[zn] || { icon:'✨', tag:'玄学体质', desc:'天生自带神秘感' };
+  const wb = WUXING_BADGE[wx] || { icon:'☯️', label:'五行·神秘体质', desc:'连玄学都看不透你', color:'#b09060' };
+  const zb = ZODIAC_BADGE[zn] || { icon:'✨', label:'玄学体质', desc:'天生自带神秘感' };
 
-  function drawDarkBadge(bx, by, bw, bh, accentColor, title, sub, desc) {
+  // 新排版：左侧 icon 色块 + 右侧大标签行 + 描述行
+  function drawDarkBadge(bx, by, bw, bh, accentColor, label, desc) {
     ctx.save();
+    // 背景
     ctx.fillStyle = C.bg2;
-    roundRect(ctx, bx, by, bw, bh, 16); ctx.fill();
-    ctx.strokeStyle = accentColor + '55'; ctx.lineWidth = 1;
-    roundRect(ctx, bx, by, bw, bh, 16); ctx.stroke();
-    // 顶部色条
-    ctx.fillStyle = accentColor + 'cc';
-    roundRect(ctx, bx, by, bw, 4, [16, 16, 0, 0]); ctx.fill();
-    ctx.font = '600 13px "Noto Sans SC", sans-serif';
-    ctx.fillStyle = accentColor; ctx.textAlign = 'left';
-    ctx.fillText(title, bx + 16, by + 26);
-    ctx.font = '700 20px "Noto Sans SC", sans-serif';
-    ctx.fillStyle = C.text0;
-    ctx.fillText(sub, bx + 16, by + 52);
-    // desc 两行自动换行
-    ctx.font = '400 17px "Noto Sans SC", sans-serif';
-    ctx.fillStyle = C.text2;
-    const maxDescW = bw - 32;
+    roundRect(ctx, bx, by, bw, bh, 18); ctx.fill();
+    // 边框
+    ctx.strokeStyle = accentColor + '66'; ctx.lineWidth = 1.5;
+    roundRect(ctx, bx, by, bw, bh, 18); ctx.stroke();
+    // 左侧竖色条
+    ctx.fillStyle = accentColor + 'dd';
+    roundRect(ctx, bx, by, 6, bh, [18, 0, 0, 18]); ctx.fill();
+    // 左侧 icon 区域背景
+    const iconBoxW = 72;
+    ctx.fillStyle = accentColor + '22';
+    roundRect(ctx, bx + 6, by, iconBoxW, bh, 0); ctx.fill();
+    // icon emoji
+    ctx.font = '36px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(label.split(' ')[0], bx + 6 + iconBoxW/2, by + bh/2 + 13);
+    // 右侧文字区
+    const textX = bx + 6 + iconBoxW + 20;
+    const textMaxW = bw - iconBoxW - 6 - 20 - 20;
+    // 【标签】大标题
+    const labelText = label.replace(/^[^\s]+\s*/, ''); // 去掉 icon 部分
+    ctx.font = 'bold 26px "Noto Sans SC", sans-serif';
+    ctx.fillStyle = accentColor;
+    ctx.textAlign = 'left';
+    // 自动换行标签
+    let lLine = '', lLines = [];
+    for (const ch of labelText) {
+      const t = lLine + ch;
+      if (ctx.measureText(t).width > textMaxW && lLine) { lLines.push(lLine); lLine = ch; }
+      else lLine = t;
+    }
+    if (lLine) lLines.push(lLine);
+    const labelLineH = 34;
+    const totalLabelH = lLines.length * labelLineH;
+    const descLineH = 28;
+    // desc 自动换行
+    ctx.font = '400 20px "Noto Sans SC", sans-serif';
     let dLine = '', dLines = [];
     for (const ch of desc) {
       const t = dLine + ch;
-      if (ctx.measureText(t).width > maxDescW && dLine) { dLines.push(dLine); dLine = ch; }
+      if (ctx.measureText(t).width > textMaxW && dLine) { dLines.push(dLine); dLine = ch; }
       else dLine = t;
     }
     if (dLine) dLines.push(dLine);
-    dLines.slice(0, 2).forEach((l, i) => ctx.fillText(l, bx + 16, by + 76 + i * 22));
+    dLines = dLines.slice(0, 2);
+    const totalH = totalLabelH + (dLines.length > 0 ? 10 + dLines.length * descLineH : 0);
+    const startY = by + (bh - totalH) / 2 + labelLineH - 6;
+    ctx.font = 'bold 26px "Noto Sans SC", sans-serif';
+    ctx.fillStyle = accentColor;
+    lLines.forEach((l, i) => ctx.fillText(l, textX, startY + i * labelLineH));
+    ctx.font = '400 20px "Noto Sans SC", sans-serif';
+    ctx.fillStyle = C.text1;
+    const descStartY = startY + totalLabelH + 10;
+    dLines.forEach((l, i) => ctx.fillText(l, textX, descStartY + i * descLineH));
     ctx.restore();
   }
 
-  drawDarkBadge(PAD, badgesY, badgeW, badgeH, C.amber,
-    `${wb.icon} ${wx}行`, wb.sub, wb.desc);
-  drawDarkBadge(PAD + badgeW + badgeGap, badgesY, badgeW, badgeH, '#9a8aee',
-    `${zb.icon} ${zn}`, `# ${zb.tag}`, zb.desc);
+  drawDarkBadge(PAD, badgesY,           badgeW, badgeH, wb.color || C.amber,
+    `${wb.icon} ${wb.label}`, wb.desc);
+  drawDarkBadge(PAD, badgesY + badgeH + badgeGap, badgeW, badgeH, '#9a8aee',
+    `${zb.icon} ${zb.label}`, zb.desc);
 
   // ── 底部签名 ──
   ctx.font = '300 18px "Noto Sans SC", sans-serif';
